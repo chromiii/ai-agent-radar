@@ -12,6 +12,7 @@ permissions:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
 
 concurrency:
   group: ai-agent-radar-${{ github.ref }}

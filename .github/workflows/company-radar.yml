@@ -12,6 +12,7 @@ permissions:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
 
 concurrency:
   group: ai-company-radar-${{ github.ref }}
@@ -50,4 +51,3 @@ jobs:
           git commit -m "Add AI company radar digest"
           git pull --rebase --autostash origin main
           git push origin main
-

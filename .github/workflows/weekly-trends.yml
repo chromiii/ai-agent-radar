@@ -12,6 +12,7 @@ permissions:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
 
 concurrency:
   group: agent-weekly-trends-${{ github.ref }}
@@ -50,4 +51,3 @@ jobs:
           git commit -m "Add weekly agent trend radar"
           git pull --rebase --autostash origin main
           git push origin main
-
