@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import datetime as dt
 import json
@@ -184,6 +184,8 @@ def looks_dynamic(title: str, url: str) -> bool:
 
 
 def fetch_page_source(source: dict[str, Any], limit: int) -> list[dict[str, Any]]:
+    # Company homepages are navigation-heavy; keep only links that look like
+    # concrete product, model, API, feature, news, or changelog updates.
     headers = {"User-Agent": "ai-agent-radar-company/0.2"}
     response = requests.get(source["url"], headers=headers, timeout=30)
     response.raise_for_status()
@@ -325,65 +327,6 @@ def compact_items(items: list[dict[str, Any]], config: dict[str, Any]) -> list[d
             }
         )
     return compact
-
-
-def build_company_prompt(day: dt.date, items: list[dict[str, Any]], config: dict[str, Any]) -> list[dict[str, str]]:
-    system = (
-        "You are a company intelligence analyst focused on AI agents, AI applications, and model/product releases. "
-        "Write entirely in Simplified Chinese. Be selective and skeptical. "
-        "Use only the supplied company items and URLs. Do not invent announcements, dates, features, links, or claims. "
-        "Pay special attention to both global AI companies and Chinese AI companies."
-    )
-    user = f"""
-请根据下面的公司动态候选条目，生成一份简体中文 Markdown 公司动态雷达。
-
-日期：{day.isoformat()}
-
-必须使用下面的中文结构：
-
-# AI Company Radar - {day.isoformat()}
-
-## 今日结论
-用 3-5 句中文说明今天最值得注意的公司动态。区分真正有价值的产品/模型/agent 动态和普通营销噪音。
-
-## 全球公司重点动态
-列出 OpenAI、Anthropic、Google DeepMind、Microsoft、Meta、Mistral、GitHub、Cursor 等相关动态。每条包含：
-- 公司：
-- 动态：
-- 和 AI agent / AI 应用的关系：
-- 可能影响：
-- 链接：
-
-## 中国公司重点动态
-列出 DeepSeek、Qwen、Kimi、GLM、豆包、混元、MiniMax、Manus 等相关动态。每条包含：
-- 公司：
-- 动态：
-- 和 AI agent / AI 应用的关系：
-- 可能影响：
-- 链接：
-
-## 值得追踪的产品或能力
-提取 3-6 个值得后续追踪的产品能力，例如 coding agent、browser automation、mobile automation、agentic workflow、API、open-source model。
-
-## 噪音和低优先级
-指出哪些条目可能只是营销、招聘、泛泛新闻、页面导航或证据不足。
-
-## 后续行动
-给出 3-5 个中文待办事项，使用 Markdown checkbox。
-
-硬性要求：
-- 全文必须使用简体中文。
-- 不要输出英文标题。
-- 不要编造输入中没有的事实。
-- 不要声称你阅读了完整公告。
-- 如果证据不足，明确写“证据不足”。
-- 保留原始 URL。
-- 如果某个区域没有高价值内容，直接写“暂无高价值新增动态”。
-
-公司动态候选条目 JSON：
-{json.dumps(compact_items(items, config), ensure_ascii=False, indent=2)}
-""".strip()
-    return [{"role": "system", "content": system}, {"role": "user", "content": user}]
 
 
 def parse_json_object(text: str) -> dict[str, Any] | None:
@@ -636,6 +579,23 @@ def render_company_markdown(day: dt.date, items: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+def append_chatgpt_request(markdown: str) -> str:
+    if "## 发给 ChatGPT 的公司动态解读请求" in markdown:
+        return markdown
+    prompt = """
+
+## 发给 ChatGPT 的公司动态解读请求
+
+请基于上面的 AI Company Radar 帮我做二次解读：
+1. 哪些公司动态真正值得关注？
+2. 它们分别影响 AI agent、AI 应用、开发者工具或模型生态的哪一部分？
+3. 标出营销噪音、证据不足或只是普通页面更新的内容。
+4. 判断哪些中国公司动态值得后续追踪。
+5. 给我今天最应该关注的 3 个行动建议。
+""".rstrip()
+    return markdown.rstrip() + prompt + "\n"
+
+
 def main() -> None:
     config = load_config()
     day = today_local()
@@ -652,9 +612,10 @@ def main() -> None:
     output_path = output_dir / f"{day.isoformat()}.md"
 
     ai_markdown = call_deepseek_company(day, items, config)
-    output_path.write_text(ai_markdown or render_company_markdown(day, items), encoding="utf-8")
+    output_path.write_text(append_chatgpt_request(ai_markdown or render_company_markdown(day, items)), encoding="utf-8")
     print(f"Wrote {output_path} with {len(items)} filtered company items")
 
 
 if __name__ == "__main__":
     main()
+

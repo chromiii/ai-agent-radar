@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import collections
 import datetime as dt
@@ -148,6 +148,8 @@ def weekly_arxiv_query(config: dict[str, Any]) -> str:
 
 
 def fetch_recent_arxiv(config: dict[str, Any], start_day: dt.date) -> list[dict[str, Any]]:
+    # arXiv may rate-limit scheduled jobs. Retry briefly, then let the weekly
+    # radar continue with HF signals instead of failing the whole workflow.
     weekly = config.get("weekly", {})
     params = {
         "search_query": weekly_arxiv_query(config),
@@ -324,72 +326,6 @@ def select_representative_items(items: list[dict[str, Any]], candidate_terms: li
         if len(selected) >= limit:
             break
     return selected
-
-
-def build_curation_prompt(
-    end_day: dt.date,
-    start_day: dt.date,
-    candidate_terms: list[dict[str, Any]],
-    representative_items: list[dict[str, Any]],
-) -> list[dict[str, str]]:
-    system = (
-        "You are a trend curator for AI agents and AI applications. "
-        "Write all final content in Simplified Chinese. "
-        "Your job is to distinguish real domain trends from generic academic phrases. "
-        "Use only the supplied candidate terms and representative items. "
-        "Do not invent links, papers, metrics, company claims, or facts."
-    )
-    user = f"""
-请筛选最近一周 AI agent / AI 应用领域的真实热词，并生成短 JSON。
-
-时间范围：{start_day.isoformat()} 到 {end_day.isoformat()}
-
-你需要：
-1. 从候选词中选出真正有领域意义的趋势词。
-2. 把普通论文套话、URL 片段、泛化表达放入 noise。
-3. 优先关注 computer-use、coding agent、agent evaluation、tool use、agent memory、multi-agent orchestration、browser/mobile automation、AI 应用产品化、中国公司生态。
-4. 不要把 "rather than"、"this work"、"github com" 这类短语当成热词。
-
-只输出一个 JSON 对象，不要输出 Markdown，不要加解释文本。
-
-JSON schema:
-{{
-  "tier1": [
-    {{
-      "term": "computer-use agent",
-      "cat": "real-world agent",
-      "why": "40字内中文理由"
-    }}
-  ],
-  "tier2": [
-    {{
-      "term": "agent memory",
-      "cat": "agent infra",
-      "why": "40字内中文理由"
-    }}
-  ],
-  "downrank": ["prompt collection", "beginner tutorial"],
-  "noise": ["rather than", "this work"]
-}}
-
-硬性要求：
-- tier1 最多 8 个。
-- tier2 最多 10 个。
-- downrank 最多 8 个。
-- noise 最多 10 个。
-- why 不超过 40 个中文字符。
-- term 必须来自候选词，不要自造新词。
-- 只有真正和 AI agent / AI 应用相关的词才能进入 tier1/tier2。
-- 如果证据不足，不要放入 tier1。
-- 所有 why 必须是简体中文。
-
-候选词 JSON：
-{json.dumps(candidate_terms, ensure_ascii=False, indent=2)}
-
-代表性条目 JSON：
-{json.dumps(representative_items, ensure_ascii=False, indent=2)}
-""".strip()
-    return [{"role": "system", "content": system}, {"role": "user", "content": user}]
 
 
 def build_classifier_prompt(
@@ -590,6 +526,7 @@ def save_trending_state(
 
 
 def save_empty_trending_state(end_day: dt.date, start_day: dt.date, config: dict[str, Any], reason: str) -> None:
+    # Prevent Daily from reusing stale noisy trend terms after a failed AI pass.
     weekly = config.get("weekly", {})
     state_dir = ROOT / weekly.get("state_dir", "state")
     state_dir.mkdir(parents=True, exist_ok=True)
@@ -707,3 +644,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

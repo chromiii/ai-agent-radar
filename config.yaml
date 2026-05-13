@@ -3,6 +3,8 @@ timezone: Australia/Sydney
 max_items_per_source: 12
 max_digest_items: 30
 hf_daily_fallback_days: 3
+hf_space_min_likes: 2
+hf_space_min_downloads: 50
 
 weekly:
   output_dir: weekly
@@ -166,13 +168,10 @@ ai:
   base_url: https://api.deepseek.com
   model: deepseek-v4-flash
   max_tokens_daily: 3500
-  max_tokens_deep_read_daily: 4500
   max_tokens_weekly: 6000
   max_tokens_company: 3500
   max_items: 15
   max_summary_chars_per_item: 1200
-  deep_read_max_items: 5
-  deep_read_summary_chars_per_item: 1800
   language: zh-CN
 
 search:
