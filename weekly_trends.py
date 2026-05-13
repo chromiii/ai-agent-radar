@@ -6,6 +6,7 @@ import json
 import math
 import os
 import re
+import time
 from pathlib import Path
 from typing import Any
 
@@ -17,32 +18,115 @@ from radar import dedupe, fetch_hf_daily_papers, fetch_hf_spaces, get_text, load
 
 ROOT = Path(__file__).resolve().parent
 
-STOPWORDS = {
-    "about",
-    "after",
+GENERIC_TERMS = {
     "agent",
     "agents",
+    "ai",
+    "and the",
+    "are increasingly",
+    "available https",
+    "available https github",
+    "existing approaches",
+    "existing methods",
+    "extensive experiments",
+    "github com",
+    "has become",
+    "https github",
+    "https github com",
+    "language model",
+    "large language",
+    "large language model",
+    "paradigm for",
+    "rather than",
+    "the first",
+    "the full",
+    "the same",
+    "these results",
+    "this gap",
+    "this paper",
+    "this propose",
+    "this study",
+    "this work",
+    "while preserving",
+}
+
+STOPWORDS = {
+    "a",
+    "about",
+    "after",
+    "all",
+    "also",
+    "an",
+    "and",
+    "are",
+    "as",
+    "at",
     "based",
-    "benchmark",
-    "benchmarks",
+    "be",
     "between",
+    "by",
+    "can",
+    "for",
     "from",
+    "has",
+    "have",
+    "in",
     "into",
-    "large",
-    "language",
-    "learning",
-    "model",
-    "models",
-    "multi",
-    "paper",
-    "reasoning",
-    "system",
-    "systems",
+    "is",
+    "it",
+    "its",
+    "of",
+    "on",
+    "or",
+    "our",
+    "than",
     "that",
+    "the",
     "their",
+    "these",
+    "this",
     "through",
+    "to",
     "using",
+    "via",
+    "we",
     "with",
+}
+
+DOMAIN_ANCHORS = {
+    "agent",
+    "agentic",
+    "automation",
+    "benchmark",
+    "browser",
+    "coding",
+    "computer",
+    "desktop",
+    "developer",
+    "evaluation",
+    "function",
+    "gaia",
+    "glm",
+    "gui",
+    "kimi",
+    "leaderboard",
+    "manus",
+    "memory",
+    "mobile",
+    "multi-agent",
+    "observability",
+    "osworld",
+    "planning",
+    "qwen",
+    "reasoning",
+    "research",
+    "swe-bench",
+    "terminal-bench",
+    "tool",
+    "trace",
+    "tracing",
+    "webarena",
+    "workflow",
 }
 
 
@@ -72,7 +156,28 @@ def fetch_recent_arxiv(config: dict[str, Any], start_day: dt.date) -> list[dict[
         "sortBy": "submittedDate",
         "sortOrder": "descending",
     }
-    feed = feedparser.parse(get_text("https://export.arxiv.org/api/query", params))
+    text = None
+    for attempt in range(3):
+        try:
+            text = get_text("https://export.arxiv.org/api/query", params)
+            break
+        except requests.exceptions.HTTPError as exc:
+            status = exc.response.status_code if exc.response is not None else None
+            if status == 429 and attempt < 2:
+                wait_seconds = 20 * (attempt + 1)
+                print(f"arXiv rate limited weekly request; retrying in {wait_seconds}s...")
+                time.sleep(wait_seconds)
+                continue
+            print(f"arXiv weekly request failed; continuing without arXiv. Error: {exc}")
+            return []
+        except Exception as exc:
+            print(f"arXiv weekly request failed; continuing without arXiv. Error: {exc}")
+            return []
+
+    if text is None:
+        return []
+
+    feed = feedparser.parse(text)
     items = []
     for entry in feed.entries:
         published = parse_arxiv_date(entry.get("published"))
@@ -119,70 +224,92 @@ def fetch_weekly_hf_spaces(config: dict[str, Any]) -> list[dict[str, Any]]:
         config["max_items_per_source"] = original_limit
 
 
-def term_candidates(text: str, seed_terms: list[str]) -> list[str]:
-    text_l = text.lower()
-    terms = []
-    for term in seed_terms:
-        if term.lower() in text_l:
-            terms.append(term)
-
-    words = re.findall(r"[a-z][a-z0-9\-]+", text_l)
-    filtered = [w for w in words if len(w) > 2 and w not in STOPWORDS]
-    for n in (2, 3):
-        for idx in range(0, max(0, len(filtered) - n + 1)):
-            phrase = " ".join(filtered[idx : idx + n])
-            if any(word in STOPWORDS for word in phrase.split()):
-                continue
-            terms.append(phrase)
-    return terms
+def clean_term(term: str) -> str:
+    term = term.lower().replace("_", "-")
+    term = re.sub(r"[^a-z0-9\-\s\.]", " ", term)
+    term = re.sub(r"\s+", " ", term).strip()
+    return term
 
 
-def extract_trending_terms(items: list[dict[str, Any]], config: dict[str, Any]) -> list[dict[str, Any]]:
+def is_domain_term(term: str, seed_terms: set[str]) -> bool:
+    term_l = clean_term(term)
+    if not term_l or term_l in GENERIC_TERMS:
+        return False
+    if "http" in term_l or "github com" in term_l or "arxiv" in term_l:
+        return False
+    parts = term_l.split()
+    if len(parts) > 5:
+        return False
+    if parts[0] in STOPWORDS or parts[-1] in STOPWORDS:
+        return False
+    if term_l in seed_terms:
+        return True
+    return any(anchor in term_l for anchor in DOMAIN_ANCHORS)
+
+
+def extract_candidate_terms(items: list[dict[str, Any]], config: dict[str, Any]) -> list[dict[str, Any]]:
     weekly = config.get("weekly", {})
-    seed_terms = weekly.get("seed_terms", [])
+    seed_terms = {clean_term(t) for t in weekly.get("seed_terms", [])}
     counts: collections.Counter[str] = collections.Counter()
     sources_by_term: dict[str, set[str]] = collections.defaultdict(set)
+    examples_by_term: dict[str, list[str]] = collections.defaultdict(list)
 
     for item in items:
-        text = f"{item.get('title', '')} {item.get('summary', '')}"
-        seen_in_item = set(term_candidates(text, seed_terms))
+        title = normalize(item.get("title"))
+        summary = normalize(item.get("summary"))
+        text_l = clean_term(f"{title} {summary}")
+        seen_in_item: set[str] = set()
+
+        for seed in seed_terms:
+            if seed and seed in text_l:
+                seen_in_item.add(seed)
+
+        words = re.findall(r"[a-z][a-z0-9\-\.]+", text_l)
+        for n in (2, 3, 4):
+            for idx in range(0, max(0, len(words) - n + 1)):
+                phrase = clean_term(" ".join(words[idx : idx + n]))
+                if is_domain_term(phrase, seed_terms):
+                    seen_in_item.add(phrase)
+
         for term in seen_in_item:
             counts[term] += 1
             sources_by_term[term].add(item.get("source", "unknown"))
+            if len(examples_by_term[term]) < 3 and title:
+                examples_by_term[term].append(title)
 
-    downrank = set(t.lower() for t in config.get("ranking", {}).get("downrank_terms", []))
     scored = []
     for term, count in counts.items():
         if count < 2 and term not in seed_terms:
             continue
         source_diversity = len(sources_by_term[term])
-        seed_boost = 1.5 if term in seed_terms else 0.0
-        penalty = 2.0 if term.lower() in downrank else 0.0
-        score = math.log1p(count) * 3.0 + source_diversity * 1.2 + seed_boost - penalty
+        seed_boost = 3.0 if term in seed_terms else 0.0
+        score = math.log1p(count) * 2.5 + source_diversity * 1.5 + seed_boost
         scored.append(
             {
                 "term": term,
                 "score": round(score, 2),
                 "count": count,
                 "sources": sorted(sources_by_term[term]),
+                "examples": examples_by_term[term],
+                "seed": term in seed_terms,
             }
         )
 
-    scored.sort(key=lambda x: (x["score"], x["count"]), reverse=True)
-    return scored[: int(weekly.get("max_terms", 30))]
+    scored.sort(key=lambda x: (x["seed"], x["score"], x["count"]), reverse=True)
+    return scored[: int(weekly.get("max_terms", 80))]
 
 
-def select_representative_items(items: list[dict[str, Any]], trending_terms: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
+def select_representative_items(items: list[dict[str, Any]], candidate_terms: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
     selected = []
-    term_list = [t["term"].lower() for t in trending_terms[:20]]
+    term_list = [t["term"] for t in candidate_terms[:40]]
     for item in items:
-        text = f"{item.get('title', '')} {item.get('summary', '')}".lower()
+        text = clean_term(f"{item.get('title', '')} {item.get('summary', '')}")
         matched = [term for term in term_list if term in text]
         if not matched:
             continue
         summary = normalize(item.get("summary"))
-        if len(summary) > 900:
-            summary = summary[:900].rsplit(" ", 1)[0] + "..."
+        if len(summary) > 800:
+            summary = summary[:800].rsplit(" ", 1)[0] + "..."
         selected.append(
             {
                 "title": item.get("title"),
@@ -199,55 +326,71 @@ def select_representative_items(items: list[dict[str, Any]], trending_terms: lis
     return selected
 
 
-def build_weekly_ai_prompt(
+def build_curation_prompt(
     end_day: dt.date,
     start_day: dt.date,
-    trending_terms: list[dict[str, Any]],
+    candidate_terms: list[dict[str, Any]],
     representative_items: list[dict[str, Any]],
 ) -> list[dict[str, str]]:
     system = (
-        "You are a trend analyst for AI agents and multi-agent systems. "
-        "Write entirely in Simplified Chinese. Be selective and skeptical. "
-        "Use only the supplied terms and representative items. Do not invent news, links, metrics, or company claims."
+        "You are a trend curator for AI agents and AI applications. "
+        "Write all final content in Simplified Chinese. "
+        "Your job is to distinguish real domain trends from generic academic phrases. "
+        "Use only the supplied candidate terms and representative items. "
+        "Do not invent links, papers, metrics, company claims, or facts."
     )
     user = f"""
-请生成一份简体中文 Markdown 周报。
+请筛选最近一周 AI agent / AI 应用领域的真实热词，并生成严格 JSON。
 
 时间范围：{start_day.isoformat()} 到 {end_day.isoformat()}
 
-必须使用下面的中文结构：
+你需要：
+1. 从候选词中选出真正有领域意义的趋势词。
+2. 把普通论文套话、URL 片段、泛化表达放入 noise。
+3. 优先关注 computer-use、coding agent、agent evaluation、tool use、agent memory、multi-agent orchestration、browser/mobile automation、AI 应用产品化、中国公司生态。
+4. 不要把 "rather than"、"this work"、"github com" 这类短语当成热词。
 
-# Agent Weekly Trend Radar - {end_day.isoformat()}
+只输出一个 JSON 对象，不要输出 Markdown，不要加解释文本。
 
-## 本周结论
-用 3-5 句中文说明本周 agent / multi-agent 方向的主要变化。
-
-## 本周升温热词
-列出 8-12 个热词。每个热词包含：
-- 热度判断：高 / 中 / 低
-- 为什么升温：基于输入证据解释
-- 应该如何关注：给出一句建议
-
-## 本周值得关注的方向
-把热词归并成 3-5 个方向，例如 computer-use、coding agent、evaluation、multi-agent orchestration、observability。
-
-## 噪音和过热信号
-指出哪些词可能只是泛化营销、教程、合集或标题党。
-
-## 代表性内容
-列出最能代表本周趋势的条目，保留 URL。
-
-## 下周搜索建议
-给出下一周应该加入或提高权重的搜索词。
+JSON schema:
+{{
+  "tier1": [
+    {{
+      "term": "computer-use agent",
+      "category": "real-world agent",
+      "heat": "high",
+      "why": "中文解释，基于输入证据",
+      "search_suggestion": "computer-use agent OSWorld WebArena"
+    }}
+  ],
+  "tier2": [
+    {{
+      "term": "agent memory",
+      "category": "agent infrastructure",
+      "heat": "medium",
+      "why": "中文解释，基于输入证据",
+      "search_suggestion": "agent memory long-horizon task"
+    }}
+  ],
+  "downrank": ["prompt collection", "beginner tutorial"],
+  "noise": [
+    {{
+      "term": "rather than",
+      "reason": "普通英语短语，不是领域趋势"
+    }}
+  ]
+}}
 
 硬性要求：
-- 全文必须使用简体中文。
-- 不要编造输入中没有的事实。
-- 如果证据不足，写“证据不足”。
-- 不要声称你已经阅读全文。
+- tier1 最多 10 个。
+- tier2 最多 15 个。
+- term 必须来自候选词，不要自造新词。
+- 只有真正和 AI agent / AI 应用相关的词才能进入 tier1/tier2。
+- 如果证据不足，不要放入 tier1。
+- 所有 why/reason 必须是简体中文。
 
-热词 JSON：
-{json.dumps(trending_terms, ensure_ascii=False, indent=2)}
+候选词 JSON：
+{json.dumps(candidate_terms, ensure_ascii=False, indent=2)}
 
 代表性条目 JSON：
 {json.dumps(representative_items, ensure_ascii=False, indent=2)}
@@ -255,73 +398,76 @@ def build_weekly_ai_prompt(
     return [{"role": "system", "content": system}, {"role": "user", "content": user}]
 
 
-def call_deepseek_weekly(
+def parse_json_object(text: str) -> dict[str, Any] | None:
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+    match = re.search(r"\{.*\}", text, re.DOTALL)
+    if not match:
+        return None
+    try:
+        return json.loads(match.group(0))
+    except json.JSONDecodeError:
+        return None
+
+
+def call_deepseek_json(
     end_day: dt.date,
     start_day: dt.date,
-    trending_terms: list[dict[str, Any]],
+    candidate_terms: list[dict[str, Any]],
     representative_items: list[dict[str, Any]],
     config: dict[str, Any],
-) -> str | None:
+) -> dict[str, Any] | None:
     ai_config = config.get("ai", {})
     if not ai_config.get("enabled", False) or ai_config.get("provider") != "deepseek":
         return None
     api_key = os.environ.get("DEEPSEEK_API_KEY")
     if not api_key:
-        print("DEEPSEEK_API_KEY is not set; using rule-based weekly Markdown.")
+        print("DEEPSEEK_API_KEY is not set; weekly curated state will not be updated.")
         return None
 
     payload = {
         "model": ai_config.get("model", "deepseek-v4-flash"),
-        "messages": build_weekly_ai_prompt(end_day, start_day, trending_terms, representative_items),
-        "temperature": 0.2,
+        "messages": build_curation_prompt(end_day, start_day, candidate_terms, representative_items),
+        "temperature": 0.1,
         "max_tokens": 3500,
+        "response_format": {"type": "json_object"},
     }
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
-        "User-Agent": "ai-agent-radar-weekly/0.1",
+        "User-Agent": "ai-agent-radar-weekly/0.2",
     }
     base_url = str(ai_config.get("base_url", "https://api.deepseek.com")).rstrip("/")
     try:
         response = requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=90)
         response.raise_for_status()
         data = response.json()
-        return data["choices"][0]["message"]["content"].strip()
+        content = data["choices"][0]["message"]["content"].strip()
+        return parse_json_object(content)
     except Exception as exc:
-        print(f"DeepSeek weekly call failed; using rule-based Markdown. Error: {exc}")
+        print(f"DeepSeek weekly JSON curation failed. Error: {exc}")
         return None
 
 
-def render_weekly_markdown(
+def term_names(entries: list[Any]) -> list[str]:
+    names = []
+    for entry in entries:
+        if isinstance(entry, str):
+            names.append(entry)
+        elif isinstance(entry, dict) and entry.get("term"):
+            names.append(str(entry["term"]))
+    return names
+
+
+def save_trending_state(
     end_day: dt.date,
     start_day: dt.date,
-    trending_terms: list[dict[str, Any]],
-    representative_items: list[dict[str, Any]],
-) -> str:
-    lines = [
-        f"# Agent Weekly Trend Radar - {end_day.isoformat()}",
-        "",
-        f"Range: {start_day.isoformat()} to {end_day.isoformat()}",
-        "",
-        "## 本周升温热词",
-        "",
-    ]
-    for idx, term in enumerate(trending_terms[:20], 1):
-        lines.append(
-            f"{idx}. **{term['term']}** - score {term['score']}, count {term['count']}, sources: {', '.join(term['sources'])}"
-        )
-    lines.extend(["", "## 代表性内容", ""])
-    for item in representative_items[:15]:
-        lines.append(f"- [{item['title']}]({item['url']})")
-        lines.append(f"  - Source: {item.get('source')}; Terms: {', '.join(item.get('matched_terms', []))}")
-    lines.extend(["", "## 下周搜索建议", ""])
-    for term in trending_terms[:10]:
-        lines.append(f"- {term['term']}")
-    lines.append("")
-    return "\n".join(lines)
-
-
-def save_trending_state(end_day: dt.date, start_day: dt.date, trending_terms: list[dict[str, Any]], config: dict[str, Any]) -> None:
+    candidate_terms: list[dict[str, Any]],
+    curated: dict[str, Any],
+    config: dict[str, Any],
+) -> None:
     weekly = config.get("weekly", {})
     state_dir = ROOT / weekly.get("state_dir", "state")
     state_dir.mkdir(parents=True, exist_ok=True)
@@ -329,11 +475,76 @@ def save_trending_state(end_day: dt.date, start_day: dt.date, trending_terms: li
     data = {
         "generated_at": end_day.isoformat(),
         "range": {"start": start_day.isoformat(), "end": end_day.isoformat()},
-        "tier1": [term["term"] for term in trending_terms[:10]],
-        "tier2": [term["term"] for term in trending_terms[10:25]],
-        "terms": trending_terms,
+        "curated_by": config.get("ai", {}).get("model", "unknown"),
+        "tier1": term_names(curated.get("tier1", [])),
+        "tier2": term_names(curated.get("tier2", [])),
+        "downrank": term_names(curated.get("downrank", [])),
+        "noise": curated.get("noise", []),
+        "curated": curated,
+        "candidate_terms": candidate_terms,
     }
     state_path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def render_weekly_markdown(
+    end_day: dt.date,
+    start_day: dt.date,
+    candidate_terms: list[dict[str, Any]],
+    representative_items: list[dict[str, Any]],
+    curated: dict[str, Any] | None,
+) -> str:
+    lines = [
+        f"# Agent Weekly Trend Radar - {end_day.isoformat()}",
+        "",
+        f"范围：{start_day.isoformat()} 到 {end_day.isoformat()}",
+        "",
+    ]
+
+    if curated:
+        lines.extend(["## 本周结论", ""])
+        tier1 = curated.get("tier1", [])
+        if tier1:
+            lines.append("本周可用于反哺每日雷达的核心热词已经过 AI 精筛。")
+        else:
+            lines.append("本周没有足够明确的 tier1 热词。")
+        lines.extend(["", "## Tier 1 热词", ""])
+        for entry in tier1:
+            if isinstance(entry, dict):
+                lines.append(f"- **{entry.get('term')}**：{entry.get('why', '证据不足')}")
+            else:
+                lines.append(f"- **{entry}**")
+        lines.extend(["", "## Tier 2 热词", ""])
+        for entry in curated.get("tier2", []):
+            if isinstance(entry, dict):
+                lines.append(f"- **{entry.get('term')}**：{entry.get('why', '证据不足')}")
+            else:
+                lines.append(f"- **{entry}**")
+        lines.extend(["", "## 噪音词", ""])
+        for entry in curated.get("noise", [])[:15]:
+            if isinstance(entry, dict):
+                lines.append(f"- {entry.get('term')}：{entry.get('reason', '')}")
+            else:
+                lines.append(f"- {entry}")
+    else:
+        lines.extend(
+            [
+                "## 本周候选热词",
+                "",
+                "DeepSeek 精筛未成功，因此没有更新 `state/trending_terms.json`。下面仅展示规则粗筛候选，不能直接视为趋势。",
+                "",
+            ]
+        )
+        for term in candidate_terms[:20]:
+            lines.append(
+                f"- **{term['term']}** - score {term['score']}, count {term['count']}, sources: {', '.join(term['sources'])}"
+            )
+
+    lines.extend(["", "## 代表性内容", ""])
+    for item in representative_items[:15]:
+        lines.append(f"- [{item['title']}]({item['url']})")
+        lines.append(f"  - 来源：{item.get('source')}；命中词：{', '.join(item.get('matched_terms', []))}")
+    lines.append("")
+    return "\n".join(lines)
 
 
 def main() -> None:
@@ -348,27 +559,28 @@ def main() -> None:
     items.extend(fetch_recent_arxiv(config, start_day))
     items = dedupe(items)
 
-    trending_terms = extract_trending_terms(items, config)
+    candidate_terms = extract_candidate_terms(items, config)
     representative_items = select_representative_items(
         items,
-        trending_terms,
+        candidate_terms,
         int(weekly.get("ai_max_items", 35)),
     )
+    curated = call_deepseek_json(end_day, start_day, candidate_terms, representative_items, config)
 
-    save_trending_state(end_day, start_day, trending_terms, config)
+    if curated:
+        save_trending_state(end_day, start_day, candidate_terms, curated, config)
+    else:
+        print("Skipping state/trending_terms.json update because AI curation did not succeed.")
 
     output_dir = ROOT / weekly.get("output_dir", "weekly")
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"{end_day.isoformat()}.md"
-
-    ai_markdown = call_deepseek_weekly(end_day, start_day, trending_terms, representative_items, config)
     output_path.write_text(
-        ai_markdown or render_weekly_markdown(end_day, start_day, trending_terms, representative_items),
+        render_weekly_markdown(end_day, start_day, candidate_terms, representative_items, curated),
         encoding="utf-8",
     )
-    print(f"Wrote {output_path} with {len(trending_terms)} terms from {len(items)} items")
+    print(f"Wrote {output_path} with {len(candidate_terms)} candidate terms from {len(items)} items")
 
 
 if __name__ == "__main__":
     main()
-

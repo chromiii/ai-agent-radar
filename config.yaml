@@ -7,7 +7,7 @@ weekly:
   output_dir: weekly
   state_dir: state
   lookback_days: 7
-  max_arxiv_results: 80
+  max_arxiv_results: 40
   max_hf_papers_per_day: 20
   max_hf_spaces_per_query: 12
   max_terms: 30
