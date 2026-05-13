@@ -51,6 +51,13 @@ Value: your DeepSeek API key
 
 If the secret is missing or the API call fails, the workflow falls back to the rule-based Markdown digest.
 
+The workflows expose this secret to the scripts as `DEEPSEEK_API_KEY`. If a run logs `DEEPSEEK_API_KEY is not set`, confirm the repository secret exists and that the workflow file includes:
+
+```yaml
+env:
+  DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+```
+
 ## Weekly Trend Radar
 
 The repository also includes a weekly trend radar:
@@ -60,7 +67,9 @@ The repository also includes a weekly trend radar:
 - Output: `weekly/YYYY-MM-DD.md`
 - Dynamic terms state: `state/trending_terms.json`
 
-It scans the last 7 days of Hugging Face Daily Papers, Hugging Face Spaces, and recent arXiv papers, extracts rising terms, and asks DeepSeek to write a Chinese weekly trend digest when `DEEPSEEK_API_KEY` is available.
+It scans the last 7 days of Hugging Face Daily Papers, Hugging Face Spaces, and recent arXiv papers, builds a candidate term list with rule-based filtering, then asks DeepSeek to curate real AI agent / AI application trend terms into `tier1`, `tier2`, `downrank`, and `noise`.
+
+Only successful AI-curated results update `state/trending_terms.json`, so generic academic phrases such as `rather than` or `this work` do not pollute the daily radar when DeepSeek is unavailable or fails.
 
 The scheduled run is set for Sunday 00:15 Australia/Sydney time during AEST, expressed as Saturday `14:15 UTC` in GitHub Actions cron.
 

@@ -486,6 +486,25 @@ def save_trending_state(
     state_path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def save_empty_trending_state(end_day: dt.date, start_day: dt.date, config: dict[str, Any], reason: str) -> None:
+    weekly = config.get("weekly", {})
+    state_dir = ROOT / weekly.get("state_dir", "state")
+    state_dir.mkdir(parents=True, exist_ok=True)
+    state_path = state_dir / "trending_terms.json"
+    data = {
+        "generated_at": end_day.isoformat(),
+        "range": {"start": start_day.isoformat(), "end": end_day.isoformat()},
+        "curated_by": None,
+        "tier1": [],
+        "tier2": [],
+        "downrank": [],
+        "noise": [],
+        "curated": {},
+        "error": reason,
+    }
+    state_path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
 def render_weekly_markdown(
     end_day: dt.date,
     start_day: dt.date,
@@ -570,7 +589,8 @@ def main() -> None:
     if curated:
         save_trending_state(end_day, start_day, candidate_terms, curated, config)
     else:
-        print("Skipping state/trending_terms.json update because AI curation did not succeed.")
+        print("Writing safe empty state because AI curation did not succeed.")
+        save_empty_trending_state(end_day, start_day, config, "AI curation did not succeed")
 
     output_dir = ROOT / weekly.get("output_dir", "weekly")
     output_dir.mkdir(parents=True, exist_ok=True)
