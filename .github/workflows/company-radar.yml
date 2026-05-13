@@ -51,3 +51,17 @@ jobs:
           git commit -m "Add AI company radar digest"
           git pull --rebase --autostash origin main
           git push origin main
+
+      - name: Send company radar email
+        env:
+          QQ_MAIL_USERNAME: ${{ secrets.QQ_MAIL_USERNAME }}
+          QQ_MAIL_PASSWORD: ${{ secrets.QQ_MAIL_PASSWORD }}
+          QQ_MAIL_TO: ${{ secrets.QQ_MAIL_TO }}
+        run: |
+          report_path="$(find company -maxdepth 1 -name '*.md' -type f 2>/dev/null | sort | tail -n 1 || true)"
+          if [ -z "$report_path" ]; then
+            echo "No company report found; skipping email."
+            exit 0
+          fi
+          report_day="$(basename "$report_path" .md)"
+          python send_email.py "$report_path" "AI Company Radar - $report_day"
