@@ -3,9 +3,9 @@ name: AI Agent Radar
 on:
   workflow_dispatch:
   schedule:
-    # 08:30 Australia/Sydney during AEST (UTC+10).
+    # 00:00 Australia/Sydney during AEST (UTC+10).
     # Adjust this when daylight saving changes if you care about exact wall-clock time.
-    - cron: "30 22 * * *"
+    - cron: "0 14 * * *"
 
 permissions:
   contents: write
@@ -34,4 +34,3 @@ jobs:
         with:
           commit_message: "Add daily AI agent radar digest"
           file_pattern: "inbox/*.md state.json"
-
