@@ -578,7 +578,7 @@ def call_deepseek(day: dt.date, items: list[dict[str, Any]], config: dict[str, A
         return None
 
 
-def fetch_hf_daily_papers(config: dict[str, Any], day: dt.date) -> list[dict[str, Any]]:
+def fetch_hf_daily_papers_for_day(config: dict[str, Any], day: dt.date) -> list[dict[str, Any]]:
     data = get_json("https://huggingface.co/api/daily_papers", {"date": day.isoformat()})
     papers = data if isinstance(data, list) else data.get("papers", [])
     items = []
@@ -590,8 +590,36 @@ def fetch_hf_daily_papers(config: dict[str, Any], day: dt.date) -> list[dict[str
         if not title:
             continue
         url = f"https://huggingface.co/papers/{paper_id}" if paper_id else "https://huggingface.co/papers"
-        items.append({"source": "hf_daily_papers", "title": title, "summary": summary, "url": url})
+        items.append(
+            {
+                "source": "hf_daily_papers",
+                "title": title,
+                "summary": summary,
+                "url": url,
+                "published": day.isoformat(),
+            }
+        )
     return items
+
+
+def fetch_hf_daily_papers(config: dict[str, Any], day: dt.date) -> list[dict[str, Any]]:
+    fallback_days = int(config.get("hf_daily_fallback_days", 3))
+    last_error: Exception | None = None
+    for offset in range(fallback_days + 1):
+        target_day = day - dt.timedelta(days=offset)
+        try:
+            items = fetch_hf_daily_papers_for_day(config, target_day)
+            if items:
+                if offset:
+                    print(f"HF daily papers used fallback date {target_day.isoformat()} because {day.isoformat()} was unavailable or empty.")
+                return items
+            print(f"HF daily papers returned no items for {target_day.isoformat()}; trying previous day.")
+        except Exception as exc:
+            last_error = exc
+            print(f"HF daily papers failed for {target_day.isoformat()}: {exc}")
+    if last_error:
+        print(f"HF daily papers unavailable after {fallback_days + 1} attempts; continuing without it.")
+    return []
 
 
 def fetch_hf_spaces(config: dict[str, Any]) -> list[dict[str, Any]]:
@@ -876,13 +904,18 @@ def main() -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"{day.isoformat()}.md"
 
-    if not digest_items and output_path.exists():
-        print(f"No new items; keeping existing {output_path}")
-    else:
-        ai_markdown = call_deepseek(day, digest_items, config)
-        output_path.write_text(ai_markdown or render_markdown(day, digest_items), encoding="utf-8")
+    if not digest_items:
+        if output_path.exists():
+            print(f"No new items; keeping existing {output_path}")
+        else:
+            print(f"No new items; not writing empty report for {day.isoformat()}")
+        save_state(state)
+        return
 
-    state["seen"] = sorted(seen | {item_id(item) for item in fresh if item.get("url")})[-2000:]
+    ai_markdown = call_deepseek(day, digest_items, config)
+    output_path.write_text(ai_markdown or render_markdown(day, digest_items), encoding="utf-8")
+
+    state["seen"] = sorted(seen | {item_id(item) for item in digest_items if item.get("url")})[-2000:]
     save_state(state)
     print(f"Wrote {output_path} with {len(digest_items)} items")
 

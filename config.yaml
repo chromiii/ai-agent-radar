@@ -2,6 +2,7 @@ output_dir: inbox
 timezone: Australia/Sydney
 max_items_per_source: 12
 max_digest_items: 30
+hf_daily_fallback_days: 3
 
 weekly:
   output_dir: weekly
