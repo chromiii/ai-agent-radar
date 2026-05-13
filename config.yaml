@@ -3,6 +3,37 @@ timezone: Australia/Sydney
 max_items_per_source: 12
 max_digest_items: 30
 
+ai:
+  enabled: true
+  provider: deepseek
+  base_url: https://api.deepseek.com
+  model: deepseek-v4-flash
+  max_items: 15
+  max_summary_chars_per_item: 1200
+  language: zh-CN
+
+search:
+  hf_space_queries:
+    - agent leaderboard
+    - multi-agent benchmark
+    - web agent
+    - agent challenge
+    - coding agent benchmark
+    - computer use agent
+    - tool use agent
+    - SWE-bench agent
+    - GAIA benchmark
+    - WebArena agent
+
+ranking:
+  downrank_terms:
+    - beginner
+    - tutorial
+    - course
+    - marketing
+    - prompt collection
+    - awesome list
+
 keywords:
   - agent
   - agents
@@ -18,6 +49,13 @@ keywords:
   - agent leaderboard
   - agentic workflow
   - multi-agent collaboration
+  - coding agent
+  - computer use agent
+  - long-horizon agent
+  - SWE-bench
+  - GAIA
+  - WebArena
+  - OSWorld
 
 arxiv_categories:
   - cs.AI
@@ -43,4 +81,10 @@ high_value_terms:
   - multiagent
   - planning
   - memory
-
+  - coding agent
+  - computer use
+  - long-horizon
+  - SWE-bench
+  - GAIA
+  - WebArena
+  - OSWorld

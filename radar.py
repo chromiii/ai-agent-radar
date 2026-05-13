@@ -3,10 +3,10 @@ from __future__ import annotations
 import datetime as dt
 import html
 import json
+import os
 import re
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
 
 import feedparser
 import requests
@@ -89,6 +89,11 @@ def score_item(item: dict[str, Any], config: dict[str, Any]) -> tuple[float, lis
             score += 1.8
             reasons.append(f"high-value: {term}")
 
+    for term in config.get("ranking", {}).get("downrank_terms", []):
+        if term.lower() in text:
+            score -= 1.5
+            reasons.append(f"downrank: {term}")
+
     source = item.get("source", "")
     if source == "hf_daily_papers":
         score += 2.5
@@ -117,7 +122,187 @@ def score_item(item: dict[str, Any], config: dict[str, Any]) -> tuple[float, lis
         score += min(float(cited_by) / 25.0, 2.0)
         reasons.append(f"OpenAlex citations: {cited_by}")
 
-    return round(min(score, 10.0), 1), reasons[:6]
+    return round(max(0.0, min(score, 10.0)), 1), reasons[:6]
+
+
+def compact_for_ai(item: dict[str, Any], max_summary_chars: int) -> dict[str, Any]:
+    summary = normalize(item.get("summary"))
+    if len(summary) > max_summary_chars:
+        summary = summary[:max_summary_chars].rsplit(" ", 1)[0] + "..."
+    return {
+        "title": item.get("title"),
+        "source": item.get("source"),
+        "url": item.get("url"),
+        "score": item.get("score"),
+        "reasons": item.get("reasons", []),
+        "authors": item.get("authors"),
+        "published": item.get("published"),
+        "summary": summary,
+    }
+
+
+def build_ai_prompt(day: dt.date, items: list[dict[str, Any]], config: dict[str, Any]) -> list[dict[str, str]]:
+    ai_config = config.get("ai", {})
+    compact_items = [
+        compact_for_ai(item, int(ai_config.get("max_summary_chars_per_item", 1200)))
+        for item in items[: int(ai_config.get("max_items", 15))]
+    ]
+    system = (
+        "You are a research assistant for AI agents and multi-agent systems. "
+        "Your job is to curate a daily research radar for a technical user. "
+        "Prioritize benchmarks, leaderboards, evaluations, datasets, open-source frameworks, "
+        "coding agents, web agents, computer-use agents, tool use, planning, memory, and multi-agent collaboration. "
+        "Use only the supplied items and URLs. Do not invent links, papers, authors, or facts. "
+        "If evidence is weak, say so."
+    )
+    user = f"""
+请根据下面的候选条目，生成一份中文 Markdown 日报。
+
+日期：{day.isoformat()}
+语言：{ai_config.get("language", "zh-CN")}
+
+输出结构必须是：
+
+# AI Agent Radar - {day.isoformat()}
+
+## 今日结论
+用 3-5 句话概括今天最值得注意的趋势。
+
+## 必看 Top 5
+每条包含：
+- 类型：paper / benchmark / leaderboard / competition / framework / dataset / space / other
+- 重要性：A / B / C
+- 为什么重要：
+- 和 agent / multi-agent 的关系：
+- 建议动作：
+- 链接：
+
+## 值得扫一眼
+列出次重要条目，说明一句理由。
+
+## 可以跳过或低优先级
+列出看起来相关但价值较低的条目，并解释为什么。
+
+## 今日概念
+提取 3-6 个值得后续关注的概念。
+
+## 后续行动
+给出 3-5 个待办事项。
+
+硬性要求：
+- 不要编造输入中没有的链接。
+- 不要声称已经阅读全文。
+- 如果摘要不足以判断，请标注“证据不足”。
+- 保留原始 URL。
+
+候选条目 JSON：
+{json.dumps(compact_items, ensure_ascii=False, indent=2)}
+""".strip()
+    return [{"role": "system", "content": system}, {"role": "user", "content": user}]
+
+
+def build_ai_prompt_v2(day: dt.date, items: list[dict[str, Any]], config: dict[str, Any]) -> list[dict[str, str]]:
+    ai_config = config.get("ai", {})
+    compact_items = [
+        compact_for_ai(item, int(ai_config.get("max_summary_chars_per_item", 1200)))
+        for item in items[: int(ai_config.get("max_items", 15))]
+    ]
+    system = (
+        "You are a skeptical research assistant for AI agents and multi-agent systems. "
+        "Do not treat every new item as useful. Curate selectively for a technical user. "
+        "Prioritize benchmarks, leaderboards, evaluations, datasets, open-source frameworks, "
+        "coding agents, web agents, computer-use agents, tool use, planning, memory, "
+        "long-horizon tasks, and multi-agent collaboration. "
+        "Use only the supplied items and URLs. Do not invent links, papers, authors, dates, metrics, or facts. "
+        "If evidence is weak, say so explicitly."
+    )
+    user = f"""
+Generate a Markdown daily digest in Simplified Chinese.
+
+# AI Agent Radar - {day.isoformat()}
+
+Required structure:
+
+## Today conclusion
+Write 3-5 concise Chinese sentences about the most important signals today.
+
+## Must-read Top 5
+For each useful item, include:
+- Basic info: type, source, authors if available, date if available, URL
+- Priority: A / B / C
+- Why it matters: explain the practical research value
+- Innovation point: infer only from the supplied title/summary; if unclear, write "evidence insufficient"
+- Agent / multi-agent relevance: explain the connection
+- Recommended action: what the user should do next
+
+## Worth scanning
+List secondary items with one-line Chinese reasons.
+
+## Low priority or skippable
+List items that look new but are probably not useful enough, and explain why.
+
+## Background knowledge you should know
+Write one compact Chinese primer that helps the user understand today's most important items.
+Focus on one foundational concept, benchmark family, or evaluation method that appears in the candidates.
+Keep it practical: definition, why it matters, how to judge good work in this area.
+
+## Concepts to track
+Extract 3-6 Chinese concept bullets.
+
+## Follow-up actions
+Give 3-5 actionable todos.
+
+Hard requirements:
+- Output Simplified Chinese Markdown.
+- Do not invent links, papers, authors, dates, claims, or metrics.
+- Do not claim you read full papers.
+- If the evidence is weak, explicitly say "证据不足".
+- Keep original URLs.
+- Be selective: not every new item deserves attention.
+
+Candidate items JSON:
+{json.dumps(compact_items, ensure_ascii=False, indent=2)}
+""".strip()
+    return [{"role": "system", "content": system}, {"role": "user", "content": user}]
+
+
+def call_deepseek(day: dt.date, items: list[dict[str, Any]], config: dict[str, Any]) -> str | None:
+    ai_config = config.get("ai", {})
+    if not ai_config.get("enabled", False):
+        return None
+    if ai_config.get("provider") != "deepseek":
+        return None
+
+    api_key = os.environ.get("DEEPSEEK_API_KEY")
+    if not api_key:
+        print("DEEPSEEK_API_KEY is not set; using rule-based Markdown.")
+        return None
+
+    if not items:
+        return None
+
+    base_url = str(ai_config.get("base_url", "https://api.deepseek.com")).rstrip("/")
+    model = ai_config.get("model", "deepseek-v4-flash")
+    payload = {
+        "model": model,
+        "messages": build_ai_prompt_v2(day, items, config),
+        "temperature": 0.2,
+        "max_tokens": 3500,
+    }
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+        "User-Agent": "ai-agent-radar/0.2",
+    }
+
+    try:
+        response = requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=90)
+        response.raise_for_status()
+        data = response.json()
+        return data["choices"][0]["message"]["content"].strip()
+    except Exception as exc:
+        print(f"DeepSeek call failed; using rule-based Markdown. Error: {exc}")
+        return None
 
 
 def fetch_hf_daily_papers(config: dict[str, Any], day: dt.date) -> list[dict[str, Any]]:
@@ -137,7 +322,10 @@ def fetch_hf_daily_papers(config: dict[str, Any], day: dt.date) -> list[dict[str
 
 
 def fetch_hf_spaces(config: dict[str, Any]) -> list[dict[str, Any]]:
-    queries = ["agent leaderboard", "multi-agent benchmark", "web agent", "agent challenge"]
+    queries = config.get("search", {}).get(
+        "hf_space_queries",
+        ["agent leaderboard", "multi-agent benchmark", "web agent", "agent challenge"],
+    )
     items: list[dict[str, Any]] = []
     for q in queries:
         try:
@@ -328,7 +516,12 @@ def main() -> None:
     output_dir = ROOT / config["output_dir"]
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"{day.isoformat()}.md"
-    output_path.write_text(render_markdown(day, digest_items), encoding="utf-8")
+
+    if not digest_items and output_path.exists():
+        print(f"No new items; keeping existing {output_path}")
+    else:
+        ai_markdown = call_deepseek(day, digest_items, config)
+        output_path.write_text(ai_markdown or render_markdown(day, digest_items), encoding="utf-8")
 
     state["seen"] = sorted((seen | {item_id(i) for i in fresh if i.get("url")}) )[-2000:]
     save_state(state)
@@ -338,4 +531,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

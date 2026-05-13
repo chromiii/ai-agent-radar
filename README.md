@@ -14,14 +14,39 @@ The scheduled run is set for 08:30 Australia/Sydney time during AEST, expressed 
 
 ## Cost
 
-This starter version does not call paid AI APIs. It uses:
+This version can run in two modes:
+
+- Rule-based mode: free public data sources only.
+- DeepSeek mode: calls DeepSeek when `DEEPSEEK_API_KEY` is configured.
+
+The public-data collection uses:
 
 - Hugging Face public APIs
 - arXiv public API
 - OpenAlex public API
 - GitHub Actions free quota
 
+DeepSeek usage is pay-as-you-go. The default model is `deepseek-v4-flash`, configured in `config.yaml`.
+
 ## Configure
 
 Edit `config.yaml` to change keywords, arXiv categories, item limits, and output folder.
 
+The current DeepSeek digest asks the model to:
+
+- separate useful new items from low-priority noise
+- explain each important item's basic information and likely innovation point
+- add one short background primer for concepts the user should understand
+- keep original URLs and mark weak evidence instead of inventing details
+
+## DeepSeek Setup
+
+Add this repository secret:
+
+```text
+Settings -> Secrets and variables -> Actions -> New repository secret
+Name: DEEPSEEK_API_KEY
+Value: your DeepSeek API key
+```
+
+If the secret is missing or the API call fails, the workflow falls back to the rule-based Markdown digest.
