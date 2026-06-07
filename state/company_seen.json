@@ -1,8 +1,5 @@
 {
   "seen": {
-    "https://cursor.com/marketplace/automations/product-finance-agent": "2026-05-25",
-    "https://www.minimax.io/news/minimax-hailuo-23": "2026-05-25",
-    "https://www.minimax.io/news/minimax-hailuo-02": "2026-05-25",
     "https://api-docs.deepseek.com/quick_start/agent_integrations/claude_code": "2026-05-28",
     "https://api-docs.deepseek.com/": "2026-05-28",
     "https://api-docs.deepseek.com/zh-cn/": "2026-05-28",
@@ -59,6 +56,7 @@
     "https://www.cursor.com/changelog/enterprise-organizations": "2026-06-04",
     "https://cursor.com/docs/cloud-agent/automations": "2026-06-05",
     "https://cursor.com/blog/cursor-3": "2026-06-05",
-    "https://cursor.com/docs/agent/tools/canvas": "2026-06-06"
+    "https://cursor.com/docs/agent/tools/canvas": "2026-06-06",
+    "https://www.minimax.io/news/minimax-hailuo-23": "2026-06-08"
   }
 }
