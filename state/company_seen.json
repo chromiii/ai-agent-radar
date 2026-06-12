@@ -1,16 +1,5 @@
 {
   "seen": {
-    "https://github.blog/developer-skills/": "2026-05-30",
-    "https://github.blog/developer-skills/application-development/": "2026-05-30",
-    "https://cloud.baidu.com/product/huiboxing-api.html?from=cloud_banner": "2026-05-30",
-    "https://www.minimax.io/models/text/m27": "2026-05-30",
-    "https://www.minimax.io/models/text": "2026-05-30",
-    "https://www.minimax.io/news/a-deep-dive-into-the-minimax-m2-her-2": "2026-05-30",
-    "https://www.minimax.io/news/minimax-m21": "2026-05-30",
-    "https://www.minimax.io/news/minimax-m2": "2026-05-30",
-    "https://www.minimax.io/news/minimax-speech-28": "2026-05-30",
-    "https://mistral.ai/products/vibe/": "2026-05-30",
-    "https://mistral.ai/solutions/coding/": "2026-05-30",
     "https://platform.minimax.io/subscribe/token-plan": "2026-06-02",
     "https://www.minimax.io/models/text/m3": "2026-06-02",
     "https://www.minimax.io/news/music-26": "2026-06-02",
@@ -56,6 +45,13 @@
     "https://blog.google/innovation-and-ai/technology/developers-tools/": "2026-06-12",
     "https://www.microsoft.com/en-us/ai/financial-services/capital-markets": "2026-06-12",
     "https://www.microsoft.com/en-us/microsoft-agent-365": "2026-06-12",
-    "https://microsoft.com/en-us/ai/agent-factory": "2026-06-12"
+    "https://microsoft.com/en-us/ai/agent-factory": "2026-06-12",
+    "https://github.blog/developer-skills/": "2026-06-13",
+    "https://github.blog/developer-skills/application-development/": "2026-06-13",
+    "https://www.minimax.io/models/text/m27": "2026-06-13",
+    "https://www.minimax.io/models/text": "2026-06-13",
+    "https://www.minimax.io/news/minimax-speech-28": "2026-06-13",
+    "https://mistral.ai/products/vibe/": "2026-06-13",
+    "https://mistral.ai/solutions/coding/": "2026-06-13"
   }
 }
