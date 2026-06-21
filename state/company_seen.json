@@ -1,6 +1,5 @@
 {
   "seen": {
-    "https://www.minimax.io/news/minimax-hailuo-23": "2026-06-08",
     "https://www.anthropic.com/news/claude-fable-5-mythos-5": "2026-06-10",
     "https://api-docs.deepseek.com/quick_start/agent_integrations/claude_code": "2026-06-11",
     "https://api-docs.deepseek.com/": "2026-06-11",
@@ -52,6 +51,7 @@
     "https://code.minimax.io": "2026-06-16",
     "https://www.cursor.com/changelog/cloud-in-agents-window": "2026-06-19",
     "https://cursor.com/docs/cloud-agent": "2026-06-19",
-    "https://cursor.com/docs/agent/agents-window": "2026-06-19"
+    "https://cursor.com/docs/agent/agents-window": "2026-06-19",
+    "https://www.minimax.io/news/minimax-hailuo-23": "2026-06-22"
   }
 }
