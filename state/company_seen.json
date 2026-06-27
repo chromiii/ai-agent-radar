@@ -1,6 +1,5 @@
 {
   "seen": {
-    "https://www.anthropic.com/news/claude-opus-4-8": "2026-06-14",
     "https://platform.minimax.io/subscribe/token-plan": "2026-06-16",
     "https://www.minimax.io/models/text/m3": "2026-06-16",
     "https://www.minimax.io/news/music-26": "2026-06-16",
@@ -50,6 +49,7 @@
     "https://www.minimax.io/models/text": "2026-06-27",
     "https://www.minimax.io/news/minimax-speech-28": "2026-06-27",
     "https://mistral.ai/products/vibe/": "2026-06-27",
-    "https://mistral.ai/solutions/coding/": "2026-06-27"
+    "https://mistral.ai/solutions/coding/": "2026-06-27",
+    "https://www.anthropic.com/news/claude-opus-4-8": "2026-06-28"
   }
 }
