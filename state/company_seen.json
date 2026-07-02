@@ -1,8 +1,5 @@
 {
   "seen": {
-    "https://www.cursor.com/changelog/cloud-in-agents-window": "2026-06-19",
-    "https://cursor.com/docs/cloud-agent": "2026-06-19",
-    "https://cursor.com/docs/agent/agents-window": "2026-06-19",
     "https://www.minimax.io/news/minimax-hailuo-23": "2026-06-22",
     "https://api-docs.deepseek.com/quick_start/agent_integrations/claude_code": "2026-06-25",
     "https://api-docs.deepseek.com/": "2026-06-25",
@@ -57,6 +54,7 @@
     "https://www.anthropic.com/news/claude-sonnet-5": "2026-07-02",
     "https://www.cursor.com/automate": "2026-07-02",
     "https://cursor.com/docs/enterprise/organization-groups": "2026-07-02",
-    "https://mistral.ai/pricing/api/": "2026-07-02"
+    "https://mistral.ai/pricing/api/": "2026-07-02",
+    "https://cursor.com/docs/agent/agents-window": "2026-07-03"
   }
 }
