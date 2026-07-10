@@ -1,12 +1,5 @@
 {
   "seen": {
-    "https://github.blog/developer-skills/": "2026-06-27",
-    "https://github.blog/developer-skills/application-development/": "2026-06-27",
-    "https://www.minimax.io/models/text/m27": "2026-06-27",
-    "https://www.minimax.io/models/text": "2026-06-27",
-    "https://www.minimax.io/news/minimax-speech-28": "2026-06-27",
-    "https://mistral.ai/products/vibe/": "2026-06-27",
-    "https://mistral.ai/solutions/coding/": "2026-06-27",
     "https://www.anthropic.com/news/claude-opus-4-8": "2026-06-28",
     "https://platform.minimax.io/subscribe/token-plan": "2026-06-30",
     "https://www.minimax.io/models/text/m3": "2026-06-30",
@@ -56,6 +49,14 @@
     "https://www.microsoft.com/en-us/ai/financial-services/capital-markets": "2026-07-10",
     "https://www.microsoft.com/en-us/microsoft-agent-365": "2026-07-10",
     "https://microsoft.com/en-us/ai/agent-factory": "2026-07-10",
-    "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/": "2026-07-10"
+    "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/": "2026-07-10",
+    "https://github.blog/developer-skills/": "2026-07-11",
+    "https://github.blog/developer-skills/application-development/": "2026-07-11",
+    "https://www.minimax.io/models/text/m27": "2026-07-11",
+    "https://www.minimax.io/models/text": "2026-07-11",
+    "https://www.minimax.io/news/minimax-speech-28": "2026-07-11",
+    "https://ai.meta.com/meta-ai/assistant/": "2026-07-11",
+    "https://mistral.ai/products/vibe/": "2026-07-11",
+    "https://mistral.ai/solutions/coding/": "2026-07-11"
   }
 }
