@@ -1,135 +1,122 @@
 {
-  "generated_at": "2026-07-05",
+  "generated_at": "2026-07-12",
   "range": {
-    "start": "2026-06-29",
-    "end": "2026-07-05"
+    "start": "2026-07-06",
+    "end": "2026-07-12"
   },
   "curated_by": "deepseek-v4-flash",
   "tier1": [
     "coding agent",
-    "computer use",
     "gaia",
+    "reflection",
     "swe-bench",
-    "long-horizon task"
+    "agentic workflow",
+    "agentic search"
   ],
   "tier2": [
-    "agent memory",
-    "reflection",
-    "manus",
-    "research agent",
-    "agent evaluation",
+    "long-horizon task",
     "gui agent",
-    "coding agents",
-    "computer-use agent",
+    "mobileworld",
     "osworld",
-    "multi-agent orchestration"
+    "agent evaluation",
+    "terminal-bench",
+    "multi-agent orchestration",
+    "developer agent",
+    "agent memory",
+    "gaia benchmark"
   ],
   "downrank": [
     "planning",
-    "llm agents",
+    "autonomous agents",
+    "reasoning benchmarks",
     "evaluation framework",
-    "agentic systems",
-    "multi-agent systems",
-    "reasoning model",
-    "agentic ai",
-    "memory systems"
+    "reasoning traces",
+    "multiple agents",
+    "embodied agents",
+    "tracing"
   ],
   "noise": [
-    "which agents",
-    "benchmarks often",
+    "benchmarks show",
+    "existing benchmarks",
+    "such agents",
     "single-agent and multi-agent",
-    "agents face",
-    "improving agentic",
-    "reduce memory",
-    "benchmarks are static",
-    "benchmark includes",
-    "recent agentic",
-    "existing memory"
+    "benchmark constructed",
+    "reasoning in agentic",
+    "during reasoning.",
+    "existing benchmarks remain",
+    "existing benchmarks remain limited",
+    "cot reasoning"
   ],
   "curated": {
     "tier1": [
       "coding agent",
-      "computer use",
       "gaia",
+      "reflection",
       "swe-bench",
-      "long-horizon task"
+      "agentic workflow",
+      "agentic search"
     ],
     "tier2": [
-      "agent memory",
-      "reflection",
-      "manus",
-      "research agent",
-      "agent evaluation",
+      "long-horizon task",
       "gui agent",
-      "coding agents",
-      "computer-use agent",
+      "mobileworld",
       "osworld",
-      "multi-agent orchestration"
+      "agent evaluation",
+      "terminal-bench",
+      "multi-agent orchestration",
+      "developer agent",
+      "agent memory",
+      "gaia benchmark"
     ],
     "downrank": [
       "planning",
-      "llm agents",
+      "autonomous agents",
+      "reasoning benchmarks",
       "evaluation framework",
-      "agentic systems",
-      "multi-agent systems",
-      "reasoning model",
-      "agentic ai",
-      "memory systems"
+      "reasoning traces",
+      "multiple agents",
+      "embodied agents",
+      "tracing"
     ],
     "noise": [
-      "which agents",
-      "benchmarks often",
+      "benchmarks show",
+      "existing benchmarks",
+      "such agents",
       "single-agent and multi-agent",
-      "agents face",
-      "improving agentic",
-      "reduce memory",
-      "benchmarks are static",
-      "benchmark includes",
-      "recent agentic",
-      "existing memory"
+      "benchmark constructed",
+      "reasoning in agentic",
+      "during reasoning.",
+      "existing benchmarks remain",
+      "existing benchmarks remain limited",
+      "cot reasoning"
     ],
     "notes": {
-      "coding agent": "代码生成代理评估方向升温",
-      "computer use": "计算机使用代理方向升温",
-      "gaia": "通用AI助手基准GAIA受关注",
-      "swe-bench": "软件工程代理基准SWE-Bench持续活跃",
-      "long-horizon task": "长周期任务代理能力研究升温"
+      "coding agent": "编码代理持续升温",
+      "gaia": "GAIA基准代理挑战活跃",
+      "reflection": "反思机制代理方向",
+      "swe-bench": "SWE-bench编码代理基准",
+      "agentic workflow": "代理工作流方向升温",
+      "agentic search": "多步检索型研究代理升温"
     }
   },
   "candidate_terms": [
     {
-      "term": "coding agent",
-      "score": 13.26,
-      "count": 9,
-      "sources": [
-        "arxiv",
-        "hf_daily_papers",
-        "hf_space"
-      ],
-      "examples": [
-        "SWE-Together: Evaluating Coding Agents in Interactive User Sessions",
-        "Dockerless: Environment-Free Program Verifier for Coding Agents",
-        "Are Performance-Optimization Benchmarks Reliably Measuring Coding Agents?"
-      ],
-      "seed": true
-    },
-    {
-      "term": "gaia",
+      "term": "planning",
       "score": 12.21,
       "count": 11,
       "sources": [
-        "hf_daily_papers",
-        "hf_space"
+        "arxiv",
+        "hf_daily_papers"
       ],
       "examples": [
-        "SkillHone: A Harness for Continual Agent Skill Evolution Through Persistent Decision History",
-        "PACE: A Proxy for Agentic Capability Evaluation",
-        "sumangempire/gaia-agent-challenge"
+        "VLA-Corrector: Lightweight Detect-and-Correct Inference for Adaptive Action Horizon",
+        "ACID: Action Consistency via Inverse Dynamics for Planning with World Models",
+        "Parallelized Autoregressive Decoding for Omni-Modal Dense Video Captioning"
       ],
       "seed": true
     },
     {
-      "term": "swe-bench",
+      "term": "coding agent",
       "score": 11.52,
       "count": 4,
       "sources": [
@@ -138,73 +125,57 @@
         "hf_space"
       ],
       "examples": [
-        "Dockerless: Environment-Free Program Verifier for Coding Agents",
-        "PACE: A Proxy for Agentic Capability Evaluation",
-        "Samabe1109/SWE-bench-SWE-agent-LM-32B"
+        "SkillOpt-Lite: Better and Faster Agent Self-evolution via One Line of Vibe",
+        "AgentLens: Production-Assessed Trajectory Reviews for Coding Agent Evaluation",
+        "taagarwa/coding-agent-leaderboard"
       ],
       "seed": true
     },
     {
-      "term": "planning",
-      "score": 11.49,
-      "count": 8,
+      "term": "gaia",
+      "score": 10.26,
+      "count": 9,
       "sources": [
-        "arxiv",
-        "hf_daily_papers"
+        "hf_space"
       ],
       "examples": [
-        "Qwen-RobotNav Technical Report: A Scalable Navigation Model Designed for an Agentic Navigation System",
-        "Vesta: A Generalist Embodied Reasoning Model",
-        "AutoTrainess: Teaching Language Models to Improve Language Models Autonomously"
-      ],
-      "seed": true
-    },
-    {
-      "term": "long-horizon task",
-      "score": 9.7,
-      "count": 7,
-      "sources": [
-        "hf_daily_papers"
-      ],
-      "examples": [
-        "AgentOdyssey: Open-Ended Long-Horizon Text Game Generation for Test-Time Continual Learning Agents",
-        "Scaling the Horizon, Not the Parameters: Reaching Trillion-Parameter Performance with a 35B Agent",
-        "Seed2.0 Model Card: Towards Intelligence Frontier for Real-World Complexity"
-      ],
-      "seed": true
-    },
-    {
-      "term": "agent memory",
-      "score": 9.47,
-      "count": 3,
-      "sources": [
-        "arxiv",
-        "hf_daily_papers"
-      ],
-      "examples": [
-        "MemSyco-Bench: Benchmarking Sycophancy in Agent Memory",
-        "A-TMA: Decoupling State-Aware Memory Failures in Long-Term Agent Memory",
-        "ContextSniper: AntTrail's Token-Efficient Code Memory for Repository-Level Program Repair"
+        "sumangempire/gaia-agent-challenge",
+        "lakshaykumarr28/GAIA-Benchmark-Agent",
+        "nkrishnas/gaia-benchmark-agent"
       ],
       "seed": true
     },
     {
       "term": "reflection",
-      "score": 9.47,
-      "count": 3,
+      "score": 10.02,
+      "count": 4,
       "sources": [
         "arxiv",
         "hf_daily_papers"
       ],
       "examples": [
-        "AgenticSTS: A Bounded-Memory Testbed for Long-Horizon LLM Agents",
-        "SkillCoach: Self-Evolving Rubrics for Evaluating and Enhancing Agentic Skill-Use",
-        "Episodic-to-Semantic Consolidation Without Identity Drift"
+        "MentalThink: Shaping Thoughts in Mental SVG World",
+        "Automating the Design of Embodied Agent Architectures",
+        "Flash-BoN: Instant Drafts for Inference-Time Scaling in Diffusion Models"
       ],
       "seed": true
     },
     {
-      "term": "manus",
+      "term": "swe-bench",
+      "score": 8.75,
+      "count": 2,
+      "sources": [
+        "hf_daily_papers",
+        "hf_space"
+      ],
+      "examples": [
+        "Single-Rollout Asynchronous Optimization for Agentic Reinforcement Learning",
+        "Samabe1109/SWE-bench-SWE-agent-LM-32B"
+      ],
+      "seed": true
+    },
+    {
+      "term": "agentic workflow",
       "score": 8.75,
       "count": 2,
       "sources": [
@@ -212,74 +183,45 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "Towards Automating Scientific Review with Google's Paper Assistant Tool",
-        "Grounded autonomous research: a fault-tolerant LLM pipeline from corpus to manuscript in frontier computational physics"
+        "Jet-Long: Efficient Long-Context Extension with Dynamic Bifocal RoPE",
+        "ProjAgent: Procedural Similarity Retrieval for Repository-Level Code Generation"
       ],
       "seed": true
     },
     {
-      "term": "research agent",
-      "score": 8.75,
+      "term": "long-horizon task",
+      "score": 7.25,
       "count": 2,
       "sources": [
-        "arxiv",
         "hf_daily_papers"
       ],
       "examples": [
-        "SkillHone: A Harness for Continual Agent Skill Evolution Through Persistent Decision History",
-        "Grounded autonomous research: a fault-tolerant LLM pipeline from corpus to manuscript in frontier computational physics"
-      ],
-      "seed": true
-    },
-    {
-      "term": "agent evaluation",
-      "score": 8.75,
-      "count": 2,
-      "sources": [
-        "arxiv",
-        "hf_daily_papers"
-      ],
-      "examples": [
-        "PACE: A Proxy for Agentic Capability Evaluation",
-        "What LLM Agents Say When No One Is Watching: Social Structure and Latent Objective Emergence in Multi-Agent Debates"
+        "RoboTALES: Learning Reasoning-Guided Robot Policies via Task-Aligned Simulated Futures",
+        "Remember When It Matters: Proactive Memory Agent for Long-Horizon Agents"
       ],
       "seed": true
     },
     {
       "term": "gui agent",
-      "score": 7.25,
-      "count": 2,
-      "sources": [
-        "hf_daily_papers"
-      ],
-      "examples": [
-        "Bridging VideoQA and Video-Guided Agentic Tasks via Generalized Keyframe Extraction",
-        "GUICrafter: Weakly-Supervised GUI Agent Leveraging Massive Unannotated Screenshots"
-      ],
-      "seed": true
-    },
-    {
-      "term": "human intervention",
-      "score": 7.25,
-      "count": 2,
-      "sources": [
-        "arxiv"
-      ],
-      "examples": [
-        "Grounded autonomous research: a fault-tolerant LLM pipeline from corpus to manuscript in frontier computational physics",
-        "Criticality-Based Guard Rail Validation for AI Agent Decisions in Autonomous Telecom Networks"
-      ],
-      "seed": true
-    },
-    {
-      "term": "computer-use agent",
       "score": 6.23,
       "count": 1,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "TUA-Bench: A Benchmark for General-Purpose Terminal-Use Agents"
+        "UI-MOPD: Multi-Platform On-Policy Distillation for Continual GUI Agent Learning"
+      ],
+      "seed": true
+    },
+    {
+      "term": "mobileworld",
+      "score": 6.23,
+      "count": 1,
+      "sources": [
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "UI-MOPD: Multi-Platform On-Policy Distillation for Continual GUI Agent Learning"
       ],
       "seed": true
     },
@@ -291,7 +233,55 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "OSWorld2.0: Benchmarking Computer Use Agents on Long-Horizon Real-World Tasks"
+        "UI-MOPD: Multi-Platform On-Policy Distillation for Continual GUI Agent Learning"
+      ],
+      "seed": true
+    },
+    {
+      "term": "agent evaluation",
+      "score": 6.23,
+      "count": 1,
+      "sources": [
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "AgentLens: Production-Assessed Trajectory Reviews for Coding Agent Evaluation"
+      ],
+      "seed": true
+    },
+    {
+      "term": "tracing",
+      "score": 6.23,
+      "count": 1,
+      "sources": [
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "Ideas Have Genomes: Benchmarking Scientific Lineage Reasoning and Lineage-Grounded Idea Generation"
+      ],
+      "seed": true
+    },
+    {
+      "term": "terminal-bench",
+      "score": 6.23,
+      "count": 1,
+      "sources": [
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "Remember When It Matters: Proactive Memory Agent for Long-Horizon Agents"
+      ],
+      "seed": true
+    },
+    {
+      "term": "auditability",
+      "score": 6.23,
+      "count": 1,
+      "sources": [
+        "arxiv"
+      ],
+      "examples": [
+        "SolarChain-Eval: A Physics-Constrained Benchmark for Trustworthy Economic Agents in Decentralized Energy Markets"
       ],
       "seed": true
     },
@@ -300,22 +290,10 @@
       "score": 6.23,
       "count": 1,
       "sources": [
-        "hf_daily_papers"
-      ],
-      "examples": [
-        "BioInsight: Multi-Agent Orchestration for Interactive Biomedical Knowledge Discovery"
-      ],
-      "seed": true
-    },
-    {
-      "term": "agentic workflow",
-      "score": 6.23,
-      "count": 1,
-      "sources": [
         "arxiv"
       ],
       "examples": [
-        "Language Models as Measurement Apparatus for Culture"
+        "WebSwarm: Recursive Multi-Agent Orchestration for Deep-and-Wide Web Search"
       ],
       "seed": true
     },
@@ -327,57 +305,51 @@
         "arxiv"
       ],
       "examples": [
-        "Bringing Agentic Search to Earth Observation Data Discovery"
+        "WebSwarm: Recursive Multi-Agent Orchestration for Deep-and-Wide Web Search"
       ],
       "seed": true
     },
     {
-      "term": "llm agents",
-      "score": 8.2,
-      "count": 7,
+      "term": "developer agent",
+      "score": 6.23,
+      "count": 1,
       "sources": [
-        "arxiv",
-        "hf_daily_papers"
+        "arxiv"
       ],
       "examples": [
-        "Agentic Abstention: Do Agents Know When to Stop Instead of Act?",
-        "Managing Procedural Memory in LLM Agents: Control, Adaptation, and Evaluation",
-        "AgenticSTS: A Bounded-Memory Testbed for Long-Horizon LLM Agents"
+        "TRACE: A Two-Channel Robust Attribution Watermark via Complementary Embeddings for LLM-Agent Trajectories"
       ],
-      "seed": false
+      "seed": true
     },
     {
-      "term": "coding agents",
-      "score": 7.86,
-      "count": 6,
+      "term": "agent memory",
+      "score": 6.23,
+      "count": 1,
       "sources": [
-        "arxiv",
-        "hf_daily_papers"
+        "arxiv"
       ],
       "examples": [
-        "SWE-Together: Evaluating Coding Agents in Interactive User Sessions",
-        "Dockerless: Environment-Free Program Verifier for Coding Agents",
-        "Are Performance-Optimization Benchmarks Reliably Measuring Coding Agents?"
+        "What to Keep, What to Forget: A Rate--Distortion View of Memory Compaction in LLMs and Agents"
       ],
-      "seed": false
+      "seed": true
     },
     {
-      "term": "computer use",
+      "term": "benchmarks show",
       "score": 7.48,
       "count": 5,
       "sources": [
-        "hf_daily_papers",
-        "hf_space"
+        "arxiv",
+        "hf_daily_papers"
       ],
       "examples": [
-        "OSWorld2.0: Benchmarking Computer Use Agents on Long-Horizon Real-World Tasks",
-        "likhonsheikh/open-computer-use-agent",
-        "smolagents/computer-use-agent"
+        "AnyBokeh: Physics-Guided Any-to-Any Bokeh Editing with Optical Fingerprint Transfer",
+        "Bridging Interleaved Multi-Modal Reasoning as a Unified Decision Process",
+        "Look Before You Leap: Distilling Tree Search into Action Evaluation for Frozen VLA Models"
       ],
       "seed": false
     },
     {
-      "term": "evaluation framework",
+      "term": "autonomous agents",
       "score": 7.02,
       "count": 4,
       "sources": [
@@ -385,14 +357,44 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "Formalizing Latent Thoughts: Four Axioms of Thought Representation in LLMs",
-        "AgentOdyssey: Open-Ended Long-Horizon Text Game Generation for Test-Time Continual Learning Agents",
-        "PerceptionRubrics: Calibrating Multimodal Evaluation to Human Perception"
+        "SkillOpt-Lite: Better and Faster Agent Self-evolution via One Line of Vibe",
+        "SolarChain-Eval: A Physics-Constrained Benchmark for Trustworthy Economic Agents in Decentralized Energy Markets",
+        "Multi-Modal, Multi-Environment Machine Teaching for Robust Reward Learning"
       ],
       "seed": false
     },
     {
-      "term": "agentic systems",
+      "term": "reasoning benchmarks",
+      "score": 7.02,
+      "count": 4,
+      "sources": [
+        "arxiv",
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "MentalThink: Shaping Thoughts in Mental SVG World",
+        "Single-Rollout Asynchronous Optimization for Agentic Reinforcement Learning",
+        "OpenCoF: Learning to Reason Through Video Generation"
+      ],
+      "seed": false
+    },
+    {
+      "term": "existing benchmarks",
+      "score": 7.02,
+      "count": 4,
+      "sources": [
+        "arxiv",
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "RoboDojo: A Unified Sim-and-Real Benchmark for Comprehensive Evaluation of Generalist Robot Manipulation Policies",
+        "UniClawBench: A Universal Benchmark for Proactive Agents on Real-World Tasks",
+        "DexVerse: A Modular Benchmark for Multi-Task, Multi-Embodiment Dexterous Manipulation"
+      ],
+      "seed": false
+    },
+    {
+      "term": "evaluation framework",
       "score": 6.47,
       "count": 3,
       "sources": [
@@ -400,14 +402,14 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "Qwen-RobotNav Technical Report: A Scalable Navigation Model Designed for an Agentic Navigation System",
-        "Behind the Refusal: Determining Guardrail Activation via Behavioral Monitoring",
-        "ElephantAgent: Contextual State Continuity in Agentic Systems"
+        "Measuring the Gap Between Human and LLM Research Ideas",
+        "EdgeBench: Unveiling Scaling Laws of Learning from Real-World Environments",
+        "Persuasion Attacks Can Decrease Effectiveness of CoT Monitoring"
       ],
       "seed": false
     },
     {
-      "term": "which agents",
+      "term": "reasoning traces",
       "score": 6.47,
       "count": 3,
       "sources": [
@@ -415,14 +417,14 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "GBC: Gradient-Based Connections for Optimizing Multi-Agent Systems",
-        "What LLM Agents Say When No One Is Watching: Social Structure and Latent Objective Emergence in Multi-Agent Debates",
-        "Securing People and their Machines Against Major Faults"
+        "Gemma 4 Technical Report",
+        "Accurate, Interdisciplinary and Transparent Structure-property Understanding with Deep Native Structural Reasoning",
+        "Persuasion Attacks Can Decrease Effectiveness of CoT Monitoring"
       ],
       "seed": false
     },
     {
-      "term": "benchmarks often",
+      "term": "multimodal agent",
       "score": 6.47,
       "count": 3,
       "sources": [
@@ -430,9 +432,24 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "Video-MME-Logical: A Controlled Diagnostic Benchmark for Video Temporal-Logical Reasoning",
-        "When Search Agents Should Ask: DiscoBench for Clarification-Aware Deep Search",
-        "TestEvo-Bench: An Executable and Live Benchmark for Test and Code Co-Evolution"
+        "Light-Omni: Reflex over Reasoning in Agentic Video Understanding with Long-Term Memory",
+        "CanvasAgent: Enabling Complex Image Creation and Editing via Visual Tool Orchestration",
+        "Cognitive-structured Multimodal Agent for Multimodal Understanding, Generation, and Editing"
+      ],
+      "seed": false
+    },
+    {
+      "term": "such agents",
+      "score": 6.47,
+      "count": 3,
+      "sources": [
+        "arxiv",
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "UniClawBench: A Universal Benchmark for Proactive Agents on Real-World Tasks",
+        "Formal Mechanisms for Market Stability in Self-Interested Agent Societies: A Marketplace Simulation Study",
+        "Token-Flow Firewall: Semantic Runtime Auditing for Persistent AI Agents"
       ],
       "seed": false
     },
@@ -451,6 +468,34 @@
       "seed": false
     },
     {
+      "term": "agent behavior",
+      "score": 5.75,
+      "count": 2,
+      "sources": [
+        "arxiv",
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "Securing the AI Agent: A Unified Framework for Multi-Layer Agent Red Teaming",
+        "Open-ended Multi-agent Autocurricula via Visual Inspection of Policies with Multi-modal LLMs"
+      ],
+      "seed": false
+    },
+    {
+      "term": "ai agents.",
+      "score": 5.75,
+      "count": 2,
+      "sources": [
+        "arxiv",
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "Securing the AI Agent: A Unified Framework for Multi-Layer Agent Red Teaming",
+        "Token-Flow Firewall: Semantic Runtime Auditing for Persistent AI Agents"
+      ],
+      "seed": false
+    },
+    {
       "term": "single-agent and multi-agent",
       "score": 5.75,
       "count": 2,
@@ -459,13 +504,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "GBC: Gradient-Based Connections for Optimizing Multi-Agent Systems",
-        "UA-ChatDev: Uncertainty-Aware Multi-Agent Collaboration for Reliable Software Development"
+        "Teaching LLMs to Recommend and Defer in Underrepresented Epilepsy Care",
+        "WebSwarm: Recursive Multi-Agent Orchestration for Deep-and-Wide Web Search"
       ],
       "seed": false
     },
     {
-      "term": "agent output",
+      "term": "benchmark constructed",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -473,13 +518,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "GBC: Gradient-Based Connections for Optimizing Multi-Agent Systems",
-        "ContextNest: Verifiable Context Governance for Autonomous AI Agent"
+        "GigaWorld-1: A Roadmap to Build World Models for Robot Policy Evaluation",
+        "OmniFood-Bench: Evaluating VLMs for Nutrient Reasoning and Personalized Health Advice"
       ],
       "seed": false
     },
     {
-      "term": "downstream agents",
+      "term": "search agents",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -487,13 +532,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "GBC: Gradient-Based Connections for Optimizing Multi-Agent Systems",
-        "UA-ChatDev: Uncertainty-Aware Multi-Agent Collaboration for Reliable Software Development"
+        "Multi-Turn Agentic Scientific Literature Search via Workflow Induction",
+        "WebSwarm: Recursive Multi-Agent Orchestration for Deep-and-Wide Web Search"
       ],
       "seed": false
     },
     {
-      "term": "multi-agent systems",
+      "term": "multiple agents",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -501,13 +546,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "GBC: Gradient-Based Connections for Optimizing Multi-Agent Systems",
-        "QFedAgent: Quantum-Enhanced Personalized Federated Learning for Multi-Agent Activity Recognition"
+        "Multiplayer Interactive World Models with Representation Autoencoders",
+        "Securing Autonomous Vehicle Systems via Twin-Aware Federated Reinforcement Learning"
       ],
       "seed": false
     },
     {
-      "term": "agents face",
+      "term": "coding agents",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -515,13 +560,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "Thinking While Speaking: Inference-Time Knowledge Transfer for Responsive and Intelligent Conversational Voice Agents",
-        "Episodic-to-Semantic Consolidation Without Identity Drift"
+        "SkillOpt-Lite: Better and Faster Agent Self-evolution via One Line of Vibe",
+        "Harness VLA: Steering Frozen VLAs into Reliable Manipulation Primitives via Memory-Guided Agents"
       ],
       "seed": false
     },
     {
-      "term": "reasoning model",
+      "term": "reasoning in agentic",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -529,13 +574,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "Vesta: A Generalist Embodied Reasoning Model",
-        "Reasoning LLM Improves Speaker Recognition in Long-form TV Dramas"
+        "Light-Omni: Reflex over Reasoning in Agentic Video Understanding with Long-Term Memory",
+        "CausalDS: Benchmarking Causal Reasoning in Data-Science Agents"
       ],
       "seed": false
     },
     {
-      "term": "episodic memory",
+      "term": "multimodal agents",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -543,13 +588,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "AgentOdyssey: Open-Ended Long-Horizon Text Game Generation for Test-Time Continual Learning Agents",
-        "Episodic-to-Semantic Consolidation Without Identity Drift"
+        "CanvasAgent: Enabling Complex Image Creation and Editing via Visual Tool Orchestration",
+        "Cognitive-structured Multimodal Agent for Multimodal Understanding, Generation, and Editing"
       ],
       "seed": false
     },
     {
-      "term": "agentic ai",
+      "term": "during reasoning.",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -557,13 +602,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "Towards Automating Scientific Review with Google's Paper Assistant Tool",
-        "Hardware-Enforced Semantic Coordination for Safety-Critical Real-Time Autonomous Systems"
+        "Accurate, Interdisciplinary and Transparent Structure-property Understanding with Deep Native Structural Reasoning",
+        "Cognitive-structured Multimodal Agent for Multimodal Understanding, Generation, and Editing"
       ],
       "seed": false
     },
     {
-      "term": "improving agentic",
+      "term": "existing benchmarks remain",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -571,13 +616,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "Agentic Abstention: Do Agents Know When to Stop Instead of Act?",
-        "Beyond Supervised Clarification: Input Rewriting with LLMs for Dialogue Discourse Parsing"
+        "RoboDojo: A Unified Sim-and-Real Benchmark for Comprehensive Evaluation of Generalist Robot Manipulation Policies",
+        "DexVerse: A Modular Benchmark for Multi-Task, Multi-Embodiment Dexterous Manipulation"
       ],
       "seed": false
     },
     {
-      "term": "reasoning effort",
+      "term": "benchmarks remain",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -585,13 +630,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "TUA-Bench: A Benchmark for General-Purpose Terminal-Use Agents",
-        "Reasoning effort, not tool access, buys first-try reliability in agentic code generation: an observational study"
+        "RoboDojo: A Unified Sim-and-Real Benchmark for Comprehensive Evaluation of Generalist Robot Manipulation Policies",
+        "DexVerse: A Modular Benchmark for Multi-Task, Multi-Embodiment Dexterous Manipulation"
       ],
       "seed": false
     },
     {
-      "term": "reduce memory",
+      "term": "existing benchmarks remain limited",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -599,13 +644,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "ReFreeKV: Towards Threshold-Free KV Cache Compression",
-        "A-TMA: Decoupling State-Aware Memory Failures in Long-Term Agent Memory"
+        "RoboDojo: A Unified Sim-and-Real Benchmark for Comprehensive Evaluation of Generalist Robot Manipulation Policies",
+        "DexVerse: A Modular Benchmark for Multi-Task, Multi-Embodiment Dexterous Manipulation"
       ],
       "seed": false
     },
     {
-      "term": "benchmarks are static",
+      "term": "benchmarks remain limited",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -613,13 +658,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "SWE-Together: Evaluating Coding Agents in Interactive User Sessions",
-        "A$^{2}$utoLPBench: An Auto-Generated, Agent-Friendly LP Benchmark via Inverse-KKT Construction"
+        "RoboDojo: A Unified Sim-and-Real Benchmark for Comprehensive Evaluation of Generalist Robot Manipulation Policies",
+        "DexVerse: A Modular Benchmark for Multi-Task, Multi-Embodiment Dexterous Manipulation"
       ],
       "seed": false
     },
     {
-      "term": "benchmark includes",
+      "term": "state memory",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -627,13 +672,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "Managing Procedural Memory in LLM Agents: Control, Adaptation, and Evaluation",
-        "Distributed Attacks in Persistent-State AI Control"
+        "Sparse Delta Memory: Scaling the State of Linear RNNs through Sparsity",
+        "AutoPersonas: A Multi-Timescale Loop Engine for Open-Ended Persona Evolution"
       ],
       "seed": false
     },
     {
-      "term": "memory systems",
+      "term": "embodied agents",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -641,13 +686,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "Managing Procedural Memory in LLM Agents: Control, Adaptation, and Evaluation",
-        "A-TMA: Decoupling State-Aware Memory Failures in Long-Term Agent Memory"
+        "Automating the Design of Embodied Agent Architectures",
+        "Early to Share, Late to Save: Synchronisation-Driven Communication Gating in Bandwidth-Constrained Cooperative VLN"
       ],
       "seed": false
     },
     {
-      "term": "agentic frameworks",
+      "term": "tools verifies",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -655,13 +700,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "VideoSearch-R1: Iterative Video Retrieval and Reasoning via Soft Query Refinement",
-        "Adoption and Ecosystem Health: A Longitudinal Analysis of Open-Source Multi-Agent Frameworks"
+        "AgentLens: Production-Assessed Trajectory Reviews for Coding Agent Evaluation",
+        "TTHE: Test-Time Harness Evolution"
       ],
       "seed": false
     },
     {
-      "term": "recent agentic",
+      "term": "abstract reasoning",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -669,13 +714,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "VideoSearch-R1: Iterative Video Retrieval and Reasoning via Soft Query Refinement",
-        "Steerability via constraints: a substrate for scalable oversight of coding agents"
+        "RoboTALES: Learning Reasoning-Guided Robot Policies via Task-Aligned Simulated Futures",
+        "CausalDS: Benchmarking Causal Reasoning in Data-Science Agents"
       ],
       "seed": false
     },
     {
-      "term": "llm-based agents",
+      "term": "however existing benchmarks",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -683,13 +728,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "MemSyco-Bench: Benchmarking Sycophancy in Agent Memory",
-        "Atomic Task Graph: A Unified Framework for Agentic Planning and Execution"
+        "UniClawBench: A Universal Benchmark for Proactive Agents on Real-World Tasks",
+        "DexVerse: A Modular Benchmark for Multi-Task, Multi-Embodiment Dexterous Manipulation"
       ],
       "seed": false
     },
     {
-      "term": "existing memory",
+      "term": "reward functions",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -697,13 +742,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "MemSyco-Bench: Benchmarking Sycophancy in Agent Memory",
-        "A-TMA: Decoupling State-Aware Memory Failures in Long-Term Agent Memory"
+        "DrugGen 2: A disease-aware language model for enhancing drug discovery",
+        "Multi-Modal, Multi-Environment Machine Teaching for Robust Reward Learning"
       ],
       "seed": false
     },
     {
-      "term": "agents become",
+      "term": "coding and agentic",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -711,13 +756,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "AutoTrainess: Teaching Language Models to Improve Language Models Autonomously",
-        "Distributed Attacks in Persistent-State AI Control"
+        "Jet-Long: Efficient Long-Context Extension with Dynamic Bifocal RoPE",
+        "TTHE: Test-Time Harness Evolution"
       ],
       "seed": false
     },
     {
-      "term": "model agents",
+      "term": "cot reasoning",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -725,13 +770,13 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "AutoTrainess: Teaching Language Models to Improve Language Models Autonomously",
-        "ContextSniper: AntTrail's Token-Efficient Code Memory for Repository-Level Program Repair"
+        "OpenCoF: Learning to Reason Through Video Generation",
+        "Persuasion Attacks Can Decrease Effectiveness of CoT Monitoring"
       ],
       "seed": false
     },
     {
-      "term": "language model agents",
+      "term": "intermediate reasoning",
       "score": 5.75,
       "count": 2,
       "sources": [
@@ -739,64 +784,8 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "AutoTrainess: Teaching Language Models to Improve Language Models Autonomously",
-        "ContextSniper: AntTrail's Token-Efficient Code Memory for Repository-Level Program Repair"
-      ],
-      "seed": false
-    },
-    {
-      "term": "agent toward",
-      "score": 5.75,
-      "count": 2,
-      "sources": [
-        "arxiv",
-        "hf_daily_papers"
-      ],
-      "examples": [
-        "AutoTrainess: Teaching Language Models to Improve Language Models Autonomously",
-        "SkillFuzz: Fuzzing Skill Composition for Implicit Intents Discovery in Open Skill Marketplaces"
-      ],
-      "seed": false
-    },
-    {
-      "term": "reasoning remains",
-      "score": 5.75,
-      "count": 2,
-      "sources": [
-        "arxiv",
-        "hf_daily_papers"
-      ],
-      "examples": [
-        "Perceive-to-Reason: Decoupling Perception and Reasoning for Fine-Grained Visual Reasoning",
-        "Hardware-Enforced Semantic Coordination for Safety-Critical Real-Time Autonomous Systems"
-      ],
-      "seed": false
-    },
-    {
-      "term": "multi-agent system",
-      "score": 5.75,
-      "count": 2,
-      "sources": [
-        "arxiv",
-        "hf_daily_papers"
-      ],
-      "examples": [
-        "BioInsight: Multi-Agent Orchestration for Interactive Biomedical Knowledge Discovery",
-        "AgentsCAD: Automated Design for Manufacturing of FDM Parts via Multi-Agent LLM Reasoning and Geometric Feature Recognition"
-      ],
-      "seed": false
-    },
-    {
-      "term": "benchmark tasks",
-      "score": 5.75,
-      "count": 2,
-      "sources": [
-        "arxiv",
-        "hf_daily_papers"
-      ],
-      "examples": [
-        "Are Performance-Optimization Benchmarks Reliably Measuring Coding Agents?",
-        "TestEvo-Bench: An Executable and Live Benchmark for Test and Code Co-Evolution"
+        "OpenCoF: Learning to Reason Through Video Generation",
+        "ProjAgent: Procedural Similarity Retrieval for Repository-Level Code Generation"
       ],
       "seed": false
     }
