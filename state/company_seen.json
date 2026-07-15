@@ -1,9 +1,5 @@
 {
   "seen": {
-    "https://www.anthropic.com/news/claude-sonnet-5": "2026-07-02",
-    "https://www.cursor.com/automate": "2026-07-02",
-    "https://cursor.com/docs/enterprise/organization-groups": "2026-07-02",
-    "https://mistral.ai/pricing/api/": "2026-07-02",
     "https://cursor.com/docs/agent/agents-window": "2026-07-03",
     "https://www.minimax.io/news/minimax-hailuo-23": "2026-07-06",
     "https://www.anthropic.com/features/making-of-claude-code": "2026-07-08",
@@ -56,6 +52,10 @@
     "https://code.minimax.io": "2026-07-14",
     "https://autoglm.zhipuai.cn/?channel=official": "2026-07-15",
     "https://autoglm.zhipuai.cn": "2026-07-15",
-    "https://bigmodel.cn": "2026-07-15"
+    "https://bigmodel.cn": "2026-07-15",
+    "https://www.anthropic.com/news/claude-sonnet-5": "2026-07-16",
+    "https://www.cursor.com/automate": "2026-07-16",
+    "https://cursor.com/docs/enterprise/organization-groups": "2026-07-16",
+    "https://mistral.ai/pricing/api/": "2026-07-16"
   }
 }
