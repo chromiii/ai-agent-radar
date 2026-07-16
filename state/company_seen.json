@@ -1,6 +1,5 @@
 {
   "seen": {
-    "https://cursor.com/docs/agent/agents-window": "2026-07-03",
     "https://www.minimax.io/news/minimax-hailuo-23": "2026-07-06",
     "https://www.anthropic.com/features/making-of-claude-code": "2026-07-08",
     "https://api-docs.deepseek.com/quick_start/agent_integrations/claude_code": "2026-07-09",
@@ -56,6 +55,8 @@
     "https://www.anthropic.com/news/claude-sonnet-5": "2026-07-16",
     "https://www.cursor.com/automate": "2026-07-16",
     "https://cursor.com/docs/enterprise/organization-groups": "2026-07-16",
-    "https://mistral.ai/pricing/api/": "2026-07-16"
+    "https://mistral.ai/pricing/api/": "2026-07-16",
+    "https://cursor.com/docs/agent/agents-window": "2026-07-17",
+    "https://platform.minimax.io/docs/guides/music-generation": "2026-07-17"
   }
 }
