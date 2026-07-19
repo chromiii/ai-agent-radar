@@ -1,6 +1,5 @@
 {
   "seen": {
-    "https://www.minimax.io/news/minimax-hailuo-23": "2026-07-06",
     "https://www.anthropic.com/features/making-of-claude-code": "2026-07-08",
     "https://api-docs.deepseek.com/quick_start/agent_integrations/claude_code": "2026-07-09",
     "https://api-docs.deepseek.com/": "2026-07-09",
@@ -60,6 +59,8 @@
     "https://platform.minimax.io/docs/guides/music-generation": "2026-07-17",
     "https://www.kimi.com/blog/kimi-k3": "2026-07-18",
     "https://www.kimi.com/blog/perception-bench": "2026-07-18",
-    "https://developer.meta.com/ai/": "2026-07-19"
+    "https://developer.meta.com/ai/": "2026-07-19",
+    "https://www.kimi.com/zh-cn/business": "2026-07-20",
+    "https://www.minimax.io/news/minimax-hailuo-23": "2026-07-20"
   }
 }
