@@ -1,8 +1,5 @@
 {
   "seen": {
-    "https://autoglm.zhipuai.cn/?channel=official": "2026-07-15",
-    "https://autoglm.zhipuai.cn": "2026-07-15",
-    "https://bigmodel.cn": "2026-07-15",
     "https://www.anthropic.com/news/claude-sonnet-5": "2026-07-16",
     "https://www.cursor.com/automate": "2026-07-16",
     "https://cursor.com/docs/enterprise/organization-groups": "2026-07-16",
@@ -59,6 +56,7 @@
     "https://platform.minimax.io/subscribe/token-plan": "2026-07-28",
     "https://www.anthropic.com/news/cognizant-anthropic": "2026-07-28",
     "https://www.minimax.io/models/text/m3": "2026-07-28",
-    "https://code.minimax.io": "2026-07-28"
+    "https://code.minimax.io": "2026-07-28",
+    "https://cursor.com/api/auth/checkoutDeepControl?tier=express": "2026-07-29"
   }
 }
