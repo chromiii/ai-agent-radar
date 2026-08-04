@@ -1,6 +1,5 @@
 {
   "seen": {
-    "https://www.anthropic.com/features/making-of-claude-code": "2026-07-22",
     "https://api-docs.deepseek.com/quick_start/agent_integrations/claude_code": "2026-07-23",
     "https://api-docs.deepseek.com/": "2026-07-23",
     "https://api-docs.deepseek.com/zh-cn/": "2026-07-23",
@@ -59,6 +58,7 @@
     "https://bigmodel.cn": "2026-08-01",
     "https://www.minimax.io/blog/minimax-h3": "2026-08-01",
     "https://hub.minimax.io/": "2026-08-01",
-    "https://www.kimi.com/zh-cn/business": "2026-08-03"
+    "https://www.kimi.com/zh-cn/business": "2026-08-03",
+    "https://www.anthropic.com/features/making-of-claude-code": "2026-08-05"
   }
 }
