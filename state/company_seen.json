@@ -1,7 +1,5 @@
 {
   "seen": {
-    "https://www.anthropic.com/news/claude-opus-5": "2026-07-26",
-    "https://developer.meta.com/ai/?utm_source=ai_meta_site&utm_medium=web&utm_campaign=nav_AI-developers_07242026&utm_content=nav_AI-developers": "2026-07-26",
     "https://platform.minimax.io/subscribe/token-plan": "2026-07-28",
     "https://www.anthropic.com/news/cognizant-anthropic": "2026-07-28",
     "https://www.minimax.io/models/text/m3": "2026-07-28",
@@ -55,6 +53,13 @@
     "https://github.blog/developer-skills/": "2026-08-08",
     "https://github.blog/developer-skills/application-development/": "2026-08-08",
     "https://www.minimax.io/models/text/m27": "2026-08-08",
-    "https://www.minimax.io/models/text": "2026-08-08"
+    "https://www.minimax.io/models/text": "2026-08-08",
+    "https://www.anthropic.com/news/claude-opus-5": "2026-08-09",
+    "https://www.minimax.io/news/minimax-speech-28": "2026-08-09",
+    "https://design.minimax.io/": "2026-08-09",
+    "https://developer.meta.com/ai/?utm_source=ai_meta_site&utm_medium=web&utm_campaign=nav_AI-developers_07242026&utm_content=nav_AI-developers": "2026-08-09",
+    "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/": "2026-08-09",
+    "https://mistral.ai/products/vibe/": "2026-08-09",
+    "https://mistral.ai/solutions/coding/": "2026-08-09"
   }
 }
