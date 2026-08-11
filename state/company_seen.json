@@ -1,6 +1,5 @@
 {
   "seen": {
-    "https://cursor.com/api/auth/checkoutDeepControl?tier=express": "2026-07-29",
     "https://www.anthropic.com/news/claude-sonnet-5": "2026-07-30",
     "https://www.cursor.com/automate": "2026-07-30",
     "https://mistral.ai/pricing/api/": "2026-07-30",
@@ -58,6 +57,7 @@
     "https://mistral.ai/products/vibe/": "2026-08-09",
     "https://mistral.ai/solutions/coding/": "2026-08-09",
     "https://www.minimax.io/models/text/m3": "2026-08-11",
-    "https://code.minimax.io": "2026-08-11"
+    "https://code.minimax.io": "2026-08-11",
+    "https://manus.im/notice": "2026-08-12"
   }
 }
