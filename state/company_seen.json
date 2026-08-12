@@ -1,8 +1,5 @@
 {
   "seen": {
-    "https://www.anthropic.com/news/claude-sonnet-5": "2026-07-30",
-    "https://www.cursor.com/automate": "2026-07-30",
-    "https://mistral.ai/pricing/api/": "2026-07-30",
     "https://platform.minimax.io/docs/guides/music-generation": "2026-07-31",
     "https://www.kimi.com/blog/kimi-k3": "2026-08-01",
     "https://www.kimi.com/blog/perception-bench": "2026-08-01",
@@ -58,6 +55,9 @@
     "https://mistral.ai/solutions/coding/": "2026-08-09",
     "https://www.minimax.io/models/text/m3": "2026-08-11",
     "https://code.minimax.io": "2026-08-11",
-    "https://manus.im/notice": "2026-08-12"
+    "https://manus.im/notice": "2026-08-12",
+    "https://www.anthropic.com/news/claude-sonnet-5": "2026-08-13",
+    "https://www.cursor.com/automate": "2026-08-13",
+    "https://mistral.ai/pricing/api/": "2026-08-13"
   }
 }
