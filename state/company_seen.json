@@ -1,13 +1,5 @@
 {
   "seen": {
-    "https://deepseek-harness.github.io/deepseek-harness/en/guide/quickstart": "2026-08-15",
-    "https://www.kimi.com/blog/kimi-k3": "2026-08-15",
-    "https://www.kimi.com/blog/perception-bench": "2026-08-15",
-    "https://autoglm.zhipuai.cn/?channel=official": "2026-08-15",
-    "https://autoglm.zhipuai.cn": "2026-08-15",
-    "https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals": "2026-08-15",
-    "https://bigmodel.cn": "2026-08-15",
-    "https://www.minimax.io/blog/minimax-h3": "2026-08-15",
     "https://www.kimi.com/zh-cn/business": "2026-08-17",
     "https://www.anthropic.com/features/making-of-claude-code": "2026-08-19",
     "https://www.minimax.io/blog/minimax-music-3-0-next-generation-open-weights-production-ready-versatile-music-model": "2026-08-19",
@@ -60,6 +52,11 @@
     "https://www.anthropic.com/news/wellbeing-research-grants": "2026-08-27",
     "https://www.cursor.com/automate": "2026-08-27",
     "https://mistral.ai/pricing/api/": "2026-08-27",
-    "https://cursor.com/agents": "2026-08-28"
+    "https://cursor.com/agents": "2026-08-28",
+    "https://deepseek-harness.github.io/deepseek-harness/en/guide/quickstart": "2026-08-29",
+    "https://autoglm.zhipuai.cn/?channel=official": "2026-08-29",
+    "https://autoglm.zhipuai.cn": "2026-08-29",
+    "https://bigmodel.cn": "2026-08-29",
+    "https://www.minimax.io/blog/minimax-h3": "2026-08-29"
   }
 }
