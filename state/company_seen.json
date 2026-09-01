@@ -1,7 +1,5 @@
 {
   "seen": {
-    "https://www.anthropic.com/features/making-of-claude-code": "2026-08-19",
-    "https://www.minimax.io/blog/minimax-music-3-0-next-generation-open-weights-production-ready-versatile-music-model": "2026-08-19",
     "https://api-docs.deepseek.com/": "2026-08-20",
     "https://api-docs.deepseek.com/zh-cn/": "2026-08-20",
     "https://api-docs.deepseek.com/quick_start/pricing": "2026-08-20",
@@ -56,6 +54,8 @@
     "https://autoglm.zhipuai.cn/?channel=official": "2026-08-29",
     "https://autoglm.zhipuai.cn": "2026-08-29",
     "https://bigmodel.cn": "2026-08-29",
-    "https://www.minimax.io/blog/minimax-h3": "2026-08-29"
+    "https://www.minimax.io/blog/minimax-h3": "2026-08-29",
+    "https://www.anthropic.com/features/making-of-claude-code": "2026-09-02",
+    "https://www.minimax.io/blog/minimax-music-3-0-next-generation-open-weights-production-ready-versatile-music-model": "2026-09-02"
   }
 }
