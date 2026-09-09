@@ -1,9 +1,5 @@
 {
   "seen": {
-    "https://www.anthropic.com/news/claude-sonnet-5": "2026-08-27",
-    "https://www.anthropic.com/news/wellbeing-research-grants": "2026-08-27",
-    "https://www.cursor.com/automate": "2026-08-27",
-    "https://mistral.ai/pricing/api/": "2026-08-27",
     "https://cursor.com/agents": "2026-08-28",
     "https://deepseek-harness.github.io/deepseek-harness/en/guide/quickstart": "2026-08-29",
     "https://autoglm.zhipuai.cn/?channel=official": "2026-08-29",
@@ -59,6 +55,13 @@
     "https://mistral.ai/products/vibe/": "2026-09-06",
     "https://mistral.ai/solutions/coding/": "2026-09-06",
     "https://www.minimax.io/models/text/m3": "2026-09-08",
-    "https://code.minimax.io": "2026-09-08"
+    "https://code.minimax.io": "2026-09-08",
+    "https://z.ai/blog/glm-5": "2026-09-10",
+    "https://www.zhipuai.cn/zh/research/156": "2026-09-10",
+    "https://www.zhipuai.cn/zh/research/155": "2026-09-10",
+    "https://www.zhipuai.cn/zh/research/145": "2026-09-10",
+    "https://www.anthropic.com/news/wellbeing-research-grants": "2026-09-10",
+    "https://www.cursor.com/automate": "2026-09-10",
+    "https://mistral.ai/pricing/api/": "2026-09-10"
   }
 }
