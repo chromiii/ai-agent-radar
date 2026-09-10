@@ -1,6 +1,5 @@
 {
   "seen": {
-    "https://cursor.com/agents": "2026-08-28",
     "https://deepseek-harness.github.io/deepseek-harness/en/guide/quickstart": "2026-08-29",
     "https://autoglm.zhipuai.cn/?channel=official": "2026-08-29",
     "https://autoglm.zhipuai.cn": "2026-08-29",
@@ -62,6 +61,8 @@
     "https://www.zhipuai.cn/zh/research/145": "2026-09-10",
     "https://www.anthropic.com/news/wellbeing-research-grants": "2026-09-10",
     "https://www.cursor.com/automate": "2026-09-10",
-    "https://mistral.ai/pricing/api/": "2026-09-10"
+    "https://mistral.ai/pricing/api/": "2026-09-10",
+    "https://cursor.com/agents": "2026-09-11",
+    "https://zcode.z.ai/cn": "2026-09-11"
   }
 }
