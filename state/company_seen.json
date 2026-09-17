@@ -1,8 +1,5 @@
 {
   "seen": {
-    "https://www.anthropic.com/claude-fable-and-mythos-5-1": "2026-09-04",
-    "https://www.anthropic.com/news/enterprise-frontier-safeguards": "2026-09-04",
-    "https://cursor.com/docs/cloud-agent/self-hosted/integrations": "2026-09-04",
     "https://manus.im/features/manus-browser-operator": "2026-09-05",
     "https://mistral.ai/products/vibe/code/": "2026-09-05",
     "https://qwenlm.github.io/blog/page/2/": "2026-09-05",
@@ -62,6 +59,8 @@
     "https://www.kimi.com/en/blog/kimi-k3": "2026-09-17",
     "https://www.kimi.com/en/blog/perception-bench": "2026-09-17",
     "https://www.kimi.com/en/blog/kimi-k2-6": "2026-09-17",
-    "https://www.kimi.com/business": "2026-09-17"
+    "https://www.kimi.com/business": "2026-09-17",
+    "https://www.anthropic.com/news/enterprise-frontier-safeguards": "2026-09-18",
+    "https://cursor.com/docs/cloud-agent/self-hosted/integrations": "2026-09-18"
   }
 }
