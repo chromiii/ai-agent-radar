@@ -1,12 +1,5 @@
 {
   "seen": {
-    "https://z.ai/blog/glm-5": "2026-09-10",
-    "https://www.zhipuai.cn/zh/research/156": "2026-09-10",
-    "https://www.zhipuai.cn/zh/research/155": "2026-09-10",
-    "https://www.zhipuai.cn/zh/research/145": "2026-09-10",
-    "https://www.anthropic.com/news/wellbeing-research-grants": "2026-09-10",
-    "https://www.cursor.com/automate": "2026-09-10",
-    "https://mistral.ai/pricing/api/": "2026-09-10",
     "https://cursor.com/agents": "2026-09-11",
     "https://zcode.z.ai/cn": "2026-09-11",
     "https://deepseek-harness.github.io/deepseek-harness/en/guide/quickstart": "2026-09-12",
@@ -69,6 +62,11 @@
     "https://seed.bytedance.com/en/blog/seedrealtime-audio-visual-full-duplex-llm-released-toward-omni-modal-natural-interaction": "2026-09-21",
     "https://seed.bytedance.com/en/blog/one-take-creation-flexible-referencing-introducing-seedance-2-5": "2026-09-21",
     "https://www.minimax.io/models/text/m3": "2026-09-22",
-    "https://code.minimax.io": "2026-09-22"
+    "https://code.minimax.io": "2026-09-22",
+    "https://www.zhipuai.cn/zh/research/156": "2026-09-24",
+    "https://www.zhipuai.cn/zh/research/155": "2026-09-24",
+    "https://www.zhipuai.cn/zh/research/145": "2026-09-24",
+    "https://www.cursor.com/automate": "2026-09-24",
+    "https://mistral.ai/pricing/api/": "2026-09-24"
   }
 }
