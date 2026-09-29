@@ -1,6 +1,5 @@
 {
   "seen": {
-    "https://www.minimax.io/blog/minimax-music-3-0-next-generation-open-weights-production-ready-versatile-music-model": "2026-09-16",
     "https://api-docs.deepseek.com/": "2026-09-17",
     "https://api-docs.deepseek.com/zh-cn/": "2026-09-17",
     "https://api-docs.deepseek.com/quick_start/pricing": "2026-09-17",
@@ -72,6 +71,8 @@
     "https://autoglm.zhipuai.cn": "2026-09-26",
     "https://bigmodel.cn": "2026-09-26",
     "https://www.minimax.io/blog/minimax-h3": "2026-09-26",
-    "http://manus.im/blog/introducing-manus-2-0": "2026-09-29"
+    "http://manus.im/blog/introducing-manus-2-0": "2026-09-29",
+    "https://manus.im/features/video-editor": "2026-09-30",
+    "https://www.minimax.io/blog/minimax-music-3-0-next-generation-open-weights-production-ready-versatile-music-model": "2026-09-30"
   }
 }
