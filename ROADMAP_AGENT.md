@@ -10,7 +10,7 @@ V2.1 is merged via PR #3. The medical live case confirmed a real model/source pa
 
 Current focus: V2.2 learning usability. The primary product is a personal Agent learning radar: a short Weekly report or an on-demand question should explain what to know, where it applies, how deeply to learn it and one small practice task. Implement free questions through Actions, use one learning-card contract for Weekly and research, and run all eight real-model scenarios with explicit review of relevance, source support and exercise scope. Preserve latency and reported token usage without inventing a currency cost.
 
-Next gate: complete this usable learning path and classify the observed failures. Then choose semantic reranking, state/checkpoint recovery or role separation when it solves a measured problem. Learning history, historical RAG and a Web UI remain later work.
+V2.2 now has a reviewable question-to-card path in PR #4, eight live structural cases and a separate content review. Observed gaps are citation support, the distinction between direct comparisons and inferred design implications, and exercise criteria that accidentally prescribe a particular ranking result. Next gate: use those examples to improve source support and comparison wording before adding orchestration. Learning history, historical RAG and a Web UI remain later work.
 
 ## North-star product
 
@@ -239,7 +239,7 @@ Initial user-facing surfaces:
 - run health and Agent activity;
 - source/citation links.
 
-Later candidate feature: **Ask Radar** — cited questions over current and historical Radar knowledge, with bounded current-source research when historical retrieval is insufficient.
+The current V2.2 **Ask Radar** entry uses Actions for bounded current-source questions. A web question interface over current and historical Radar knowledge remains planned; current Ask Radar does not retrieve historical reports.
 
 Backend direction: reuse/extract Python application logic, then expose a small API (FastAPI is a candidate). Frontend direction: React/Next.js is a candidate. These choices are intentionally not locked during V0.
 

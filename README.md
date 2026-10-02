@@ -26,6 +26,8 @@ python ask_radar.py --question "最近 coding agent 有什么值得学？"
 
 V2.2 的评测和范围见 [学习可用性说明](docs/V2_2_USABILITY.md)。
 
+想先体验练习，可以运行 `python examples/mcp_mock_dispatch.py`。这是本地工具分发模拟，包含两个正常调用、未知工具与错误参数；[问答样本与逐条复核](docs/eval/v2_2-review.md)说明了它与真实 MCP 接入的边界。
+
 ## 产品原则
 
 ```text
@@ -155,7 +157,7 @@ final_answer
 - 医药查询覆盖 healthcare、clinical workflow、biomedical、drug discovery。当前扩展是可追踪的词表规则，不是 embedding / BM25 / 通用语义搜索。
 - 每条发现包含主题、信号/趋势等级、引用、应用层意义、动手建议。研究回答至少引用两个不同来源；“趋势”需要该条发现有两个带发布日期的来源。
 - 仓库 `pushed_at` 只表示活动日期；无日期和窗口外资料不能支撑“最近”。同一篇 HF/arXiv 论文只计一条来源。
-- 模型 JSON 出错、引用编造、结论校验失败会留下记录并停止；证据不足可正常返回 `finished_insufficient_evidence`。
+- 模型 JSON 出错、引用编造、结论校验失败会留下记录，按有限修复预算恢复或停止；证据不足可正常返回 `finished_insufficient_evidence`。
 - 格式错误最多重试一次，计入原有步数预算；研究回答最多三张紧凑学习卡。
 - 网页摘要、论文摘要及 Weekly Markdown 都是 untrusted evidence，不能给 Agent 新权限。
 - 达到预算仍未 finish 时状态为 `stopped_max_steps`，交给人决定是否继续。

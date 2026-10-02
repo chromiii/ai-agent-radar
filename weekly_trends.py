@@ -622,6 +622,7 @@ def render_weekly_markdown(
         f"# AI Agent 应用层学习周报 - {end_day.isoformat()}",
         "",
         f"范围：{start_day.isoformat()} 到 {end_day.isoformat()}",
+        "窗口按本期收集时间展示；论文首次发布日期可能更早。",
         "",
     ]
 

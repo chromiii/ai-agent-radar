@@ -16,7 +16,7 @@ Production control flow remains deterministic Python. An experimental bounded si
 | V1 | Saturday application-layer learning cards | On main, PR #2 merged |
 | V2 | Bounded Weekly-evidence Agent | On main via PR #3; experimental execution path |
 | V2.1 | External source search, query expansion, dated citations, usability cases | On main; one medical live case and excerpt-level review recorded |
-| V2.2 | Ask Radar input, shared learning cards, readable evaluation and usage reports | Implementation in this change; validation recorded in docs/V2_2_USABILITY.md |
+| V2.2 | Ask Radar input, shared learning cards, readable evaluation and usage reports | PR #4; 83 unit tests and 8/8 live structural cases; excerpt-level limitations recorded in docs/V2_2_USABILITY.md |
 
 `learning_agent.py` uses `research_search.py` for fixed source APIs: HF papers, arXiv, GitHub repository metadata, optional Tavily excerpts. Source collection, time windows, deduplication and action/citation checks remain application controlled; the model chooses among three allowed actions and writes structured findings. Alias expansion and lexical filtering are implemented; embeddings, vector search, historical RAG, and an independent semantic verifier are not.
 
@@ -181,10 +181,11 @@ Already present:
 - source failures isolated for the current run
 - external finding IDs must refer to retrieved dated sources
 - normal insufficient-evidence outcome, separate from model failure
+- one format repair within the original Agent step budget
 
 Not yet implemented as a coherent platform capability:
 
-- retry budgets and replanning
+- transport retry/backoff and general replanning
 - typed tool contracts across an Agent runtime
 - persistent checkpoints for Agent execution
 - model-quality / semantic citation-entailment evaluation
