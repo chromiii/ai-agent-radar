@@ -336,6 +336,10 @@ def build_classifier_prompt(
     candidate_terms: list[dict[str, Any]],
     representative_items: list[dict[str, Any]],
 ) -> list[dict[str, str]]:
+    # Term examples can come from items omitted by the evidence cap. They have no
+    # citable record here and previously led to claims paired with unrelated URLs.
+    prompt_terms = [{key: term[key] for key in ("term", "score", "count", "sources", "seed") if key in term}
+                    for term in candidate_terms]
     system = (
         "You are a strict editor for a weekly AI Agent application-layer learning radar. "
         "Return valid JSON only. Use only supplied candidate terms and representative items. "
@@ -401,6 +405,7 @@ Rules:
 - Prefer frameworks, tools, reliability patterns, evaluation, memory, RAG, MCP, coding agents, computer use, observability and engineering practices.
 - Purely academic work should only become a card when it explains an application-layer design choice, benchmark, failure mode, or capability boundary.
 - learning_cards.source_urls must come from Representative items JSON exactly; never invent URLs.
+- Candidate counts are collection signals, not citable evidence. Omit a learning card if its candidate term has no supporting Representative item.
 - Build each card around the title and summary of its own cited items. Every why_now statement must be supported by those same items, not by other uncited items or a matching candidate keyword.
 - A single source does not support claims of multiple studies, an industry trend or growth. Describe it as one study or implementation.
 - Do not turn a Search/Terminal/coding world-model paper into a GUI-specific card, or a security/OS memory-governance paper into a memory benchmark. Preserve the actual system type and scope.
@@ -412,7 +417,7 @@ Rules:
 {CARD_PROMPT}
 
 Candidate terms JSON:
-{json.dumps(candidate_terms, ensure_ascii=False, indent=2)}
+{json.dumps(prompt_terms, ensure_ascii=False, indent=2)}
 
 Representative items JSON:
 {json.dumps(representative_items, ensure_ascii=False, indent=2)}

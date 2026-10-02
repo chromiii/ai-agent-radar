@@ -10,7 +10,7 @@ from learning_agent import AgentState, run_agent, verify_findings
 from learning_cards import learning_details, render_learning_card, weekly_cards
 from research_eval import ReplaySearch, replay_decider
 from weekly_trends import normalize_learning_cards, render_weekly_markdown, validate_curated
-from weekly_trends import call_deepseek_json
+from weekly_trends import build_classifier_prompt, call_deepseek_json
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -167,3 +167,15 @@ def test_weekly_request_failure_does_not_log_credentials_or_raw_exception(monkey
     output = capsys.readouterr().out
     assert result is None and 'RequestException' in output
     assert 'weekly-test-secret' not in output and 'Authorization' not in output
+
+
+def test_weekly_candidate_examples_cannot_supply_uncitable_claims():
+    candidates = [{'term': 'gui agent', 'score': 8, 'count': 2, 'sources': ['arxiv'],
+                   'examples': ['Uncitable GUI Study'], 'seed': True}]
+    evidence = [{'title': 'Citable Tool Study', 'url': 'https://arxiv.org/abs/2609.10000',
+                 'summary': 'A study about task state in tool agents.'}]
+    prompt = build_classifier_prompt(dt.date(2026, 10, 2), dt.date(2026, 9, 26), candidates, evidence)
+    content = '\n'.join(message['content'] for message in prompt)
+    assert 'Uncitable GUI Study' not in content
+    assert 'Citable Tool Study' in content and evidence[0]['url'] in content
+    assert '"term": "gui agent"' in content
