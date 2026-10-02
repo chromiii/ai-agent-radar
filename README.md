@@ -6,7 +6,7 @@
 
 - **Daily Radar**：每日 AI agent / 多智能体 / AI 应用论文、项目、榜单简报。
 - **Company Radar**：每日全球和中国 AI 公司动态简报。
-- **Weekly Trend Radar**：每周热词雷达，用来反哺 Daily Radar 的动态加分和降权。
+- **Weekly Learning Radar**：每周六把趋势信号压缩成应用层学习周报，同时继续反哺 Daily Radar 的动态加分和降权。
 
 ## 结果目录
 
@@ -73,7 +73,7 @@ Workflow：`.github/workflows/company-radar.yml`
 
 Company 的历史记录是带 TTL 的，不会永久屏蔽同一个 URL。默认 14 天内重复链接不再推送。
 
-### Weekly Trend Radar
+### Weekly Learning Radar
 
 脚本：`weekly_trends.py`
 
@@ -85,8 +85,10 @@ Workflow：`.github/workflows/weekly-trends.yml`
 抓取最近 7 天 HF Daily Papers / HF Spaces / arXiv
   -> 规则抽取候选热词
   -> DeepSeek 精筛 tier1 / tier2 / downrank / noise
+  -> 生成 5–8 张应用层学习卡片（Know / Build / Understand Why）
   -> 写入 weekly/
   -> 更新 state/trending_terms.json
+  -> 每周六发送学习周报邮件
 ```
 
 Daily 会读取 `state/trending_terms.json`：
@@ -174,7 +176,7 @@ QQ_MAIL_FROM
 ```text
 Daily Radar:   00:00 Australia/Sydney -> 14:00 UTC
 Company Radar: 00:30 Australia/Sydney -> 14:30 UTC
-Weekly Radar:  Sunday 00:15 Australia/Sydney -> Saturday 14:15 UTC
+Weekly Radar:  Saturday 10:00 AEST / 11:00 AEDT -> Saturday 00:00 UTC
 ```
 
 如果进入澳洲夏令时，需要手动调整 workflow 里的 cron，除非你不在意精确的本地时钟时间。
