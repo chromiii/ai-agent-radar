@@ -15,11 +15,13 @@ import requests
 
 from radar import load_config, normalize
 from research_search import EvidenceSearch, build_query_plan, clean
+from learning_cards import CARD_PROMPT, learning_details, markdown_text, render_learning_card, research_card
 
 
 ROOT = Path(__file__).resolve().parent
 ALLOWED_ACTIONS = {"analyze", "search_more", "finish"}
 FINISH_REASONS = {"stop", "length", "content_filter", "tool_calls", "insufficient_system_resource", "aborted"}
+PROMPT_VERSION = "learning-v2.2"
 
 
 def safe_model_diagnostics(data: Any) -> dict[str, Any]:
@@ -74,6 +76,8 @@ class AgentState:
             raise ValueError("search_mode must be weekly or external")
         if not isinstance(self.user_query, str) or not self.user_query.strip():
             raise ValueError("user_query must not be empty")
+        if len(self.user_query) > 600:
+            raise ValueError("user_query must be at most 600 characters")
         if not isinstance(self.task_id, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,63}", self.task_id):
             raise ValueError("task_id must be a safe identifier, not a path")
 
@@ -132,7 +136,10 @@ def build_agent_prompt(state: AgentState, weekly_markdown: str) -> list[dict[str
         "Incidental healthcare mentions do not prove medical evaluation or deployment. "
         "Do not fill a quota or assert clinical efficacy. Put no URLs in prose; use evidence_ids. "
         "Prefer 2–3 compact findings; keep each claim, application and try_next under 180 Chinese characters. "
-        "If dates, relevance or sources are insufficient, state the gap and return insufficient_evidence."
+        "If dates, relevance or sources are insufficient, state the gap and return insufficient_evidence. "
+        "If asked about real-world deployment, explicitly distinguish prototypes, benchmarks and verified production use. "
+        "When deployment evidence is absent, disclose that gap and present implementation signals. "
+        + CARD_PROMPT
     )
     # Internal lexical filters must not become new research requirements.
     prompt_plan = {k: v for k, v in state.query_plan.items() if k != "relevance_groups"}
@@ -174,7 +181,10 @@ Return JSON only:
   "final_answer": "weekly-mode finish only",
   "verdict": "answer|insufficient_evidence (external finish only)",
   "findings": [{{"topic": "主题", "claim": "证据支持的发现", "claim_type": "signal|trend",
-    "evidence_ids": ["S1"], "application": "应用层意义", "try_next": "一个可执行学习建议"}}],
+    "evidence_ids": ["S1"], "application": "应用场景", "try_next": "一个小范围练习",
+    "level": "know|build|understand_why", "one_liner": "概念定义",
+    "learn": ["工程概念一", "工程概念二"], "practice_minutes": 20,
+    "done_when": "练习完成时可检查的结果"}}],
   "limitations": "简短说明证据和覆盖限制"
 }}
 
@@ -287,6 +297,7 @@ def verify_findings(findings: Any, items: list[dict[str, Any]]) -> list[dict[str
         if claim_type == "trend" and len({allowed[i]["url"] for i in ids if allowed[i]["date_kind"] == "published"}) < 2:
             raise ValueError("trend requires two different published sources; updated repository metadata is only an activity signal")
         result.update(evidence_ids=ids, claim_type=claim_type)
+        result.update(learning_details(f))
         verified.append(result)
         used.update(allowed[i]["url"] for i in ids)
     if len(used) < 2:
@@ -295,16 +306,14 @@ def verify_findings(findings: Any, items: list[dict[str, Any]]) -> list[dict[str
 
 
 def render_research_answer(state: AgentState, limitations: str = "") -> str:
-    lines = [f"检索范围：{state.query_plan['start_date']} 至 {state.query_plan['end_date']}。"]
+    lines = [f"检索范围：{state.query_plan['start_date']} 至 {state.query_plan['end_date']}。", "",
+             "先读学习卡，再挑一个小练习；动手时间是建议预算。", ""]
     sources = {i["id"]: i for i in state.selected_items}
-    for f in state.findings:
-        citations = " ".join(f"[{i}]({sources[i]['url']})" for i in f["evidence_ids"])
-        label = "趋势" if f["claim_type"] == "trend" else "信号"
-        lines.extend(["", f"**{f['topic']}（{label}）**", f"{f['claim']} {citations}",
-                      f"应用层：{f['application']}", f"动手建议：{f['try_next']}"])
+    for index, finding in enumerate(state.findings, 1):
+        lines.extend(render_learning_card(research_card(finding, sources), index))
     notes = list(dict.fromkeys(([limitations] if limitations else []) + state.warnings))
     if notes:
-        lines.extend(["", "证据限制：" + "；".join(notes)])
+        lines.extend(["", "证据限制：" + markdown_text("；".join(notes))])
     return "\n".join(lines)
 
 

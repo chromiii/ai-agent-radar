@@ -14,6 +14,7 @@ import feedparser
 import requests
 
 from radar import dedupe, fetch_hf_daily_papers, fetch_hf_spaces, get_text, load_config, normalize, today_local
+from learning_cards import CARD_PROMPT, render_learning_card, weekly_cards
 
 
 ROOT = Path(__file__).resolve().parent
@@ -376,8 +377,11 @@ JSON schema:
       "level": "build",
       "one_liner": "让模型在真实 GUI 环境里观察、决策并执行操作。",
       "why_now": "本周多来源持续出现相关评测与实现。",
+      "application": "需要图形界面操作、且没有稳定 API 的小任务。",
       "learn": ["状态/动作空间", "工具调用", "失败恢复"],
-      "hands_on": "挑一个代表性项目跑通最小 demo，并记录一次失败轨迹。",
+      "hands_on": "用三张示例界面截图模拟一次观察与动作选择，记录一个错误动作。",
+      "practice_minutes": 20,
+      "done_when": "保存三条观察与动作记录，以及错误动作的处理结果。",
       "source_urls": ["https://example.com/item"]
     }}
   ]
@@ -400,6 +404,7 @@ Rules:
 - learn must contain 2 to 4 concise learning points.
 - If evidence is weak, use tier2 or omit; do not put weak terms in tier1.
 - Do not create new terms.
+{CARD_PROMPT}
 
 Candidate terms JSON:
 {json.dumps(candidate_terms, ensure_ascii=False, indent=2)}
@@ -445,45 +450,7 @@ def normalize_learning_cards(
     representative_items: list[dict[str, Any]],
     limit: int = 8,
 ) -> list[dict[str, Any]]:
-    if not isinstance(value, list):
-        return []
-    allowed_urls = {str(item.get("url")) for item in representative_items if item.get("url")}
-    cards: list[dict[str, Any]] = []
-    for entry in value:
-        if not isinstance(entry, dict):
-            continue
-        title = normalize(entry.get("title"))
-        level = str(entry.get("level", "")).strip()
-        one_liner = normalize(entry.get("one_liner"))
-        why_now = normalize(entry.get("why_now"))
-        hands_on = normalize(entry.get("hands_on"))
-        raw_learn = entry.get("learn", [])
-        learn = [normalize(x) for x in raw_learn if isinstance(x, str) and normalize(x)][:4] if isinstance(raw_learn, list) else []
-        raw_urls = entry.get("source_urls", [])
-        source_urls = []
-        if isinstance(raw_urls, list):
-            for url in raw_urls:
-                url_s = str(url)
-                if url_s in allowed_urls and url_s not in source_urls:
-                    source_urls.append(url_s)
-        if not title or level not in {"know", "build", "understand_why"} or not one_liner:
-            continue
-        if not source_urls:
-            continue
-        cards.append(
-            {
-                "title": title[:120],
-                "level": level,
-                "one_liner": one_liner[:220],
-                "why_now": why_now[:260],
-                "learn": learn,
-                "hands_on": hands_on[:260],
-                "source_urls": source_urls[:3],
-            }
-        )
-        if len(cards) >= limit:
-            break
-    return cards
+    return weekly_cards(value, representative_items, limit)
 
 
 def validate_curated(
@@ -643,23 +610,8 @@ def render_weekly_markdown(
         if learning_cards:
             lines.append("目标：用 5–10 分钟快速补齐应用层知识；只保留对 Agent 工程实践有解释力的内容。")
             lines.append("")
-            level_names = {"know": "Know｜先知道", "build": "Build｜值得动手", "understand_why": "Understand Why｜理解原因"}
             for idx, card in enumerate(learning_cards, 1):
-                lines.append(f"### {idx}. {card.get('title', 'Untitled')}")
-                lines.append("")
-                lines.append(f"- **类型**：{level_names.get(card.get('level'), card.get('level'))}")
-                lines.append(f"- **30 秒结论**：{card.get('one_liner', '')}")
-                if card.get("why_now"):
-                    lines.append(f"- **为什么这周值得知道**：{card.get('why_now')}")
-                learn = card.get("learn", [])
-                if learn:
-                    lines.append(f"- **应用层学到这里就够**：{'；'.join(learn)}")
-                if card.get("hands_on"):
-                    lines.append(f"- **动手建议**：{card.get('hands_on')}")
-                urls = card.get("source_urls", [])
-                if urls:
-                    lines.append("- **来源**：" + " / ".join(f"[source {n}]({url})" for n, url in enumerate(urls, 1)))
-                lines.append("")
+                lines.extend(render_learning_card(card, idx))
         else:
             lines.extend(["本周没有形成足够可靠的学习卡片，保留趋势结果供后台排序使用。", ""])
 

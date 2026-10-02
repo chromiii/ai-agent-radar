@@ -1,0 +1,54 @@
+name: Ask Radar
+
+on:
+  pull_request:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      question:
+        description: 想了解什么？输入一个 Agent 应用层学习问题（最多 600 字）
+        required: true
+        type: string
+        default: 最近 coding agent 有什么值得学？
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ask-radar-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  ask:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.label.name == 'ask-radar-preview' &&
+       github.event.pull_request.head.repo.full_name == github.repository &&
+       github.event.pull_request.author_association == 'OWNER')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - name: Generate learning cards
+        env:
+          RADAR_QUESTION: ${{ inputs.question || '我想用 MCP 给一个已有 Python 工具加接口，最近有哪些值得学的实现？' }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$DEEPSEEK_API_KEY" ]; then
+            echo "::error::DEEPSEEK_API_KEY is unavailable to this run."
+            exit 1
+          fi
+          python ask_radar.py
+      - name: Save answer and source record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ask-radar-answer
+          path: ask_results/
+          retention-days: 7

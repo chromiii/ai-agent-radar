@@ -6,9 +6,11 @@ This roadmap describes intended evolution. **Planned items are not implemented f
 
 The original V0 roadmap below uses architecture-stage labels. Actual releases have now shipped as **V1 = application-layer Weekly cards**, **V2 = bounded learning Agent**, and **V2.1 = real source search + usability evaluation**. Future stage labels below are planning labels, not release numbers or implementation claims.
 
-Current focus: finish the V2.1 search and evidence contract in PR #3. The eight regression questions start with “最近医药 Agent 有什么趋势？”. Query expansion is a small alias dictionary; source APIs, date filters, citations, and deterministic replay are implemented. Live model quality must be checked separately using configured credentials. A dated GitHub push is an activity signal, not a newly published trend.
+V2.1 is merged via PR #3. The medical live case confirmed a real model/source path and exposed prompt-scope and output-format problems, which were corrected. One case does not establish quality across the product.
 
-Next gate: live evaluation and human review of relevance, application usefulness and citation entailment. Then decide whether stronger semantic reranking or a LangGraph/checkpoint layer solves an observed failure. Multi-Agent, historical memory, vector RAG and Web UI remain later work.
+Current focus: V2.2 learning usability. The primary product is a personal Agent learning radar: a short Weekly report or an on-demand question should explain what to know, where it applies, how deeply to learn it and one small practice task. Implement free questions through Actions, use one learning-card contract for Weekly and research, and run all eight real-model scenarios with explicit review of relevance, source support and exercise scope. Preserve latency and reported token usage without inventing a currency cost.
+
+Next gate: complete this usable learning path and classify the observed failures. Then choose semantic reranking, state/checkpoint recovery or role separation when it solves a measured problem. Learning history, historical RAG and a Web UI remain later work.
 
 ## North-star product
 
@@ -57,7 +59,7 @@ Exit criteria:
 
 ## Stage 1 — Bounded single-Agent experiment (released as V2)
 
-**Status:** implemented as an isolated experiment in PR #3; extended by V2.1.
+**Status:** implemented as an isolated experiment and merged via PR #3; extended by V2.1.
 
 Learning goals:
 - fixed workflow vs conditional workflow vs ReAct-style execution;
