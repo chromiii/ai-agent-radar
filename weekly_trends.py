@@ -394,7 +394,7 @@ Rules:
 - noise max 10 terms.
 - notes values must be Simplified Chinese, max 30 Chinese characters.
 - Every term in tier1/tier2/downrank/noise must exactly match a candidate term.
-- learning_cards: 5 to 8 cards when evidence allows; fewer is acceptable when the week is weak.
+- learning_cards: at most 5 concise cards; fewer is acceptable when the week is weak.
 - learning_cards.level must be one of "know", "build", "understand_why".
 - learning_cards should answer: 是什么、为什么现在值得知道、应用层要学到什么深度、是否值得动手。
 - Prefer frameworks, tools, reliability patterns, evaluation, memory, RAG, MCP, coding agents, computer use, observability and engineering practices.
@@ -448,7 +448,7 @@ def normalize_term_list(value: Any, allowed_terms: set[str], limit: int) -> list
 def normalize_learning_cards(
     value: Any,
     representative_items: list[dict[str, Any]],
-    limit: int = 8,
+    limit: int = 5,
 ) -> list[dict[str, Any]]:
     return weekly_cards(value, representative_items, limit)
 
@@ -519,16 +519,23 @@ def call_deepseek_json(
         response = requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=90)
         response.raise_for_status()
         data = response.json()
-        content = data["choices"][0]["message"]["content"].strip()
+        choice = data["choices"][0]
+        reason = choice.get("finish_reason")
+        if reason != 'stop':
+            safe_reason = reason if reason in ('length', 'content_filter', 'aborted', 'insufficient_system_resource') else 'unknown'
+            print(f"DeepSeek weekly response incomplete: {safe_reason}.")
+            return None
+        content = choice["message"]["content"].strip()
         parsed = parse_json_object(content)
         if parsed is None:
-            print("DeepSeek weekly JSON parse failed. Response head:")
-            print(content[:1500])
-            print("DeepSeek weekly response tail:")
-            print(content[-500:])
+            print("DeepSeek weekly JSON parse failed; raw model content is not logged.")
         validated = validate_curated(parsed, candidate_terms, representative_items)
         if validated is None:
             print("DeepSeek weekly JSON validation failed.")
+        else:
+            usage = data.get('usage', {})
+            validated['model_usage'] = {key: usage[key] for key in ('prompt_tokens', 'completion_tokens', 'total_tokens')
+                                      if type(usage.get(key)) is int and 0 <= usage[key] <= 10_000_000}
         return validated
     except Exception as exc:
         print(f"DeepSeek weekly JSON curation failed. Error: {exc}")
@@ -699,4 +706,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

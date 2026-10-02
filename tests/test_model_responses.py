@@ -79,3 +79,22 @@ def test_prompt_keeps_internal_aliases_out_of_task_and_sources_once():
     assert "internal-filter-not-a-subtask" not in prompt
     assert "Remaining search API calls: 6" in prompt
     assert state.observations[0]["new_evidence"] == [item]
+
+
+def test_one_format_retry_recovers_within_existing_step_budget(monkeypatch):
+    monkeypatch.setenv('DEEPSEEK_API_KEY', 'test-secret-must-stay-private')
+    responses = iter([ModelResponse('{"action":'), ModelResponse('{"action":"finish","final_answer":"恢复后的回答"}')])
+    monkeypatch.setattr(requests, 'post', lambda *args, **kwargs: next(responses))
+    result = run_agent(AgentState(task_id='format-repair', user_query='agent memory', max_steps=2), '', {})
+    assert result.status == 'finished' and result.current_step == 2
+    assert result.format_retry_count == 1
+    assert result.observations[0]['error_code'] == 'invalid_json'
+    assert result.final_answer == '恢复后的回答'
+    assert 'secret-must-stay-private' not in json.dumps(asdict(result))
+
+
+def test_format_retry_cannot_extend_one_step_budget(monkeypatch):
+    mock_model(monkeypatch, ModelResponse('{"action":'))
+    result = run_agent(AgentState(task_id='no-extra-step', user_query='agent memory', max_steps=1), '', {})
+    assert result.status == 'failed_decision' and result.current_step == 1
+    assert result.format_retry_count == 0

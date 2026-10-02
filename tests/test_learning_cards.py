@@ -5,10 +5,12 @@ from pathlib import Path
 import pytest
 
 import ask_radar
+import requests
 from learning_agent import AgentState, run_agent, verify_findings
 from learning_cards import learning_details, render_learning_card, weekly_cards
 from research_eval import ReplaySearch, replay_decider
 from weekly_trends import normalize_learning_cards, render_weekly_markdown, validate_curated
+from weekly_trends import call_deepseek_json
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -102,3 +104,37 @@ def test_overlong_free_question_fails_before_model_call(tmp_path):
     with pytest.raises(ValueError, match='600'):
         ask_radar.run_request('a' * 601, {}, tmp_path, decide=lambda *_: pytest.fail('model must not be called'))
     assert not (tmp_path / 'run.json').exists()
+
+
+def test_task_specific_rewrite_keeps_python_and_rejects_unrelated_first_query():
+    class RecordingSearch(ReplaySearch):
+        def search(self, plan, queries, selected_urls):
+            self.queries = queries
+            return super().search(plan, queries, selected_urls)
+
+    searcher = RecordingSearch([])
+    state = AgentState(task_id='python-mcp', user_query='MCP 给 Python 工具加接口', max_steps=1,
+                       search_mode='external', as_of='2026-10-02')
+    result = run_agent(state, '', {}, decide=lambda *_: {'action': 'search_more',
+                       'query_terms': ['unrelated weather forecast', 'MCP Python SDK tools']}, searcher=searcher)
+    assert searcher.queries == ['mcp python sdk tools', 'MCP agent tools']
+    assert result.query_plan['original_query'] == state.user_query
+    assert result.observations[0]['query_terms'] == searcher.queries
+
+
+def test_weekly_truncated_response_is_rejected_without_logging_content(monkeypatch, capsys):
+    monkeypatch.setenv('DEEPSEEK_API_KEY', 'weekly-test-secret')
+
+    class Truncated:
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return {'choices': [{'finish_reason': 'length', 'message': {'content': 'private-model-content'}}]}
+
+    monkeypatch.setattr(requests, 'post', lambda *args, **kwargs: Truncated())
+    config = {'ai': {'enabled': True, 'provider': 'deepseek'}}
+    result = call_deepseek_json(dt.date(2026, 10, 2), dt.date(2026, 9, 26), [], [], config)
+    output = capsys.readouterr().out
+    assert result is None and 'length' in output
+    assert 'private-model-content' not in output and 'weekly-test-secret' not in output

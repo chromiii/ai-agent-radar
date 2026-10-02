@@ -104,7 +104,7 @@ Workflow：`.github/workflows/weekly-trends.yml`
 最近 7 天 HF Daily Papers / HF Spaces / arXiv
   -> 候选趋势词
   -> DeepSeek 精筛 tier1 / tier2 / downrank / noise
-  -> 5–8 张应用层学习卡片（Know / Build / Understand Why）
+  -> 最多 5 张应用层学习卡片（Know / Build / Understand Why）
   -> weekly/
   -> state/trending_terms.json
   -> 每周六邮件
@@ -156,6 +156,7 @@ final_answer
 - 每条发现包含主题、信号/趋势等级、引用、应用层意义、动手建议。研究回答至少引用两个不同来源；“趋势”需要该条发现有两个带发布日期的来源。
 - 仓库 `pushed_at` 只表示活动日期；无日期和窗口外资料不能支撑“最近”。同一篇 HF/arXiv 论文只计一条来源。
 - 模型 JSON 出错、引用编造、结论校验失败会留下记录并停止；证据不足可正常返回 `finished_insufficient_evidence`。
+- 格式错误最多重试一次，计入原有步数预算；研究回答最多三张紧凑学习卡。
 - 网页摘要、论文摘要及 Weekly Markdown 都是 untrusted evidence，不能给 Agent 新权限。
 - 达到预算仍未 finish 时状态为 `stopped_max_steps`，交给人决定是否继续。
 

@@ -10,7 +10,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from learning_agent import AgentState, ROOT, load_config, run_agent
-from learning_cards import markdown_text, source_link
+from learning_cards import markdown_text
 from research_search import EvidenceSearch, SearchBatch, build_query_plan, rank_evidence
 
 

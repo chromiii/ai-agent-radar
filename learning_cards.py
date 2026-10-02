@@ -18,6 +18,8 @@ CARD_PROMPT = (
     "done_when is an observable completion criterion for the practice. "
     "Use toy inputs or mocks so the exercise fits the timebox; do not ask for a full paper reproduction, "
     "production deployment or entire benchmark run. Do not invent package commands or APIs. "
+    "done_when must check only steps named in the exercise; it must not add an agent client, "
+    "server setup, login or other new prerequisites. Prefer a self-contained mock or local toy exercise. "
     "Keep one_liner and application under 120 Chinese characters, each learn point under 60, "
     "the practice under 160 and done_when under 100. Use Simplified Chinese."
 )
@@ -55,7 +57,7 @@ def learning_details(entry: dict[str, Any]) -> dict[str, Any]:
             "practice_minutes": minutes, "done_when": done_when}
 
 
-def weekly_cards(value: Any, representative_items: list[dict[str, Any]], limit: int = 8) -> list[dict[str, Any]]:
+def weekly_cards(value: Any, representative_items: list[dict[str, Any]], limit: int = 5) -> list[dict[str, Any]]:
     if not isinstance(value, list):
         return []
     allowed = {item.get("url") for item in representative_items if canonical_url(item.get("url"))}
