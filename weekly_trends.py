@@ -335,9 +335,10 @@ def build_classifier_prompt(
     representative_items: list[dict[str, Any]],
 ) -> list[dict[str, str]]:
     system = (
-        "You are a strict classifier for weekly AI agent and AI application trend terms. "
-        "Return valid JSON only. Use only supplied candidate terms. "
-        "Do not invent terms, facts, links, papers, metrics, or company claims."
+        "You are a strict editor for a weekly AI Agent application-layer learning radar. "
+        "Return valid JSON only. Use only supplied candidate terms and representative items. "
+        "Prioritize practical application knowledge over pure research novelty. "
+        "Do not invent terms, facts, links, papers, metrics, code behavior, or company claims."
     )
     user = f"""
 Classify weekly trend candidate terms for AI agent / AI application monitoring.
@@ -368,7 +369,18 @@ JSON schema:
   "notes": {{
     "computer use": "真实环境操作方向升温",
     "agentic search": "多步检索型研究代理升温"
-  }}
+  }},
+  "learning_cards": [
+    {{
+      "title": "Computer-use Agent",
+      "level": "build",
+      "one_liner": "让模型在真实 GUI 环境里观察、决策并执行操作。",
+      "why_now": "本周多来源持续出现相关评测与实现。",
+      "learn": ["状态/动作空间", "工具调用", "失败恢复"],
+      "hands_on": "挑一个代表性项目跑通最小 demo，并记录一次失败轨迹。",
+      "source_urls": ["https://example.com/item"]
+    }}
+  ]
 }}
 
 Rules:
@@ -378,6 +390,14 @@ Rules:
 - noise max 10 terms.
 - notes values must be Simplified Chinese, max 30 Chinese characters.
 - Every term in tier1/tier2/downrank/noise must exactly match a candidate term.
+- learning_cards: 5 to 8 cards when evidence allows; fewer is acceptable when the week is weak.
+- learning_cards.level must be one of "know", "build", "understand_why".
+- learning_cards should answer: 是什么、为什么现在值得知道、应用层要学到什么深度、是否值得动手。
+- Prefer frameworks, tools, reliability patterns, evaluation, memory, RAG, MCP, coding agents, computer use, observability and engineering practices.
+- Purely academic work should only become a card when it explains an application-layer design choice, benchmark, failure mode, or capability boundary.
+- learning_cards.source_urls must come from Representative items JSON exactly; never invent URLs.
+- one_liner/why_now/hands_on must be Simplified Chinese and concise.
+- learn must contain 2 to 4 concise learning points.
 - If evidence is weak, use tier2 or omit; do not put weak terms in tier1.
 - Do not create new terms.
 
@@ -420,7 +440,57 @@ def normalize_term_list(value: Any, allowed_terms: set[str], limit: int) -> list
     return result
 
 
-def validate_curated(curated: dict[str, Any] | None, candidate_terms: list[dict[str, Any]]) -> dict[str, Any] | None:
+def normalize_learning_cards(
+    value: Any,
+    representative_items: list[dict[str, Any]],
+    limit: int = 8,
+) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
+    allowed_urls = {str(item.get("url")) for item in representative_items if item.get("url")}
+    cards: list[dict[str, Any]] = []
+    for entry in value:
+        if not isinstance(entry, dict):
+            continue
+        title = normalize(entry.get("title"))
+        level = str(entry.get("level", "")).strip()
+        one_liner = normalize(entry.get("one_liner"))
+        why_now = normalize(entry.get("why_now"))
+        hands_on = normalize(entry.get("hands_on"))
+        raw_learn = entry.get("learn", [])
+        learn = [normalize(x) for x in raw_learn if isinstance(x, str) and normalize(x)][:4] if isinstance(raw_learn, list) else []
+        raw_urls = entry.get("source_urls", [])
+        source_urls = []
+        if isinstance(raw_urls, list):
+            for url in raw_urls:
+                url_s = str(url)
+                if url_s in allowed_urls and url_s not in source_urls:
+                    source_urls.append(url_s)
+        if not title or level not in {"know", "build", "understand_why"} or not one_liner:
+            continue
+        if not source_urls:
+            continue
+        cards.append(
+            {
+                "title": title[:120],
+                "level": level,
+                "one_liner": one_liner[:220],
+                "why_now": why_now[:260],
+                "learn": learn,
+                "hands_on": hands_on[:260],
+                "source_urls": source_urls[:3],
+            }
+        )
+        if len(cards) >= limit:
+            break
+    return cards
+
+
+def validate_curated(
+    curated: dict[str, Any] | None,
+    candidate_terms: list[dict[str, Any]],
+    representative_items: list[dict[str, Any]],
+) -> dict[str, Any] | None:
     if not isinstance(curated, dict):
         return None
     allowed_terms = {term["term"] for term in candidate_terms}
@@ -437,9 +507,17 @@ def validate_curated(curated: dict[str, Any] | None, candidate_terms: list[dict[
             if term in allowed_terms and isinstance(value, str):
                 notes[term] = value[:80]
 
-    if not tier1 and not tier2:
+    learning_cards = normalize_learning_cards(curated.get("learning_cards"), representative_items)
+    if not tier1 and not tier2 and not learning_cards:
         return None
-    return {"tier1": tier1, "tier2": tier2, "downrank": downrank, "noise": noise, "notes": notes}
+    return {
+        "tier1": tier1,
+        "tier2": tier2,
+        "downrank": downrank,
+        "noise": noise,
+        "notes": notes,
+        "learning_cards": learning_cards,
+    }
 
 
 def call_deepseek_json(
@@ -481,7 +559,7 @@ def call_deepseek_json(
             print(content[:1500])
             print("DeepSeek weekly response tail:")
             print(content[-500:])
-        validated = validate_curated(parsed, candidate_terms)
+        validated = validate_curated(parsed, candidate_terms, representative_items)
         if validated is None:
             print("DeepSeek weekly JSON validation failed.")
         return validated
@@ -553,14 +631,39 @@ def render_weekly_markdown(
     curated: dict[str, Any] | None,
 ) -> str:
     lines = [
-        f"# Agent Weekly Trend Radar - {end_day.isoformat()}",
+        f"# AI Agent 应用层学习周报 - {end_day.isoformat()}",
         "",
         f"范围：{start_day.isoformat()} 到 {end_day.isoformat()}",
         "",
     ]
 
     if curated:
-        lines.extend(["## 本周结论", ""])
+        learning_cards = curated.get("learning_cards", [])
+        lines.extend(["## 这周先学什么", ""])
+        if learning_cards:
+            lines.append("目标：用 5–10 分钟快速补齐应用层知识；只保留对 Agent 工程实践有解释力的内容。")
+            lines.append("")
+            level_names = {"know": "Know｜先知道", "build": "Build｜值得动手", "understand_why": "Understand Why｜理解原因"}
+            for idx, card in enumerate(learning_cards, 1):
+                lines.append(f"### {idx}. {card.get('title', 'Untitled')}")
+                lines.append("")
+                lines.append(f"- **类型**：{level_names.get(card.get('level'), card.get('level'))}")
+                lines.append(f"- **30 秒结论**：{card.get('one_liner', '')}")
+                if card.get("why_now"):
+                    lines.append(f"- **为什么这周值得知道**：{card.get('why_now')}")
+                learn = card.get("learn", [])
+                if learn:
+                    lines.append(f"- **应用层学到这里就够**：{'；'.join(learn)}")
+                if card.get("hands_on"):
+                    lines.append(f"- **动手建议**：{card.get('hands_on')}")
+                urls = card.get("source_urls", [])
+                if urls:
+                    lines.append("- **来源**：" + " / ".join(f"[source {n}]({url})" for n, url in enumerate(urls, 1)))
+                lines.append("")
+        else:
+            lines.extend(["本周没有形成足够可靠的学习卡片，保留趋势结果供后台排序使用。", ""])
+
+        lines.extend(["## 本周趋势信号（后台也用于 Daily 排序）", ""])
         tier1 = curated.get("tier1", [])
         if tier1:
             lines.append("本周可用于反哺每日雷达的核心热词已经过 AI 精筛。")
