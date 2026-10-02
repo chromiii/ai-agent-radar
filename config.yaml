@@ -16,7 +16,6 @@ weekly:
   max_terms: 50
   ai_max_items: 15
   ai_max_terms: 20
-  learning_max_cards: 8
   seed_terms:
     - computer-use agent
     - GUI agent
