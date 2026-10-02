@@ -1,0 +1,204 @@
+{
+  "case": "medical-agent-trends",
+  "query": "最近医药 Agent 有什么趋势？",
+  "as_of": "2026-10-02",
+  "verification_level": "live_model_run",
+  "evaluated_commit": "bfaa39127a0c3abeaae52fc81ff9d423702a9d4b",
+  "workflow_run": "https://github.com/chromiii/ai-agent-radar/actions/runs/37021846258",
+  "credentials": "Existing DEEPSEEK_API_KEY repository secret consumed by Actions; its value was not read or stored.",
+  "checks": {
+    "query_expansion": true,
+    "topic_understanding": true,
+    "search_path_executed": true,
+    "sources": true,
+    "completed": true,
+    "findings": true,
+    "application_view": true
+  },
+  "passed_structural_checks": true,
+  "status": "finished",
+  "steps": 2,
+  "latency_ms": 12002,
+  "search_calls": 6,
+  "evidence_levels": {
+    "publication_sources": 8,
+    "activity_sources": 4,
+    "trend_evidence_ready": true
+  },
+  "model_trace": [
+    {
+      "step": 1,
+      "finish_reason": "stop",
+      "prompt_tokens": 926,
+      "completion_tokens": 53,
+      "total_tokens": 979
+    },
+    {
+      "step": 2,
+      "finish_reason": "stop",
+      "prompt_tokens": 4464,
+      "completion_tokens": 1327,
+      "total_tokens": 5791
+    }
+  ],
+  "findings": [
+    {
+      "topic": "临床多智能体协同",
+      "claim": "近期研究探索以多智能体协调医院科室患者流或健康体检解读，通过去中心化协调、意图分派与并行执行提升多需求处理，但延迟与成本上升、安全失败未显著减少。",
+      "application": "医疗工作流 Agent 设计需在协调开销与安全失败率间权衡，而非默认多智能体更优。",
+      "try_next": "复现一个科室级 Dec-POMDP 患者路由与资源缩放玩具仿真，记录通信开销与结果。",
+      "evidence_ids": [
+        "S1",
+        "S6"
+      ],
+      "claim_type": "trend"
+    },
+    {
+      "topic": "药物发现与科研工作流",
+      "claim": "近期工作把药物发现与科学假设生成组织为进化式多智能体协作或可复现的技能库，强调可执行、可验证与错误纠正。",
+      "application": "医药 Agent 落地宜以“可复现技能+验证闭环”为基本单元，而非纯对话式推理。",
+      "try_next": "用公开技能库搭建靶点-机制假设生成流水线，并接入外部证据做可测试性校验。",
+      "evidence_ids": [
+        "S8",
+        "S10"
+      ],
+      "claim_type": "trend"
+    },
+    {
+      "topic": "评测与证据可验证性",
+      "claim": "近期出现面向长周期专业工作（含医疗）的基准与跨组织 A2A 案例证据校验，指出 Agent 易接受记录否证的前提并将错误输入贯穿分析。",
+      "application": "上线前需长流程基准评测与证据链校验，防止看似自洽但前提错误的输出。",
+      "try_next": "用长周期专业基准跑一次医疗任务，记录前提被接受而未被纠正的失败点。",
+      "evidence_ids": [
+        "S4",
+        "S5"
+      ],
+      "claim_type": "trend"
+    }
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "Physics-Informed Multi-Agent Coordination for Hospital Patient Flow Optimization",
+      "url": "https://arxiv.org/abs/2609.37022",
+      "date": "2026-09-29",
+      "date_kind": "published",
+      "provider": "arxiv"
+    },
+    {
+      "id": "S2",
+      "title": "Agentic Federated Learning: Rule-Based Client and Server Agents for Adaptive Training",
+      "url": "https://arxiv.org/abs/2609.35914",
+      "date": "2026-09-28",
+      "date_kind": "published",
+      "provider": "arxiv"
+    },
+    {
+      "id": "S3",
+      "title": "awslabs/hcls-agent-skills",
+      "url": "https://github.com/awslabs/hcls-agent-skills",
+      "date": "2026-09-18",
+      "date_kind": "updated",
+      "provider": "github"
+    },
+    {
+      "id": "S4",
+      "title": "DAYJOB: A Benchmark for Long-Horizon Professional Work",
+      "url": "https://arxiv.org/abs/2610.01306",
+      "date": "2026-10-01",
+      "date_kind": "published",
+      "provider": "arxiv"
+    },
+    {
+      "id": "S5",
+      "title": "A2A-CaseVerify: Merkle-Linked Case-Evidence Verification for Cross-Organization A2A Workflows",
+      "url": "https://arxiv.org/abs/2609.33914",
+      "date": "2026-09-27",
+      "date_kind": "published",
+      "provider": "arxiv"
+    },
+    {
+      "id": "S6",
+      "title": "A Multi-Agent LLM Framework for Personalized Health Checkup Interpretation and Guidance",
+      "url": "https://arxiv.org/abs/2610.01451",
+      "date": "2026-10-01",
+      "date_kind": "published",
+      "provider": "arxiv"
+    },
+    {
+      "id": "S7",
+      "title": "K-Dense-AI/scientific-agent-skills",
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills",
+      "date": "2026-10-01",
+      "date_kind": "updated",
+      "provider": "github"
+    },
+    {
+      "id": "S8",
+      "title": "HypoEvolve: Genetic Algorithms Enable Multi-Agent LLMs to Discover Scientific Hypotheses",
+      "url": "https://arxiv.org/abs/2609.15938",
+      "date": "2026-09-14",
+      "date_kind": "published",
+      "provider": "hf"
+    },
+    {
+      "id": "S9",
+      "title": "jinm29/ai-healthcare-app",
+      "url": "https://github.com/jinm29/ai-healthcare-app",
+      "date": "2026-09-14",
+      "date_kind": "updated",
+      "provider": "github"
+    },
+    {
+      "id": "S10",
+      "title": "LabAgent: Customize Any Research Hubs for Scientific Discoveries Using AI Agents",
+      "url": "https://arxiv.org/abs/2609.13437",
+      "date": "2026-09-11",
+      "date_kind": "published",
+      "provider": "arxiv"
+    },
+    {
+      "id": "S11",
+      "title": "From Document Silos to Process Intelligence: A Multi-Layer Knowledge Graph for CMC Process Development",
+      "url": "https://arxiv.org/abs/2609.11493",
+      "date": "2026-09-10",
+      "date_kind": "published",
+      "provider": "arxiv"
+    },
+    {
+      "id": "S12",
+      "title": "AgenticHealthAI/Awesome-AI-Agents-for-Healthcare",
+      "url": "https://github.com/AgenticHealthAI/Awesome-AI-Agents-for-Healthcare",
+      "date": "2026-09-08",
+      "date_kind": "updated",
+      "provider": "github"
+    }
+  ],
+  "human_review": {
+    "scope": "Read retained abstracts/repository descriptions and compare cited findings; no full-paper or deployment verification.",
+    "assessment": "Recent research directions and practical suggestions are supported at abstract level, with attribution limits below.",
+    "notes": [
+      "No historical growth or industry adoption baseline was retrieved; the final answer limits trend claims to recent research directions.",
+      "Finding 1 combines hospital routing and checkup interpretation. Cost and safety tradeoffs come from the checkup experiment, not a universal hospital result.",
+      "Findings 2 and 3 are engineering synthesis and learning suggestions, not evidence of clinical effectiveness.",
+      "Only medical-agent-trends was run live. The other seven cases remain offline-replay checks.",
+      "Tavily was unconfigured. ArXiv, HF and GitHub supplied the evidence in this runner."
+    ]
+  },
+  "failure_experiment": {
+    "workflow_run": "https://github.com/chromiii/ai-agent-radar/actions/runs/37020600509",
+    "status": "failed_decision",
+    "steps": 5,
+    "error_type": "JSONDecodeError",
+    "diagnosis": "First run did not preserve finish_reason; truncation versus another formatting cause is unconfirmed.",
+    "fixes": [
+      "Remove internal lexical filters from prompt",
+      "Render evidence once",
+      "Encourage early finish and compact output",
+      "Increase output token cap to 3600",
+      "Record whitelisted response metadata",
+      "Constrain historical/adoption claims"
+    ]
+  },
+  "notice": "Structural PASS is not an automatic semantic-quality judgment. This is one case, not a full live benchmark."
+}
