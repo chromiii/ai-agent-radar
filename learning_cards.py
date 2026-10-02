@@ -20,6 +20,10 @@ CARD_PROMPT = (
     "production deployment or entire benchmark run. Do not invent package commands or APIs. "
     "done_when must check only steps named in the exercise; it must not add an agent client, "
     "server setup, login or other new prerequisites. Prefer a self-contained mock or local toy exercise. "
+    "Assume only basic local Python and toy/mock inputs are ready. The timeboxed exercise must not require "
+    "API keys, real model calls, model downloads, a vector database or a new framework/SDK installation. "
+    "For retrieval use small documents and supplied toy rankings/scores; for tool interfaces use local "
+    "schema dictionaries and a mock dispatcher. Clearly call these simulations, not real protocol integrations. "
     "Keep one_liner and application under 120 Chinese characters, each learn point under 60, "
     "the practice under 160 and done_when under 100. Use Simplified Chinese."
 )
