@@ -134,7 +134,8 @@ def build_agent_prompt(state: AgentState, weekly_markdown: str) -> list[dict[str
         "Search excerpts and abstracts establish only what they say, not that you read the full document. "
         "Group relevant findings into topics; distinguish clinical workflows from drug discovery when supported. "
         "Query expansions are search alternatives, not extra required subtopics. "
-        "Write English search queries that preserve concrete user constraints such as Python, SDK or a named platform. "
+        "Write short English search queries that preserve concrete user constraints such as Python, SDK or a named platform. "
+        "Prefer 2–5 useful keywords; do not join every part of a comparison into one restrictive query. "
         "Incidental healthcare mentions do not prove medical evaluation or deployment. "
         "Do not fill a quota or assert clinical efficacy. Put no URLs in prose; use evidence_ids. "
         "Return at most 3 compact findings; keep each claim, application and try_next under 180 Chinese characters. "
@@ -385,7 +386,9 @@ def run_agent(
                     # spending the first round on generic aliases (e.g. dropping Python).
                     grounded = [q for q in decision["query_terms"] if q.casefold() != state.user_query.casefold()
                                 and all(any(contains(q, term) for term in group) for group in plan.relevance_groups)]
-                    queries = list(dict.fromkeys(grounded + plan.expanded_queries))[:2]
+                    # Pair one specific query with a broad topic alias. Two long rewrites
+                    # can exhaust the first-round budget without any recent matches.
+                    queries = list(dict.fromkeys(grounded[:1] + plan.expanded_queries))[:2]
                 else:
                     queries = decision["query_terms"]
                 batch = searcher.search(plan, queries, selected_urls)

@@ -506,6 +506,8 @@ def call_deepseek_json(
         "model": ai_config.get("model", "deepseek-v4-flash"),
         "messages": build_classifier_prompt(end_day, start_day, candidate_terms, representative_items),
         "temperature": 0.1,
+        # Weekly is a bounded editing task; reserve its budget for the visible JSON.
+        "thinking": {"type": "disabled"},
         "max_tokens": int(ai_config.get("max_tokens_weekly", 6000)),
         "response_format": {"type": "json_object"},
     }
@@ -538,7 +540,9 @@ def call_deepseek_json(
                                       if type(usage.get(key)) is int and 0 <= usage[key] <= 10_000_000}
         return validated
     except Exception as exc:
-        print(f"DeepSeek weekly JSON curation failed. Error: {exc}")
+        status = exc.response.status_code if isinstance(exc, requests.HTTPError) and exc.response is not None else None
+        safe_status = f" (HTTP {status})" if type(status) is int and 100 <= status <= 599 else ""
+        print(f"DeepSeek weekly JSON curation failed: {type(exc).__name__}{safe_status}.")
         return None
 
 

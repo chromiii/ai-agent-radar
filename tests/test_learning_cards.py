@@ -138,3 +138,32 @@ def test_weekly_truncated_response_is_rejected_without_logging_content(monkeypat
     output = capsys.readouterr().out
     assert result is None and 'length' in output
     assert 'private-model-content' not in output and 'weekly-test-secret' not in output
+
+
+def test_two_narrow_queries_leave_room_for_a_broad_topic_search():
+    class RecordingSearch(ReplaySearch):
+        def search(self, plan, queries, selected_urls):
+            self.queries = queries
+            return super().search(plan, queries, selected_urls)
+
+    searcher = RecordingSearch([])
+    state = AgentState(task_id='medical-comparison', user_query='医疗 Agent 和普通 Agent 工程区别是什么？',
+                       max_steps=1, search_mode='external', as_of='2026-10-02')
+    run_agent(state, '', {}, decide=lambda *_: {'action': 'search_more', 'query_terms': [
+        'healthcare llm agent clinical workflow engineering challenges',
+        'medical agent safety evaluation benchmark guardrails']}, searcher=searcher)
+    assert searcher.queries == ['healthcare llm agent clinical workflow engineering challenges', 'healthcare agent']
+
+
+def test_weekly_request_failure_does_not_log_credentials_or_raw_exception(monkeypatch, capsys):
+    monkeypatch.setenv('DEEPSEEK_API_KEY', 'weekly-test-secret')
+
+    def fail(*args, **kwargs):
+        raise requests.RequestException('Authorization: Bearer weekly-test-secret')
+
+    monkeypatch.setattr(requests, 'post', fail)
+    result = call_deepseek_json(dt.date(2026, 10, 2), dt.date(2026, 9, 26), [], [],
+                                {'ai': {'enabled': True, 'provider': 'deepseek'}})
+    output = capsys.readouterr().out
+    assert result is None and 'RequestException' in output
+    assert 'weekly-test-secret' not in output and 'Authorization' not in output
