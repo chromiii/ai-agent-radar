@@ -19,6 +19,28 @@ from research_search import EvidenceSearch, build_query_plan, clean
 
 ROOT = Path(__file__).resolve().parent
 ALLOWED_ACTIONS = {"analyze", "search_more", "finish"}
+FINISH_REASONS = {"stop", "length", "content_filter", "tool_calls", "insufficient_system_resource", "aborted"}
+
+
+def safe_model_diagnostics(data: Any) -> dict[str, Any]:
+    """Retain only bounded API metadata, never model text or request credentials."""
+    if not isinstance(data, dict):
+        return {}
+    result = {}
+    if isinstance(data.get("finish_reason"), str) and data["finish_reason"] in FINISH_REASONS:
+        result["finish_reason"] = data["finish_reason"]
+    for key in ("prompt_tokens", "completion_tokens", "total_tokens", "http_status"):
+        value = data.get(key)
+        if type(value) is int and 0 <= value <= 10_000_000:
+            result[key] = value
+    return result
+
+
+class ModelResponseError(ValueError):
+    def __init__(self, code: str, diagnostics: dict[str, Any]):
+        super().__init__(code)
+        self.code = code
+        self.diagnostics = safe_model_diagnostics(diagnostics)
 
 
 @dataclass
@@ -42,6 +64,8 @@ class AgentState:
     validation_errors: list[str] = field(default_factory=list)
     validation_failures: int = 0
     search_calls: int = 0
+    search_call_limit: int = 8
+    model_trace: list[dict[str, Any]] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         if type(self.max_steps) is not int or not 1 <= self.max_steps <= 10:
@@ -101,22 +125,34 @@ def build_agent_prompt(state: AgentState, weekly_markdown: str) -> list[dict[str
         "Repository updated dates show activity, not release/publication dates or proven deployment. "
         "Search excerpts and abstracts establish only what they say, not that you read the full document. "
         "Group relevant findings into topics; distinguish clinical workflows from drug discovery when supported. "
+        "Query expansions are search alternatives, not extra required subtopics. "
+        "Incidental healthcare mentions do not prove medical evaluation or deployment. "
         "Do not fill a quota or assert clinical efficacy. Put no URLs in prose; use evidence_ids. "
+        "Prefer 2–3 compact findings; keep each claim, application and try_next under 180 Chinese characters. "
         "If dates, relevance or sources are insufficient, state the gap and return insufficient_evidence."
     )
+    # Internal lexical filters must not become new research requirements.
+    prompt_plan = {k: v for k, v in state.query_plan.items() if k != "relevance_groups"}
+    observations = []
+    for observation in state.observations:
+        record = {k: v for k, v in observation.items() if k != "new_evidence"}
+        if "new_evidence" in observation:
+            record["new_evidence_ids"] = [item.get("id") for item in observation["new_evidence"]]
+        observations.append(record)
     user = f"""
 Task: {state.user_query}
 Step: {state.current_step}/{state.max_steps}
 Last action: {state.last_action}
 No-progress count: {state.no_progress_count}
 Mode: {state.search_mode}
-Query plan: {json.dumps(state.query_plan, ensure_ascii=False)}
+Query plan: {json.dumps(prompt_plan, ensure_ascii=False)}
 Search calls already used: {state.search_calls}
+Remaining search API calls: {max(0, state.search_call_limit - state.search_calls)}
 Search coverage warnings: {json.dumps(state.warnings, ensure_ascii=False)}
 Previous validation errors: {json.dumps(state.validation_errors, ensure_ascii=False)}
 
 Existing observations JSON:
-{json.dumps(state.observations, ensure_ascii=False, indent=2)}
+{json.dumps(observations, ensure_ascii=False, indent=2)}
 
 Selected items JSON:
 {json.dumps(state.selected_items, ensure_ascii=False, indent=2)}
@@ -143,6 +179,10 @@ Rules:
 - analyze: use when current evidence is enough to form a useful observation but the task is not complete.
 - search_more: use only when a specific evidence gap exists; query_terms must be grounded in the task/report.
 - finish: use when the answer is useful enough or the remaining evidence gap is not worth another step.
+- Finish as soon as useful evidence is available; a separate analyze step is optional.
+- At the final step, return finish using available evidence or insufficient_evidence.
+- Do not search when no API requests remain or when 12 sources are retained.
+- Keep reason under 80 Chinese characters, observation under 220, and limitations under 240.
 - Prefer application-layer concepts, implementation boundaries, failure modes, and hands-on learning.
 - Do not expose chain-of-thought. reason is a short action rationale only.
 {mode_rules}
@@ -159,7 +199,7 @@ def call_deepseek(messages: list[dict[str, str]], config: dict[str, Any]) -> dic
         "model": ai.get("model", "deepseek-v4-flash"),
         "messages": messages,
         "temperature": 0.1,
-        "max_tokens": 2400,
+        "max_tokens": 3600,
         "response_format": {"type": "json_object"},
     }
     response = requests.post(
@@ -169,14 +209,34 @@ def call_deepseek(messages: list[dict[str, str]], config: dict[str, Any]) -> dic
         timeout=90,
     )
     response.raise_for_status()
-    content = response.json()["choices"][0]["message"]["content"].strip()
+    data = response.json()
     try:
-        return json.loads(content)
+        choice = data["choices"][0]
+        content = choice["message"]["content"]
+        diagnostics = safe_model_diagnostics({"finish_reason": choice.get("finish_reason"), **(data.get("usage") or {})})
+    except (KeyError, IndexError, TypeError, AttributeError):
+        raise ModelResponseError("invalid_response_shape", {}) from None
+    if not isinstance(content, str):
+        raise ModelResponseError("empty_or_invalid_content", diagnostics)
+    if choice.get("finish_reason") == "length":
+        raise ModelResponseError("truncated_response", diagnostics)
+    if choice.get("finish_reason") != "stop":
+        raise ModelResponseError("incomplete_response", diagnostics)
+    content = content.strip()
+    try:
+        decision = json.loads(content)
     except json.JSONDecodeError:
         match = re.search(r"\{.*\}", content, re.DOTALL)
         if not match:
-            raise ValueError("Agent returned non-JSON output")
-        return json.loads(match.group(0))
+            raise ModelResponseError("invalid_json", diagnostics) from None
+        try:
+            decision = json.loads(match.group(0))
+        except json.JSONDecodeError:
+            raise ModelResponseError("invalid_json", diagnostics) from None
+    if not isinstance(decision, dict):
+        raise ModelResponseError("invalid_decision_shape", diagnostics)
+    decision["_model_diagnostics"] = diagnostics
+    return decision
 
 
 def validate_decision(raw: dict[str, Any], search_mode: str = "weekly") -> dict[str, Any]:
@@ -275,13 +335,23 @@ def run_agent(
         state.as_of = today.isoformat()
         state.query_plan = asdict(plan)
         searcher = searcher or EvidenceSearch(config)
+        state.search_call_limit = getattr(searcher, "max_calls", 8)
     while state.status == "running" and state.current_step < state.max_steps:
         state.current_step += 1
         try:
-            decision = validate_decision(decide(build_agent_prompt(state, weekly_markdown), config), state.search_mode)
+            raw = decide(build_agent_prompt(state, weekly_markdown), config)
+            diagnostics = safe_model_diagnostics(raw.get("_model_diagnostics")) if isinstance(raw, dict) else {}
+            if diagnostics:
+                state.model_trace.append({"step": state.current_step, **diagnostics})
+            decision = validate_decision(raw, state.search_mode)
         except (requests.RequestException, ValueError, TypeError, KeyError, RuntimeError) as exc:
             state.status = "failed_decision"
-            state.observations.append({"step": state.current_step, "action": "decision_error", "error_type": type(exc).__name__})
+            error = {"step": state.current_step, "action": "decision_error", "error_type": type(exc).__name__}
+            if isinstance(exc, ModelResponseError):
+                error.update(error_code=exc.code, **exc.diagnostics)
+            elif isinstance(exc, requests.HTTPError) and exc.response is not None:
+                error.update(safe_model_diagnostics({"http_status": exc.response.status_code}))
+            state.observations.append(error)
             state.final_answer = "模型调用或输出校验失败；已保存运行记录，没有生成未经校验的结论。"
             break
         action = decision["action"]
