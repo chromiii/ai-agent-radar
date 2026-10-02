@@ -37,7 +37,7 @@ jobs:
     # Secrets are used only for manually selected runs or the owner's in-repo PR.
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      ((github.event.label.name == 'research-live-test' || github.event.label.name == 'research-live-suite') &&
+      ((github.event.label.name == 'research-live-test' || github.event.label.name == 'research-live-suite' || github.event.label.name == 'weekly-learning-preview') &&
        github.event.pull_request.head.repo.full_name == github.repository &&
        github.event.pull_request.author_association == 'OWNER')
     runs-on: ubuntu-latest
@@ -50,6 +50,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Evaluate selected scenario
+        if: github.event.label.name != 'weekly-learning-preview'
         env:
           EVAL_MODE: ${{ inputs.mode || 'live' }}
           EVAL_CASE: ${{ github.event.label.name == 'research-live-suite' && 'all' || inputs.case || 'medical-agent-trends' }}
@@ -68,12 +69,12 @@ jobs:
           fi
       - name: Preview Weekly learning cards
         if: >-
-          always() && (github.event.label.name == 'research-live-suite' ||
+          always() && (github.event.label.name == 'research-live-suite' || github.event.label.name == 'weekly-learning-preview' ||
           (inputs.case == 'all' && inputs.mode == 'live'))
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: |
-          python weekly_trends.py
+          python weekly_trends.py --evidence-output eval_results/weekly-evidence.json
           python - <<'PY'
           import json, shutil
           from pathlib import Path
@@ -92,6 +93,9 @@ jobs:
         run: |
           if [ -f eval_results/evaluation.md ]; then
             cat eval_results/evaluation.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f eval_results/weekly-preview.md ]; then
+            cat eval_results/weekly-preview.md >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Preserve evaluation evidence
         if: always()

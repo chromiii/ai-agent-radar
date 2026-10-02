@@ -1,5 +1,6 @@
 ﻿from __future__ import annotations
 
+import argparse
 import collections
 import datetime as dt
 import json
@@ -400,6 +401,10 @@ Rules:
 - Prefer frameworks, tools, reliability patterns, evaluation, memory, RAG, MCP, coding agents, computer use, observability and engineering practices.
 - Purely academic work should only become a card when it explains an application-layer design choice, benchmark, failure mode, or capability boundary.
 - learning_cards.source_urls must come from Representative items JSON exactly; never invent URLs.
+- Build each card around the title and summary of its own cited items. Every why_now statement must be supported by those same items, not by other uncited items or a matching candidate keyword.
+- A single source does not support claims of multiple studies, an industry trend or growth. Describe it as one study or implementation.
+- Do not turn a Search/Terminal/coding world-model paper into a GUI-specific card, or a security/OS memory-governance paper into a memory benchmark. Preserve the actual system type and scope.
+- HF collection days describe when items entered this weekly feed, not necessarily their original publication dates. Do not imply all cited papers were first published this week.
 - one_liner/why_now/hands_on must be Simplified Chinese and concise.
 - learn must contain 2 to 4 concise learning points.
 - If evidence is weak, use tier2 or omit; do not put weak terms in tier1.
@@ -672,7 +677,7 @@ def render_weekly_markdown(
     return "\n".join(lines)
 
 
-def main() -> None:
+def main(evidence_output: Path | None = None) -> None:
     config = load_config()
     weekly = config.get("weekly", {})
     end_day = today_local()
@@ -690,6 +695,12 @@ def main() -> None:
         candidate_terms,
         int(weekly.get("ai_max_items", 35)),
     )
+    if evidence_output is not None:
+        evidence_output.parent.mkdir(parents=True, exist_ok=True)
+        evidence_output.write_text(json.dumps({"range": {"start": start_day.isoformat(), "end": end_day.isoformat()},
+                                               "candidate_terms": candidate_terms,
+                                               "representative_items": representative_items},
+                                              ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     curated = call_deepseek_json(end_day, start_day, candidate_terms, representative_items, config)
 
     if curated:
@@ -709,4 +720,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Weekly learning radar")
+    parser.add_argument("--evidence-output", type=Path, help="Optional source excerpts for an evaluation artifact")
+    main(parser.parse_args().evidence_output)
