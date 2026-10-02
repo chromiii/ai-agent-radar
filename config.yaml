@@ -6,6 +6,19 @@ hf_daily_fallback_days: 3
 hf_space_min_likes: 2
 hf_space_min_downloads: 50
 
+# Isolated on-demand Agent settings. Scheduled Radar settings stay independent.
+learning_agent:
+  timezone: Asia/Shanghai
+  lookback_days: 30
+  search:
+    providers: [hf, github, arxiv, tavily]
+    max_calls: 8
+    max_queries: 4
+    results_per_query: 6
+    # HF ranks by query relevance; inspect more candidates before date filtering.
+    hf_candidates: 40
+    timeout_seconds: 12
+
 weekly:
   output_dir: weekly
   state_dir: state

@@ -1,0 +1,59 @@
+name: Research usability evaluation
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Verification level
+        type: choice
+        default: retrieval
+        options: [replay, retrieval, live]
+      case:
+        description: Usability case
+        type: choice
+        default: medical-agent-trends
+        options:
+          - medical-agent-trends
+          - coding-agent-learning
+          - mcp-application-value
+          - multi-agent-application
+          - agent-memory-changes
+          - agentic-rag-learning
+          - medical-agent-engineering
+          - weak-week
+          - all
+
+permissions:
+  contents: read
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Evaluate selected scenario
+        env:
+          EVAL_MODE: ${{ inputs.mode }}
+          EVAL_CASE: ${{ inputs.case }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$EVAL_CASE" = "all" ]; then
+            python research_eval.py --mode "$EVAL_MODE" --output eval_results/evaluation.json
+          else
+            python research_eval.py --mode "$EVAL_MODE" --case "$EVAL_CASE" --output eval_results/evaluation.json
+          fi
+      - name: Preserve evaluation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-evaluation
+          path: eval_results/
+          retention-days: 7
