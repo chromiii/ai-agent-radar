@@ -1,0 +1,10 @@
+[
+  {"id":"medical-agent-trends","query":"最近医药 Agent 有什么趋势？","topics":["healthcare"],"min_sources":2,"must_expand":true},
+  {"id":"coding-agent-learning","query":"最近 coding agent 有什么值得学？","topics":["coding"],"min_sources":2,"must_expand":true},
+  {"id":"mcp-application-value","query":"MCP 最近还值得学吗？","topics":["mcp"],"min_sources":2,"must_expand":true},
+  {"id":"multi-agent-application","query":"Multi-Agent 最近有什么真正落地的东西？","topics":["multi_agent"],"min_sources":2,"must_expand":true},
+  {"id":"agent-memory-changes","query":"Agent Memory 最近有什么变化？","topics":["memory"],"min_sources":2,"must_expand":true},
+  {"id":"agentic-rag-learning","query":"最近 RAG 有什么值得 Agent 工程师关注？","topics":["rag"],"min_sources":2,"must_expand":true},
+  {"id":"medical-agent-engineering","query":"医疗 Agent 和普通 Agent 最大工程区别是什么？","topics":["healthcare"],"min_sources":2,"must_expand":true},
+  {"id":"weak-week","query":"这周没什么值得学的吗？","topics":[],"min_sources":0,"must_expand":false,"fixture":"empty","allow_insufficient":true}
+]

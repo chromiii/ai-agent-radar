@@ -1,0 +1,326 @@
+{
+  "case_id": "medical-agent-trends",
+  "query": "最近医药 Agent 有什么趋势？",
+  "as_of": "2026-10-02",
+  "verification_level": "live_retrieval_only",
+  "checks": {
+    "query_expansion": true,
+    "topic_understanding": true,
+    "search_path_executed": true,
+    "sources": true
+  },
+  "evidence_levels": {
+    "publication_sources": 1,
+    "activity_sources": 11,
+    "trend_evidence_ready": false
+  },
+  "semantic_quality": "not_automatically_evaluated",
+  "model_called": false,
+  "search_calls": 8,
+  "warnings": [
+    "arxiv 检索失败；本轮来源覆盖不完整。",
+    "Tavily 未配置；本轮仅覆盖可用的论文/开源项目源。",
+    "本轮发布日期证据少于两条；仓库更新只能作为活跃信号，无法据此确认行业趋势。"
+  ],
+  "query_plan": {
+    "original_query": "最近医药 Agent 有什么趋势？",
+    "expanded_queries": [
+      "healthcare agent",
+      "drug discovery agent",
+      "clinical workflow agent",
+      "biomedical agent"
+    ],
+    "topics": [
+      "healthcare"
+    ],
+    "relevance_groups": [
+      [
+        "agent",
+        "agents",
+        "agentic",
+        "mcp",
+        "model context protocol",
+        "智能体"
+      ],
+      [
+        "medical",
+        "medicine",
+        "healthcare",
+        "health care",
+        "clinical",
+        "ehr",
+        "patient",
+        "biomedical",
+        "drug",
+        "pharma",
+        "pharmaceutical",
+        "pharmacology",
+        "医药",
+        "医疗"
+      ]
+    ],
+    "intent": "research",
+    "start_date": "2026-09-03",
+    "end_date": "2026-10-02"
+  },
+  "search_trace": [
+    {
+      "provider": "hf",
+      "query": "healthcare agent",
+      "start_date": "2026-09-03",
+      "end_date": "2026-10-02",
+      "status": "ok",
+      "retrieved": 40,
+      "latency_ms": 6564
+    },
+    {
+      "provider": "github",
+      "query": "healthcare agent",
+      "start_date": "2026-09-03",
+      "end_date": "2026-10-02",
+      "status": "ok",
+      "retrieved": 6,
+      "latency_ms": 6923
+    },
+    {
+      "provider": "arxiv",
+      "query": "healthcare agent",
+      "start_date": "2026-09-03",
+      "end_date": "2026-10-02",
+      "status": "error",
+      "error_type": "HTTPError",
+      "latency_ms": 5076
+    },
+    {
+      "provider": "tavily",
+      "query": "healthcare agent",
+      "start_date": "2026-09-03",
+      "end_date": "2026-10-02",
+      "status": "unconfigured"
+    },
+    {
+      "provider": "hf",
+      "query": "drug discovery agent",
+      "start_date": "2026-09-03",
+      "end_date": "2026-10-02",
+      "status": "ok",
+      "retrieved": 40,
+      "latency_ms": 543
+    },
+    {
+      "provider": "github",
+      "query": "drug discovery agent",
+      "start_date": "2026-09-03",
+      "end_date": "2026-10-02",
+      "status": "ok",
+      "retrieved": 6,
+      "latency_ms": 365
+    },
+    {
+      "provider": "arxiv",
+      "query": "drug discovery agent",
+      "start_date": "2026-09-03",
+      "end_date": "2026-10-02",
+      "status": "isolated_after_error"
+    },
+    {
+      "provider": "tavily",
+      "query": "drug discovery agent",
+      "start_date": "2026-09-03",
+      "end_date": "2026-10-02",
+      "status": "unconfigured"
+    },
+    {
+      "provider": "hf",
+      "query": "clinical workflow agent",
+      "start_date": "2026-09-03",
+      "end_date": "2026-10-02",
+      "status": "ok",
+      "retrieved": 40,
+      "latency_ms": 460
+    },
+    {
+      "provider": "github",
+      "query": "clinical workflow agent",
+      "start_date": "2026-09-03",
+      "end_date": "2026-10-02",
+      "status": "ok",
+      "retrieved": 6,
+      "latency_ms": 344
+    },
+    {
+      "provider": "arxiv",
+      "query": "clinical workflow agent",
+      "start_date": "2026-09-03",
+      "end_date": "2026-10-02",
+      "status": "isolated_after_error"
+    },
+    {
+      "provider": "tavily",
+      "query": "clinical workflow agent",
+      "start_date": "2026-09-03",
+      "end_date": "2026-10-02",
+      "status": "unconfigured"
+    },
+    {
+      "provider": "hf",
+      "query": "biomedical agent",
+      "start_date": "2026-09-03",
+      "end_date": "2026-10-02",
+      "status": "ok",
+      "retrieved": 40,
+      "latency_ms": 516
+    },
+    {
+      "provider": "github",
+      "query": "biomedical agent",
+      "start_date": "2026-09-03",
+      "end_date": "2026-10-02",
+      "status": "budget_exhausted"
+    },
+    {
+      "provider": "arxiv",
+      "query": "biomedical agent",
+      "start_date": "2026-09-03",
+      "end_date": "2026-10-02",
+      "status": "isolated_after_error"
+    },
+    {
+      "provider": "tavily",
+      "query": "biomedical agent",
+      "start_date": "2026-09-03",
+      "end_date": "2026-10-02",
+      "status": "unconfigured"
+    },
+    {
+      "stage": "filter",
+      "retrieved": 178,
+      "selected": 12,
+      "rejected": {
+        "invalid": 1,
+        "duplicate": 0,
+        "undated": 0,
+        "out_of_window": 159,
+        "irrelevant": 0,
+        "over_limit": 6
+      },
+      "used_calls": 8
+    }
+  ],
+  "sources": [
+    {
+      "title": "Hussmart/caremesh-ai",
+      "url": "https://github.com/Hussmart/caremesh-ai",
+      "date": "2026-09-21",
+      "date_kind": "updated",
+      "provider": "github",
+      "evidence_kind": "repository_metadata",
+      "retrieved_query": "clinical workflow agent"
+    },
+    {
+      "title": "awslabs/hcls-agent-skills",
+      "url": "https://github.com/awslabs/hcls-agent-skills",
+      "date": "2026-09-18",
+      "date_kind": "updated",
+      "provider": "github",
+      "evidence_kind": "repository_metadata",
+      "retrieved_query": "drug discovery agent"
+    },
+    {
+      "title": "jeevesh2515/clinical-rag-agent",
+      "url": "https://github.com/jeevesh2515/clinical-rag-agent",
+      "date": "2026-10-01",
+      "date_kind": "updated",
+      "provider": "github",
+      "evidence_kind": "repository_metadata",
+      "retrieved_query": "clinical workflow agent"
+    },
+    {
+      "title": "aws-samples/sample-amazon-connect-health-telehealth-workflow",
+      "url": "https://github.com/aws-samples/sample-amazon-connect-health-telehealth-workflow",
+      "date": "2026-09-29",
+      "date_kind": "updated",
+      "provider": "github",
+      "evidence_kind": "repository_metadata",
+      "retrieved_query": "clinical workflow agent"
+    },
+    {
+      "title": "K-Dense-AI/scientific-agent-skills",
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills",
+      "date": "2026-10-01",
+      "date_kind": "updated",
+      "provider": "github",
+      "evidence_kind": "repository_metadata",
+      "retrieved_query": "drug discovery agent"
+    },
+    {
+      "title": "HypoEvolve: Genetic Algorithms Enable Multi-Agent LLMs to Discover Scientific Hypotheses",
+      "url": "https://arxiv.org/abs/2609.15938",
+      "date": "2026-09-14",
+      "date_kind": "published",
+      "provider": "hf",
+      "evidence_kind": "abstract",
+      "retrieved_query": "drug discovery agent"
+    },
+    {
+      "title": "jinm29/ai-healthcare-app",
+      "url": "https://github.com/jinm29/ai-healthcare-app",
+      "date": "2026-09-14",
+      "date_kind": "updated",
+      "provider": "github",
+      "evidence_kind": "repository_metadata",
+      "retrieved_query": "healthcare agent"
+    },
+    {
+      "title": "AgenticHealthAI/Awesome-AI-Agents-for-Healthcare",
+      "url": "https://github.com/AgenticHealthAI/Awesome-AI-Agents-for-Healthcare",
+      "date": "2026-09-08",
+      "date_kind": "updated",
+      "provider": "github",
+      "evidence_kind": "repository_metadata",
+      "retrieved_query": "healthcare agent"
+    },
+    {
+      "title": "yingjac/agentic-bionemo-workshop",
+      "url": "https://github.com/yingjac/agentic-bionemo-workshop",
+      "date": "2026-09-07",
+      "date_kind": "updated",
+      "provider": "github",
+      "evidence_kind": "repository_metadata",
+      "retrieved_query": "drug discovery agent"
+    },
+    {
+      "title": "songyue-chen/sas2r",
+      "url": "https://github.com/songyue-chen/sas2r",
+      "date": "2026-09-29",
+      "date_kind": "updated",
+      "provider": "github",
+      "evidence_kind": "repository_metadata",
+      "retrieved_query": "clinical workflow agent"
+    },
+    {
+      "title": "lynxkite/lynxkite-2000",
+      "url": "https://github.com/lynxkite/lynxkite-2000",
+      "date": "2026-10-02",
+      "date_kind": "updated",
+      "provider": "github",
+      "evidence_kind": "repository_metadata",
+      "retrieved_query": "drug discovery agent"
+    },
+    {
+      "title": "Don-Uwe/ai-healthcare-agent-app",
+      "url": "https://github.com/Don-Uwe/ai-healthcare-agent-app",
+      "date": "2026-10-01",
+      "date_kind": "updated",
+      "provider": "github",
+      "evidence_kind": "repository_metadata",
+      "retrieved_query": "healthcare agent"
+    }
+  ],
+  "local_validation": {
+    "pytest_passed": 56,
+    "offline_replay_cases_passed": 8,
+    "offline_replay_cases_total": 8
+  },
+  "notice": "This verifies real retrieval only. One publication and eleven repository activity records do not establish a recent industry trend. Live DeepSeek quality and semantic entailment have not been verified."
+}

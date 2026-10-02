@@ -2,6 +2,14 @@
 
 This roadmap describes intended evolution. **Planned items are not implemented features.** The existing Daily / Company / Weekly pipelines remain the reliability backbone throughout the migration.
 
+## Release naming and current stage
+
+The original V0 roadmap below uses architecture-stage labels. Actual releases have now shipped as **V1 = application-layer Weekly cards**, **V2 = bounded learning Agent**, and **V2.1 = real source search + usability evaluation**. Future stage labels below are planning labels, not release numbers or implementation claims.
+
+Current focus: finish the V2.1 search and evidence contract in PR #3. The eight regression questions start with “最近医药 Agent 有什么趋势？”. Query expansion is a small alias dictionary; source APIs, date filters, citations, and deterministic replay are implemented. Live model quality must be checked separately using configured credentials. A dated GitHub push is an activity signal, not a newly published trend.
+
+Next gate: live evaluation and human review of relevance, application usefulness and citation entailment. Then decide whether stronger semantic reranking or a LangGraph/checkpoint layer solves an observed failure. Multi-Agent, historical memory, vector RAG and Web UI remain later work.
+
 ## North-star product
 
 AI Agent Radar should evolve from automated report generation into a source-backed AI intelligence product that can:
@@ -47,9 +55,9 @@ Exit criteria:
 - latest baseline understood;
 - roadmap functionality clearly marked as planned.
 
-## V1 — Bounded single-Agent experiment
+## Stage 1 — Bounded single-Agent experiment (released as V2)
 
-**Status:** planned.
+**Status:** implemented as an isolated experiment in PR #3; extended by V2.1.
 
 Learning goals:
 - fixed workflow vs conditional workflow vs ReAct-style execution;
@@ -94,7 +102,7 @@ Exit criteria:
 - failure experiment documented;
 - interview explanation comparing DAG and Agent execution.
 
-## V2 — Agent reliability and tool contracts
+## Stage 2 — Agent reliability and tool contracts
 
 **Status:** planned.
 
@@ -112,7 +120,7 @@ Exit criteria:
 - malformed tool call tests;
 - no infinite retry path.
 
-## V3 — Memory model
+## Stage 3 — Memory model
 
 **Status:** planned.
 
@@ -139,7 +147,7 @@ Exit criteria:
 - transient retry counters never leak into long-term memory;
 - stale/conflicting memory behavior defined.
 
-## V4 — Multi-Agent analysis layer
+## Stage 4 — Multi-Agent analysis layer
 
 **Status:** planned.
 
@@ -165,7 +173,7 @@ Exit criteria:
 - role-specific tests;
 - documented comparison against a single Agent + tools baseline.
 
-## V5 — Historical RAG
+## Stage 5 — Historical RAG
 
 **Status:** planned.
 
@@ -184,7 +192,7 @@ Incremental capabilities:
 
 Evaluation should distinguish ingestion, chunking, embedding, recall, reranking and generation failures.
 
-## V6 — Evaluation, security and observability
+## Stage 6 — Evaluation, security and observability
 
 **Status:** planned.
 
@@ -215,7 +223,7 @@ request/session
 
 Record model/prompt/tool-definition versions where practical.
 
-## V7 — Web product
+## Stage 7 — Web product
 
 **Status:** planned.
 
@@ -233,7 +241,7 @@ Later candidate feature: **Ask Radar** — cited questions over current and hist
 
 Backend direction: reuse/extract Python application logic, then expose a small API (FastAPI is a candidate). Frontend direction: React/Next.js is a candidate. These choices are intentionally not locked during V0.
 
-## V8 — Production execution and recovery
+## Stage 8 — Production execution and recovery
 
 **Status:** planned and only justified after product behavior is stable.
 

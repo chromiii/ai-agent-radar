@@ -1,12 +1,25 @@
 # AI Agent Radar — Project State
 
-> Baseline snapshot for the V0 architecture phase. This document describes what is implemented today; it is not a claim about roadmap features.
+> Updated for V2.1. Scheduled pipeline descriptions retain the V0 baseline; isolated Agent capabilities are listed separately below.
 
 ## Product today
 
 AI Agent Radar is an automated intelligence pipeline running on GitHub Actions. It collects public AI information, filters and deduplicates candidates, uses DeepSeek for bounded semantic classification, renders Markdown reports, persists lightweight state, and can deliver reports by QQ email.
 
-The current system is **not yet a general Agent or Multi-Agent system**. Most control flow is deterministic Python. LLM calls are bounded components inside that pipeline.
+Production control flow remains deterministic Python. An experimental bounded single Agent is available separately; Multi-Agent and historical RAG remain planned.
+
+## Release snapshot
+
+| Release | Capability | Status at this review |
+| --- | --- | --- |
+| V0 | Baseline architecture and decisions | On main |
+| V1 | Saturday application-layer learning cards | On main, PR #2 merged |
+| V2 | Bounded Weekly-evidence Agent | Experimental, PR #3 |
+| V2.1 | External source search, query expansion, dated citations, usability cases | Experimental extension of V2 |
+
+`learning_agent.py` uses `research_search.py` for fixed source APIs: HF papers, arXiv, GitHub repository metadata, optional Tavily excerpts. Source collection, time windows, deduplication and action/citation checks remain application controlled; the model chooses among three allowed actions and writes structured findings. Alias expansion and lexical filtering are implemented; embeddings, vector search, historical RAG, and an independent semantic verifier are not.
+
+`research_eval.py` separates synthetic replay, actual network retrieval, and live model evaluation. See `docs/V2_1_RESEARCH.md` for evidence and limitations. A replay pass is not a live-model validation result.
 
 ## Current modules
 
@@ -78,6 +91,7 @@ rule-based candidate term extraction
 DeepSeek trend refinement
         ↓
 tier1 / tier2 / downrank / noise
+        + application-layer learning cards
         ↓
 weekly/YYYY-MM-DD.md + state/trending_terms.json
         ↓
@@ -123,7 +137,7 @@ Potential future refactoring should extract shared capabilities only when doing 
 - Company semantic classification/summarization
 - Weekly trend refinement
 
-The LLM does **not** currently choose arbitrary tools, dynamically create an execution plan, or control an unbounded action loop.
+The production LLM calls do not choose arbitrary tools. The isolated Agent can choose `analyze`, `search_more`, or `finish` inside a 1–10 step budget. External search shares an API-request budget, uses only fixed endpoints, and treats all retrieved content as untrusted.
 
 ## State today
 
@@ -132,6 +146,9 @@ The LLM does **not** currently choose arbitrary tools, dynamically create an exe
 | `state.json` | Daily seen history | cross-run |
 | `state/company_seen.json` | Company URL history | cross-run, TTL based |
 | `state/trending_terms.json` | Weekly trend signal consumed by Daily | refreshed weekly |
+| `state/agent_runs/TASK_ID.json` | Isolated Agent decisions, query plan, source metadata, errors, findings | one run, ignored by git |
+
+Agent JSON records are inspection artifacts, not resumable checkpoints or long-term memory. Default IDs are unique; explicit output paths remain caller controlled.
 
 These are persistence mechanisms, but they are not yet a formal Agent memory architecture. Future work must distinguish run state, session/task state, entity memory, trend memory, and long-term knowledge.
 
@@ -156,15 +173,18 @@ Already present:
 - safe Weekly failure state
 - workflow concurrency controls
 - no empty Daily report when there is no new content
+- isolated Agent step and search-request budgets
+- repeated-query suppression and no-progress stopping
+- source failures isolated for the current run
+- external finding IDs must refer to retrieved dated sources
+- normal insufficient-evidence outcome, separate from model failure
 
 Not yet implemented as a coherent platform capability:
 
-- Agent step budgets
-- no-progress / loop detection
 - retry budgets and replanning
 - typed tool contracts across an Agent runtime
 - persistent checkpoints for Agent execution
-- retrieval evaluation
+- model-quality / semantic citation-entailment evaluation
 - end-to-end tracing
 - business-level success metrics
 - queue/worker recovery

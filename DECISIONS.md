@@ -135,3 +135,33 @@ The exact frontend stack is not locked in during V0.
 **Decision:** Architecture documentation and README claims must not present roadmap functionality as shipped functionality.
 
 **Why:** The repository should be defensible in an engineering interview and useful to future maintainers/agents.
+
+---
+
+## ADR-010 — Add real source discovery before orchestration frameworks
+
+**Status:** Experimental, V2.1
+
+**Decision:** Extend the isolated bounded Agent with HF/arXiv/GitHub discovery and optional Tavily. Retain Weekly-only mode for regression. Introduce no new runtime dependency or production scheduler.
+
+**Why:** The medical-Agent usability case exposed a retrieval bottleneck: no control-flow framework can recover sources missing from the Weekly report. Keep original query, alias expansion, date window, API calls, filter counts and source metadata visible.
+
+**Limits:** Alias expansion and lexical relevance are not general semantic search. Repository metadata and abstracts are incomplete evidence. Failed source APIs and missing Tavily configuration are disclosed, not silently treated as comprehensive coverage.
+
+## ADR-011 — Date and evidence level are part of the answer contract
+
+**Status:** Experimental, V2.1
+
+**Decision:** Reject unknown/old/future dates for recent findings; canonicalize the same HF/arXiv paper; require citation IDs from selected evidence. At least two distinct sources support a research answer. A finding labeled trend needs two distinct publication-dated sources; pushed repositories support activity signals.
+
+**Why:** A real link alone does not establish freshness, independent evidence, or a trend. Keep application implications and suggested experiments attached to each finding.
+
+**Limits:** The verifier checks structure/provenance. It cannot prove semantic entailment, source independence in the scientific sense, deployment, or clinical efficacy.
+
+## ADR-012 — Evaluation has three distinct verification levels
+
+**Status:** Implemented harness, V2.1
+
+**Decision:** Offline replay uses clearly labeled synthetic sources and scripted decisions; retrieval evaluation makes network calls without generating findings; live evaluation calls the configured model and requires human review. Do not merge their success counts.
+
+**Why:** Deterministic tests should detect regressions without network/cost/randomness. Their success cannot prove model quality. Keep evidence-level metrics visible so multiple repository updates are not mistaken for validated recent publications.
