@@ -1,5 +1,6 @@
 ﻿from __future__ import annotations
 
+import argparse
 import collections
 import datetime as dt
 import json
@@ -14,6 +15,7 @@ import feedparser
 import requests
 
 from radar import dedupe, fetch_hf_daily_papers, fetch_hf_spaces, get_text, load_config, normalize, today_local
+from learning_cards import CARD_PROMPT, render_learning_card, weekly_cards
 
 
 ROOT = Path(__file__).resolve().parent
@@ -334,6 +336,10 @@ def build_classifier_prompt(
     candidate_terms: list[dict[str, Any]],
     representative_items: list[dict[str, Any]],
 ) -> list[dict[str, str]]:
+    # Term examples can come from items omitted by the evidence cap. They have no
+    # citable record here and previously led to claims paired with unrelated URLs.
+    prompt_terms = [{key: term[key] for key in ("term", "score", "count", "sources", "seed") if key in term}
+                    for term in candidate_terms]
     system = (
         "You are a strict editor for a weekly AI Agent application-layer learning radar. "
         "Return valid JSON only. Use only supplied candidate terms and representative items. "
@@ -376,8 +382,11 @@ JSON schema:
       "level": "build",
       "one_liner": "让模型在真实 GUI 环境里观察、决策并执行操作。",
       "why_now": "本周多来源持续出现相关评测与实现。",
+      "application": "需要图形界面操作、且没有稳定 API 的小任务。",
       "learn": ["状态/动作空间", "工具调用", "失败恢复"],
-      "hands_on": "挑一个代表性项目跑通最小 demo，并记录一次失败轨迹。",
+      "hands_on": "用三张示例界面截图模拟一次观察与动作选择，记录一个错误动作。",
+      "practice_minutes": 20,
+      "done_when": "保存三条观察与动作记录，以及错误动作的处理结果。",
       "source_urls": ["https://example.com/item"]
     }}
   ]
@@ -390,19 +399,25 @@ Rules:
 - noise max 10 terms.
 - notes values must be Simplified Chinese, max 30 Chinese characters.
 - Every term in tier1/tier2/downrank/noise must exactly match a candidate term.
-- learning_cards: 5 to 8 cards when evidence allows; fewer is acceptable when the week is weak.
+- learning_cards: at most 5 concise cards; fewer is acceptable when the week is weak.
 - learning_cards.level must be one of "know", "build", "understand_why".
 - learning_cards should answer: 是什么、为什么现在值得知道、应用层要学到什么深度、是否值得动手。
 - Prefer frameworks, tools, reliability patterns, evaluation, memory, RAG, MCP, coding agents, computer use, observability and engineering practices.
 - Purely academic work should only become a card when it explains an application-layer design choice, benchmark, failure mode, or capability boundary.
 - learning_cards.source_urls must come from Representative items JSON exactly; never invent URLs.
+- Candidate counts are collection signals, not citable evidence. Omit a learning card if its candidate term has no supporting Representative item.
+- Build each card around the title and summary of its own cited items. Every why_now statement must be supported by those same items, not by other uncited items or a matching candidate keyword.
+- A single source does not support claims of multiple studies, an industry trend or growth. Describe it as one study or implementation.
+- Do not turn a Search/Terminal/coding world-model paper into a GUI-specific card, or a security/OS memory-governance paper into a memory benchmark. Preserve the actual system type and scope.
+- HF collection days describe when items entered this weekly feed, not necessarily their original publication dates. Do not imply all cited papers were first published this week.
 - one_liner/why_now/hands_on must be Simplified Chinese and concise.
 - learn must contain 2 to 4 concise learning points.
 - If evidence is weak, use tier2 or omit; do not put weak terms in tier1.
 - Do not create new terms.
+{CARD_PROMPT}
 
 Candidate terms JSON:
-{json.dumps(candidate_terms, ensure_ascii=False, indent=2)}
+{json.dumps(prompt_terms, ensure_ascii=False, indent=2)}
 
 Representative items JSON:
 {json.dumps(representative_items, ensure_ascii=False, indent=2)}
@@ -443,47 +458,9 @@ def normalize_term_list(value: Any, allowed_terms: set[str], limit: int) -> list
 def normalize_learning_cards(
     value: Any,
     representative_items: list[dict[str, Any]],
-    limit: int = 8,
+    limit: int = 5,
 ) -> list[dict[str, Any]]:
-    if not isinstance(value, list):
-        return []
-    allowed_urls = {str(item.get("url")) for item in representative_items if item.get("url")}
-    cards: list[dict[str, Any]] = []
-    for entry in value:
-        if not isinstance(entry, dict):
-            continue
-        title = normalize(entry.get("title"))
-        level = str(entry.get("level", "")).strip()
-        one_liner = normalize(entry.get("one_liner"))
-        why_now = normalize(entry.get("why_now"))
-        hands_on = normalize(entry.get("hands_on"))
-        raw_learn = entry.get("learn", [])
-        learn = [normalize(x) for x in raw_learn if isinstance(x, str) and normalize(x)][:4] if isinstance(raw_learn, list) else []
-        raw_urls = entry.get("source_urls", [])
-        source_urls = []
-        if isinstance(raw_urls, list):
-            for url in raw_urls:
-                url_s = str(url)
-                if url_s in allowed_urls and url_s not in source_urls:
-                    source_urls.append(url_s)
-        if not title or level not in {"know", "build", "understand_why"} or not one_liner:
-            continue
-        if not source_urls:
-            continue
-        cards.append(
-            {
-                "title": title[:120],
-                "level": level,
-                "one_liner": one_liner[:220],
-                "why_now": why_now[:260],
-                "learn": learn,
-                "hands_on": hands_on[:260],
-                "source_urls": source_urls[:3],
-            }
-        )
-        if len(cards) >= limit:
-            break
-    return cards
+    return weekly_cards(value, representative_items, limit)
 
 
 def validate_curated(
@@ -539,6 +516,8 @@ def call_deepseek_json(
         "model": ai_config.get("model", "deepseek-v4-flash"),
         "messages": build_classifier_prompt(end_day, start_day, candidate_terms, representative_items),
         "temperature": 0.1,
+        # Weekly is a bounded editing task; reserve its budget for the visible JSON.
+        "thinking": {"type": "disabled"},
         "max_tokens": int(ai_config.get("max_tokens_weekly", 6000)),
         "response_format": {"type": "json_object"},
     }
@@ -552,19 +531,28 @@ def call_deepseek_json(
         response = requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=90)
         response.raise_for_status()
         data = response.json()
-        content = data["choices"][0]["message"]["content"].strip()
+        choice = data["choices"][0]
+        reason = choice.get("finish_reason")
+        if reason != 'stop':
+            safe_reason = reason if reason in ('length', 'content_filter', 'aborted', 'insufficient_system_resource') else 'unknown'
+            print(f"DeepSeek weekly response incomplete: {safe_reason}.")
+            return None
+        content = choice["message"]["content"].strip()
         parsed = parse_json_object(content)
         if parsed is None:
-            print("DeepSeek weekly JSON parse failed. Response head:")
-            print(content[:1500])
-            print("DeepSeek weekly response tail:")
-            print(content[-500:])
+            print("DeepSeek weekly JSON parse failed; raw model content is not logged.")
         validated = validate_curated(parsed, candidate_terms, representative_items)
         if validated is None:
             print("DeepSeek weekly JSON validation failed.")
+        else:
+            usage = data.get('usage', {})
+            validated['model_usage'] = {key: usage[key] for key in ('prompt_tokens', 'completion_tokens', 'total_tokens')
+                                      if type(usage.get(key)) is int and 0 <= usage[key] <= 10_000_000}
         return validated
     except Exception as exc:
-        print(f"DeepSeek weekly JSON curation failed. Error: {exc}")
+        status = exc.response.status_code if isinstance(exc, requests.HTTPError) and exc.response is not None else None
+        safe_status = f" (HTTP {status})" if type(status) is int and 100 <= status <= 599 else ""
+        print(f"DeepSeek weekly JSON curation failed: {type(exc).__name__}{safe_status}.")
         return None
 
 
@@ -634,6 +622,7 @@ def render_weekly_markdown(
         f"# AI Agent 应用层学习周报 - {end_day.isoformat()}",
         "",
         f"范围：{start_day.isoformat()} 到 {end_day.isoformat()}",
+        "窗口按本期收集时间展示；论文首次发布日期可能更早。",
         "",
     ]
 
@@ -643,23 +632,8 @@ def render_weekly_markdown(
         if learning_cards:
             lines.append("目标：用 5–10 分钟快速补齐应用层知识；只保留对 Agent 工程实践有解释力的内容。")
             lines.append("")
-            level_names = {"know": "Know｜先知道", "build": "Build｜值得动手", "understand_why": "Understand Why｜理解原因"}
             for idx, card in enumerate(learning_cards, 1):
-                lines.append(f"### {idx}. {card.get('title', 'Untitled')}")
-                lines.append("")
-                lines.append(f"- **类型**：{level_names.get(card.get('level'), card.get('level'))}")
-                lines.append(f"- **30 秒结论**：{card.get('one_liner', '')}")
-                if card.get("why_now"):
-                    lines.append(f"- **为什么这周值得知道**：{card.get('why_now')}")
-                learn = card.get("learn", [])
-                if learn:
-                    lines.append(f"- **应用层学到这里就够**：{'；'.join(learn)}")
-                if card.get("hands_on"):
-                    lines.append(f"- **动手建议**：{card.get('hands_on')}")
-                urls = card.get("source_urls", [])
-                if urls:
-                    lines.append("- **来源**：" + " / ".join(f"[source {n}]({url})" for n, url in enumerate(urls, 1)))
-                lines.append("")
+                lines.extend(render_learning_card(card, idx))
         else:
             lines.extend(["本周没有形成足够可靠的学习卡片，保留趋势结果供后台排序使用。", ""])
 
@@ -709,7 +683,7 @@ def render_weekly_markdown(
     return "\n".join(lines)
 
 
-def main() -> None:
+def main(evidence_output: Path | None = None) -> None:
     config = load_config()
     weekly = config.get("weekly", {})
     end_day = today_local()
@@ -727,6 +701,12 @@ def main() -> None:
         candidate_terms,
         int(weekly.get("ai_max_items", 35)),
     )
+    if evidence_output is not None:
+        evidence_output.parent.mkdir(parents=True, exist_ok=True)
+        evidence_output.write_text(json.dumps({"range": {"start": start_day.isoformat(), "end": end_day.isoformat()},
+                                               "candidate_terms": candidate_terms,
+                                               "representative_items": representative_items},
+                                              ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     curated = call_deepseek_json(end_day, start_day, candidate_terms, representative_items, config)
 
     if curated:
@@ -746,5 +726,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
-
+    parser = argparse.ArgumentParser(description="Weekly learning radar")
+    parser.add_argument("--evidence-output", type=Path, help="Optional source excerpts for an evaluation artifact")
+    main(parser.parse_args().evidence_output)

@@ -165,3 +165,13 @@ The exact frontend stack is not locked in during V0.
 **Decision:** Offline replay uses clearly labeled synthetic sources and scripted decisions; retrieval evaluation makes network calls without generating findings; live evaluation calls the configured model and requires human review. Do not merge their success counts.
 
 **Why:** Deterministic tests should detect regressions without network/cost/randomness. Their success cannot prove model quality. Keep evidence-level metrics visible so multiple repository updates are not mistaken for validated recent publications.
+
+## ADR-013 — Make learning outputs useful before adding more orchestration
+
+**Status:** V2.2 implementation
+
+**Decision:** Add a free-question Actions entry using repository secrets. Weekly and research answers share a card contract and renderer: definition, application, learning depth, learning points, a small timeboxed practice, an observable completion criterion and validated source references. Keep technical traces in a separate JSON artifact.
+
+**Why:** A cited research paragraph alone does not give the user a manageable learning task. Existing examples also need broader real-model evaluation before additional architecture is justified.
+
+**Limits:** A schema can check required fields and timebox values, but cannot prove that a task fits the timebox or that a citation entails a claim. Recorded token usage is not a currency cost estimate. Excerpt-level review is separate from structural PASS and full-document validation.

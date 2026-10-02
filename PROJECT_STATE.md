@@ -1,6 +1,6 @@
 # AI Agent Radar — Project State
 
-> Updated for V2.1. Scheduled pipeline descriptions retain the V0 baseline; isolated Agent capabilities are listed separately below.
+> Updated for V2.2 learning usability. Scheduled pipeline descriptions retain the V0 baseline; isolated Agent capabilities are listed separately below.
 
 ## Product today
 
@@ -14,12 +14,15 @@ Production control flow remains deterministic Python. An experimental bounded si
 | --- | --- | --- |
 | V0 | Baseline architecture and decisions | On main |
 | V1 | Saturday application-layer learning cards | On main, PR #2 merged |
-| V2 | Bounded Weekly-evidence Agent | Experimental, PR #3 |
-| V2.1 | External source search, query expansion, dated citations, usability cases | Experimental extension of V2 |
+| V2 | Bounded Weekly-evidence Agent | On main via PR #3; experimental execution path |
+| V2.1 | External source search, query expansion, dated citations, usability cases | On main; one medical live case and excerpt-level review recorded |
+| V2.2 | Ask Radar input, shared learning cards, readable evaluation and usage reports | PR #4; 83 unit tests and 8/8 live structural cases; excerpt-level limitations recorded in docs/V2_2_USABILITY.md |
 
 `learning_agent.py` uses `research_search.py` for fixed source APIs: HF papers, arXiv, GitHub repository metadata, optional Tavily excerpts. Source collection, time windows, deduplication and action/citation checks remain application controlled; the model chooses among three allowed actions and writes structured findings. Alias expansion and lexical filtering are implemented; embeddings, vector search, historical RAG, and an independent semantic verifier are not.
 
 `research_eval.py` separates synthetic replay, actual network retrieval, and live model evaluation. See `docs/V2_1_RESEARCH.md` for evidence and limitations. A replay pass is not a live-model validation result.
+
+`ask_radar.py` accepts a 1–600 character question, saves a readable Markdown answer and source trace, and publishes the answer to the GitHub Actions run summary. `learning_cards.py` supplies the shared teaching contract and renderer for Weekly and research answers. Cards need a definition, application, 2–4 learning points, a 15–30 minute practice and an observable completion criterion. These structural checks do not establish semantic correctness or actual exercise duration.
 
 ## Current modules
 
@@ -178,10 +181,11 @@ Already present:
 - source failures isolated for the current run
 - external finding IDs must refer to retrieved dated sources
 - normal insufficient-evidence outcome, separate from model failure
+- one format repair within the original Agent step budget
 
 Not yet implemented as a coherent platform capability:
 
-- retry budgets and replanning
+- transport retry/backoff and general replanning
 - typed tool contracts across an Agent runtime
 - persistent checkpoints for Agent execution
 - model-quality / semantic citation-entailment evaluation

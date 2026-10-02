@@ -1,0 +1,822 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-02",
+  "configured_model": "deepseek-v4-flash",
+  "prompt_version": "learning-v2.2",
+  "research_commit": "c29794dfaecd6ceceba76f81d17f92fe415e5152",
+  "research_run": "https://github.com/chromiii/ai-agent-radar/actions/runs/37030517257",
+  "ask_run": "https://github.com/chromiii/ai-agent-radar/actions/runs/37030519156",
+  "tests": 83,
+  "replay_passed": 8,
+  "live_structural_passed": 8,
+  "live_total": 8,
+  "review_method": "Codex excerpt-level review; not an independent expert review, full-paper review, or proof of exercise duration.",
+  "notice": "Structure PASS does not prove semantic quality. Token usage is not a currency estimate. Real retrieval is time-sensitive; the configured model alias can change backend.",
+  "metrics": {
+    "model_calls": 20,
+    "recorded_total_tokens": 95123,
+    "median_latency_ms": 17289.5,
+    "min_latency_ms": 14111,
+    "max_latency_ms": 35413
+  },
+  "results": [
+    {
+      "id": "medical-agent-trends",
+      "query": "最近医药 Agent 有什么趋势？",
+      "structural_pass": true,
+      "status": "finished",
+      "latency_ms": 17486,
+      "usage": {
+        "model_calls": 2,
+        "reported_tokens": {
+          "prompt_tokens": 6348,
+          "completion_tokens": 2875,
+          "total_tokens": 9223
+        },
+        "complete": true
+      },
+      "steps": 2,
+      "search_calls": 6,
+      "source_count": 12,
+      "publication_sources": 8,
+      "format_retries": 0,
+      "validation_failures": 0,
+      "finding_topics": [
+        "临床工作流的多智能体协作",
+        "药物发现与科研的 Agent 工具链",
+        "评测与证据可验证性"
+      ],
+      "review": {
+        "scores": {
+          "relevance": 2,
+          "source_support": 1,
+          "application": 2,
+          "practice_scope": 2
+        },
+        "note": "已区分 RL 控制与 LLM 团队；A2A 证据属于跨领域模式，不能视作医疗验证。"
+      },
+      "citations": [
+        {
+          "id": "S1",
+          "url": "https://arxiv.org/abs/2609.37022",
+          "date": "2026-09-29",
+          "date_kind": "published"
+        },
+        {
+          "id": "S3",
+          "url": "https://github.com/awslabs/hcls-agent-skills",
+          "date": "2026-09-18",
+          "date_kind": "updated"
+        },
+        {
+          "id": "S4",
+          "url": "https://arxiv.org/abs/2610.01306",
+          "date": "2026-10-01",
+          "date_kind": "published"
+        },
+        {
+          "id": "S5",
+          "url": "https://arxiv.org/abs/2609.33914",
+          "date": "2026-09-27",
+          "date_kind": "published"
+        },
+        {
+          "id": "S7",
+          "url": "https://arxiv.org/abs/2610.01451",
+          "date": "2026-10-01",
+          "date_kind": "published"
+        },
+        {
+          "id": "S8",
+          "url": "https://github.com/K-Dense-AI/scientific-agent-skills",
+          "date": "2026-10-01",
+          "date_kind": "updated"
+        },
+        {
+          "id": "S9",
+          "url": "https://arxiv.org/abs/2609.15938",
+          "date": "2026-09-14",
+          "date_kind": "published"
+        },
+        {
+          "id": "S11",
+          "url": "https://arxiv.org/abs/2609.13437",
+          "date": "2026-09-11",
+          "date_kind": "published"
+        }
+      ]
+    },
+    {
+      "id": "coding-agent-learning",
+      "query": "最近 coding agent 有什么值得学？",
+      "structural_pass": true,
+      "status": "finished",
+      "latency_ms": 15880,
+      "usage": {
+        "model_calls": 2,
+        "reported_tokens": {
+          "prompt_tokens": 6739,
+          "completion_tokens": 2241,
+          "total_tokens": 8980
+        },
+        "complete": true
+      },
+      "steps": 2,
+      "search_calls": 6,
+      "source_count": 12,
+      "publication_sources": 10,
+      "format_retries": 0,
+      "validation_failures": 0,
+      "finding_topics": [
+        "长程编码 agent 的上下文压缩",
+        "编码 agent 评测的可靠性与奖励黑客",
+        "评测范围向跨仓库与跨域扩展"
+      ],
+      "review": {
+        "scores": {
+          "relevance": 2,
+          "source_support": 1,
+          "application": 2,
+          "practice_scope": 2
+        },
+        "note": "上下文与跨仓库设计有摘要支持；卡片把通过率下降与作弊率下降并列，仍需逐项区分。"
+      },
+      "citations": [
+        {
+          "id": "S1",
+          "url": "https://arxiv.org/abs/2610.02163",
+          "date": "2026-10-01",
+          "date_kind": "published"
+        },
+        {
+          "id": "S3",
+          "url": "https://arxiv.org/abs/2609.08149",
+          "date": "2026-09-08",
+          "date_kind": "published"
+        },
+        {
+          "id": "S5",
+          "url": "https://arxiv.org/abs/2609.30233",
+          "date": "2026-09-24",
+          "date_kind": "published"
+        },
+        {
+          "id": "S7",
+          "url": "https://arxiv.org/abs/2609.33382",
+          "date": "2026-09-27",
+          "date_kind": "published"
+        },
+        {
+          "id": "S9",
+          "url": "https://arxiv.org/abs/2609.06780",
+          "date": "2026-09-06",
+          "date_kind": "published"
+        },
+        {
+          "id": "S11",
+          "url": "https://arxiv.org/abs/2609.34210",
+          "date": "2026-09-29",
+          "date_kind": "published"
+        }
+      ]
+    },
+    {
+      "id": "mcp-application-value",
+      "query": "MCP 最近还值得学吗？",
+      "structural_pass": true,
+      "status": "finished",
+      "latency_ms": 14111,
+      "usage": {
+        "model_calls": 2,
+        "reported_tokens": {
+          "prompt_tokens": 5913,
+          "completion_tokens": 1937,
+          "total_tokens": 7850
+        },
+        "complete": true
+      },
+      "steps": 2,
+      "search_calls": 6,
+      "source_count": 12,
+      "publication_sources": 5,
+      "format_retries": 0,
+      "validation_failures": 0,
+      "finding_topics": [
+        "MCP 作为专业系统的统一工具接口",
+        "MCP 安全审计与可验证副作用",
+        "MCP 生态集成面"
+      ],
+      "review": {
+        "scores": {
+          "relevance": 2,
+          "source_support": 1,
+          "application": 2,
+          "practice_scope": 2
+        },
+        "note": "工具适配与审计方向可用；多个来源的效果描述被合并，应逐项限定实验与证据类型。"
+      },
+      "citations": [
+        {
+          "id": "S1",
+          "url": "https://arxiv.org/abs/2609.40272",
+          "date": "2026-09-30",
+          "date_kind": "published"
+        },
+        {
+          "id": "S2",
+          "url": "https://github.com/graygnatconsole/mcp-audit-tool",
+          "date": "2026-09-26",
+          "date_kind": "updated"
+        },
+        {
+          "id": "S3",
+          "url": "https://arxiv.org/abs/2610.01364",
+          "date": "2026-10-01",
+          "date_kind": "published"
+        },
+        {
+          "id": "S4",
+          "url": "https://arxiv.org/abs/2610.01097",
+          "date": "2026-10-01",
+          "date_kind": "published"
+        },
+        {
+          "id": "S5",
+          "url": "https://arxiv.org/abs/2609.39544",
+          "date": "2026-09-30",
+          "date_kind": "published"
+        },
+        {
+          "id": "S6",
+          "url": "https://arxiv.org/abs/2609.38266",
+          "date": "2026-09-29",
+          "date_kind": "published"
+        },
+        {
+          "id": "S7",
+          "url": "https://github.com/GopherSecurity/gopher-mcp",
+          "date": "2026-09-30",
+          "date_kind": "updated"
+        },
+        {
+          "id": "S8",
+          "url": "https://github.com/WagnerAgent/awesome-mcp-servers-devops",
+          "date": "2026-09-29",
+          "date_kind": "updated"
+        },
+        {
+          "id": "S9",
+          "url": "https://github.com/trendmicro/vision-one-mcp-server",
+          "date": "2026-09-23",
+          "date_kind": "updated"
+        },
+        {
+          "id": "S11",
+          "url": "https://github.com/mksglu/context-mode",
+          "date": "2026-10-02",
+          "date_kind": "updated"
+        },
+        {
+          "id": "S12",
+          "url": "https://github.com/lanbaoshen/mcp-jenkins",
+          "date": "2026-09-07",
+          "date_kind": "updated"
+        }
+      ]
+    },
+    {
+      "id": "multi-agent-application",
+      "query": "Multi-Agent 最近有什么真正落地的东西？",
+      "structural_pass": true,
+      "status": "finished",
+      "latency_ms": 17093,
+      "usage": {
+        "model_calls": 2,
+        "reported_tokens": {
+          "prompt_tokens": 6103,
+          "completion_tokens": 2719,
+          "total_tokens": 8822
+        },
+        "complete": true
+      },
+      "steps": 2,
+      "search_calls": 6,
+      "source_count": 12,
+      "publication_sources": 6,
+      "format_retries": 0,
+      "validation_failures": 0,
+      "finding_topics": [
+        "多智能体编排架构",
+        "编排成本与故障定位",
+        "开源框架实现信号"
+      ],
+      "review": {
+        "scores": {
+          "relevance": 1,
+          "source_support": 1,
+          "application": 2,
+          "practice_scope": 2
+        },
+        "note": "清楚披露没有生产部署证据；仿真、动态编排与仓库宣称混在同组，不能当作已验证的真实应用。"
+      },
+      "citations": [
+        {
+          "id": "S1",
+          "url": "https://github.com/labsai/EDDI",
+          "date": "2026-10-02",
+          "date_kind": "updated"
+        },
+        {
+          "id": "S3",
+          "url": "https://github.com/DemonDamon/AgenticX",
+          "date": "2026-10-02",
+          "date_kind": "updated"
+        },
+        {
+          "id": "S4",
+          "url": "https://arxiv.org/abs/2610.01364",
+          "date": "2026-10-01",
+          "date_kind": "published"
+        },
+        {
+          "id": "S5",
+          "url": "https://arxiv.org/abs/2609.38661",
+          "date": "2026-09-29",
+          "date_kind": "published"
+        },
+        {
+          "id": "S6",
+          "url": "https://arxiv.org/abs/2610.00629",
+          "date": "2026-09-30",
+          "date_kind": "published"
+        },
+        {
+          "id": "S7",
+          "url": "https://arxiv.org/abs/2610.00905",
+          "date": "2026-10-01",
+          "date_kind": "published"
+        },
+        {
+          "id": "S8",
+          "url": "https://arxiv.org/abs/2610.01017",
+          "date": "2026-10-01",
+          "date_kind": "published"
+        },
+        {
+          "id": "S9",
+          "url": "https://github.com/framerslab/agentos",
+          "date": "2026-10-02",
+          "date_kind": "updated"
+        },
+        {
+          "id": "S10",
+          "url": "https://arxiv.org/abs/2609.34060",
+          "date": "2026-09-28",
+          "date_kind": "published"
+        },
+        {
+          "id": "S11",
+          "url": "https://github.com/chunxiaoxx/nautilus-compass",
+          "date": "2026-10-02",
+          "date_kind": "updated"
+        },
+        {
+          "id": "S12",
+          "url": "https://github.com/HKUDS/nanobot",
+          "date": "2026-10-02",
+          "date_kind": "updated"
+        }
+      ]
+    },
+    {
+      "id": "agent-memory-changes",
+      "query": "Agent Memory 最近有什么变化？",
+      "structural_pass": true,
+      "status": "finished",
+      "latency_ms": 17951,
+      "usage": {
+        "model_calls": 2,
+        "reported_tokens": {
+          "prompt_tokens": 6685,
+          "completion_tokens": 2762,
+          "total_tokens": 9447
+        },
+        "complete": true
+      },
+      "steps": 2,
+      "search_calls": 6,
+      "source_count": 12,
+      "publication_sources": 9,
+      "format_retries": 0,
+      "validation_failures": 0,
+      "finding_topics": [
+        "持久记忆的有效性与治理",
+        "分布式与多智能体记忆的分发融合",
+        "长时任务的检查点与恢复"
+      ],
+      "review": {
+        "scores": {
+          "relevance": 2,
+          "source_support": 1,
+          "application": 1,
+          "practice_scope": 2
+        },
+        "note": "准入/恢复与 toy 练习有用；46 小时是特定压力测试的观测上限，不能写成统一触发时刻；部分术语还需具体例子。"
+      },
+      "citations": [
+        {
+          "id": "S1",
+          "url": "https://arxiv.org/abs/2610.01569",
+          "date": "2026-10-01",
+          "date_kind": "published"
+        },
+        {
+          "id": "S2",
+          "url": "https://arxiv.org/abs/2609.33517",
+          "date": "2026-09-27",
+          "date_kind": "published"
+        },
+        {
+          "id": "S5",
+          "url": "https://arxiv.org/abs/2610.01705",
+          "date": "2026-10-01",
+          "date_kind": "published"
+        },
+        {
+          "id": "S8",
+          "url": "https://arxiv.org/abs/2609.17320",
+          "date": "2026-09-15",
+          "date_kind": "published"
+        },
+        {
+          "id": "S10",
+          "url": "https://github.com/Alpha-Park/genpark-long-horizon-autonomous-task-resumption-skill",
+          "date": "2026-09-30",
+          "date_kind": "updated"
+        },
+        {
+          "id": "S12",
+          "url": "https://arxiv.org/abs/2609.38648",
+          "date": "2026-09-29",
+          "date_kind": "published"
+        }
+      ]
+    },
+    {
+      "id": "agentic-rag-learning",
+      "query": "最近 RAG 有什么值得 Agent 工程师关注？",
+      "structural_pass": true,
+      "status": "finished",
+      "latency_ms": 28144,
+      "usage": {
+        "model_calls": 4,
+        "reported_tokens": {
+          "prompt_tokens": 14578,
+          "completion_tokens": 4499,
+          "total_tokens": 19077
+        },
+        "complete": true
+      },
+      "steps": 4,
+      "search_calls": 8,
+      "source_count": 12,
+      "publication_sources": 5,
+      "format_retries": 0,
+      "validation_failures": 0,
+      "finding_topics": [
+        "检索质量杠杆：重排序、多查询融合与多轮检索池化",
+        "知识组织与记忆层：读取时选择与自描述知识库",
+        "以证据为中心的评估与置信度门控"
+      ],
+      "review": {
+        "scores": {
+          "relevance": 2,
+          "source_support": 2,
+          "application": 2,
+          "practice_scope": 1
+        },
+        "note": "已改成给定 toy 排名与分数，无模型安装要求；RRF 完成标准不应强制排序一定改变，相同排名可能合法不变。"
+      },
+      "citations": [
+        {
+          "id": "S2",
+          "url": "https://arxiv.org/abs/2609.38473",
+          "date": "2026-09-29",
+          "date_kind": "published"
+        },
+        {
+          "id": "S7",
+          "url": "https://arxiv.org/abs/2609.37993",
+          "date": "2026-09-29",
+          "date_kind": "published"
+        },
+        {
+          "id": "S8",
+          "url": "https://arxiv.org/abs/2610.02002",
+          "date": "2026-10-01",
+          "date_kind": "published"
+        },
+        {
+          "id": "S11",
+          "url": "https://github.com/VimalN2005/AI-Agent-Evaluation-Reliability-Platform",
+          "date": "2026-10-02",
+          "date_kind": "updated"
+        },
+        {
+          "id": "S12",
+          "url": "https://arxiv.org/abs/2609.25991",
+          "date": "2026-09-22",
+          "date_kind": "published"
+        }
+      ]
+    },
+    {
+      "id": "medical-agent-engineering",
+      "query": "医疗 Agent 和普通 Agent 最大工程区别是什么？",
+      "structural_pass": true,
+      "status": "finished",
+      "latency_ms": 35413,
+      "usage": {
+        "model_calls": 4,
+        "reported_tokens": {
+          "prompt_tokens": 16989,
+          "completion_tokens": 6582,
+          "total_tokens": 23571
+        },
+        "complete": true
+      },
+      "steps": 4,
+      "search_calls": 6,
+      "source_count": 12,
+      "publication_sources": 8,
+      "format_retries": 1,
+      "validation_failures": 0,
+      "finding_topics": [
+        "证据获取与核验（最突出的工程重心）",
+        "噪声输入与验证优先",
+        "长时程专业任务与安全护栏"
+      ],
+      "review": {
+        "scores": {
+          "relevance": 1,
+          "source_support": 1,
+          "application": 2,
+          "practice_scope": 2
+        },
+        "note": "限制段承认没有普通 Agent 对照，但标题/定义仍称“核心工程差别”；只能保留为这些来源的设计重点。"
+      },
+      "citations": [
+        {
+          "id": "S1",
+          "url": "https://arxiv.org/abs/2609.39566",
+          "date": "2026-09-30",
+          "date_kind": "published"
+        },
+        {
+          "id": "S3",
+          "url": "https://arxiv.org/abs/2609.39371",
+          "date": "2026-09-30",
+          "date_kind": "published"
+        },
+        {
+          "id": "S6",
+          "url": "https://arxiv.org/abs/2609.30939",
+          "date": "2026-09-25",
+          "date_kind": "published"
+        },
+        {
+          "id": "S7",
+          "url": "https://arxiv.org/abs/2610.01306",
+          "date": "2026-10-01",
+          "date_kind": "published"
+        },
+        {
+          "id": "S8",
+          "url": "https://arxiv.org/abs/2609.32787",
+          "date": "2026-09-26",
+          "date_kind": "published"
+        },
+        {
+          "id": "S9",
+          "url": "https://github.com/jeevesh2515/clinical-rag-agent",
+          "date": "2026-10-01",
+          "date_kind": "updated"
+        },
+        {
+          "id": "S10",
+          "url": "https://github.com/aws-samples/sample-amazon-connect-health-telehealth-workflow",
+          "date": "2026-09-29",
+          "date_kind": "updated"
+        }
+      ]
+    },
+    {
+      "id": "weak-week",
+      "query": "这周没什么值得学的吗？",
+      "structural_pass": true,
+      "status": "finished",
+      "latency_ms": 15413,
+      "usage": {
+        "model_calls": 2,
+        "reported_tokens": {
+          "prompt_tokens": 6082,
+          "completion_tokens": 2071,
+          "total_tokens": 8153
+        },
+        "complete": true
+      },
+      "steps": 2,
+      "search_calls": 6,
+      "source_count": 12,
+      "publication_sources": 6,
+      "format_retries": 0,
+      "validation_failures": 0,
+      "finding_topics": [
+        "智能体记忆：从写时压缩转向读时选择与显式信念",
+        "工具调用安全：执行前的来源感知能力强制",
+        "记忆与编排工程栈的模块化配置"
+      ],
+      "review": {
+        "scores": {
+          "relevance": 2,
+          "source_support": 2,
+          "application": 2,
+          "practice_scope": 2
+        },
+        "note": "实际一周内检索到了信号，因此未迎合“没有值得学”；没有历史基线，不据此判断行业采用或增长。"
+      },
+      "citations": [
+        {
+          "id": "S1",
+          "url": "https://github.com/IAAR-Shanghai/Awesome-AI-Memory",
+          "date": "2026-09-30",
+          "date_kind": "updated"
+        },
+        {
+          "id": "S2",
+          "url": "https://arxiv.org/abs/2610.01349",
+          "date": "2026-10-01",
+          "date_kind": "published"
+        },
+        {
+          "id": "S3",
+          "url": "https://arxiv.org/abs/2610.01415",
+          "date": "2026-10-01",
+          "date_kind": "published"
+        },
+        {
+          "id": "S5",
+          "url": "https://github.com/deepset-ai/haystack",
+          "date": "2026-10-02",
+          "date_kind": "updated"
+        },
+        {
+          "id": "S7",
+          "url": "https://arxiv.org/abs/2610.02150",
+          "date": "2026-10-01",
+          "date_kind": "published"
+        },
+        {
+          "id": "S9",
+          "url": "https://github.com/TencentCloud/TencentDB-Agent-Memory",
+          "date": "2026-09-29",
+          "date_kind": "updated"
+        },
+        {
+          "id": "S10",
+          "url": "https://arxiv.org/abs/2610.02002",
+          "date": "2026-10-01",
+          "date_kind": "published"
+        },
+        {
+          "id": "S12",
+          "url": "https://github.com/MemTensor/MemOS",
+          "date": "2026-09-29",
+          "date_kind": "updated"
+        }
+      ]
+    }
+  ],
+  "ask": {
+    "question": "我想用 MCP 给一个已有 Python 工具加接口，最近有哪些值得学的实现？",
+    "latency_ms": 19140,
+    "steps": 2,
+    "recorded_total_tokens": 9200,
+    "cards": 3,
+    "scores": {
+      "relevance": 2,
+      "source_support": 1,
+      "application": 2,
+      "practice_scope": 2
+    },
+    "review_note": "Python 需求与本地模拟练习已保留。没有查阅 SDK 文档或实际连接 MCP；来源反映原型与仓库宣称。完成标准中的未知工具分支在可运行示例里显式补齐。"
+  },
+  "previous_attempts": [
+    {
+      "commit": "6060ecb5d0d3585d6b8996250e7574b27cc0fdd6",
+      "structural_passed": 7,
+      "failed_case": "agent-memory-changes",
+      "failure": "invalid_json; Weekly had invalid JSON and no cards"
+    },
+    {
+      "commit": "0c30d794fc49096927b6fdfca15922f56b2c7469",
+      "structural_passed": 7,
+      "failed_case": "medical-agent-engineering",
+      "failure": "overly narrow first queries; Weekly finish_reason=length"
+    },
+    {
+      "commit": "a0ce6ded5521db9b9d6a1b77fc1b70480bd3915e",
+      "structural_passed": 8,
+      "failure": "Excerpt review found LLM/RL conflation, unstated practice setup, and Weekly source mismatch"
+    },
+    {
+      "commit": "a5d5b6f2729952224bdcca1b18447606c4cc7a7e",
+      "weekly_run": "https://github.com/chromiii/ai-agent-radar/actions/runs/37031342878",
+      "failure": "Candidate examples supplied uncitable study names; removed from model input"
+    }
+  ],
+  "weekly": {
+    "status": "completed",
+    "commit": "fb1c3defc01ecdb9745e68ddff1754da92b0f9d6",
+    "run": "https://github.com/chromiii/ai-agent-radar/actions/runs/37032278507",
+    "cards": 5,
+    "range": {
+      "start": "2026-09-27",
+      "end": "2026-10-03"
+    },
+    "model_usage": {
+      "prompt_tokens": 6847,
+      "completion_tokens": 1947,
+      "total_tokens": 8794
+    },
+    "evidence_time_note": "HF daily collection dates are not original paper publication dates.",
+    "review_method": "Compared every card with the actual representative title and summary retained in weekly-evidence.json.",
+    "card_reviews": [
+      {
+        "title": "编码代理用于广义任务与运动规划",
+        "source_urls": [
+          "https://huggingface.co/papers/2609.30233"
+        ],
+        "scores": {
+          "relevance": 2,
+          "source_support": 2,
+          "application": 1,
+          "practice_scope": 1
+        },
+        "note": "主题与 TAMP 摘要匹配；领域门槛较高，练习要求编码代理生成脚本，未完全满足默认纯本地模拟约束。可改为手写/mock 候选脚本。"
+      },
+      {
+        "title": "代理运行框架与工具编排",
+        "source_urls": [
+          "https://huggingface.co/papers/2609.29964"
+        ],
+        "scores": {
+          "relevance": 2,
+          "source_support": 2,
+          "application": 2,
+          "practice_scope": 2
+        },
+        "note": "机器人 harness 的来源与描述匹配；练习明确不接真实模型。"
+      },
+      {
+        "title": "长程多代理协作评测",
+        "source_urls": [
+          "https://huggingface.co/papers/2609.31590"
+        ],
+        "scores": {
+          "relevance": 2,
+          "source_support": 2,
+          "application": 2,
+          "practice_scope": 2
+        },
+        "note": "任务数、交互轮次与摘要匹配；用两轮 toy 任务学习评测结构，不宣称复现基准。"
+      },
+      {
+        "title": "移动规划代理的闭环框架",
+        "source_urls": [
+          "https://huggingface.co/papers/2609.29892"
+        ],
+        "scores": {
+          "relevance": 2,
+          "source_support": 2,
+          "application": 1,
+          "practice_scope": 2
+        },
+        "note": "AI-for-AI 与闭环规划主题有支持；“移动规划”术语仍需例子帮助初学者理解。"
+      },
+      {
+        "title": "代理世界模型与任务状态污染",
+        "source_urls": [
+          "https://huggingface.co/papers/2609.28416"
+        ],
+        "scores": {
+          "relevance": 2,
+          "source_support": 2,
+          "application": 2,
+          "practice_scope": 2
+        },
+        "note": "已改为任务状态污染，引用不再错配成 GUI；清理假设的练习有明确输出。"
+      }
+    ]
+  }
+}

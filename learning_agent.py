@@ -14,12 +14,14 @@ from zoneinfo import ZoneInfo
 import requests
 
 from radar import load_config, normalize
-from research_search import EvidenceSearch, build_query_plan, clean
+from research_search import EvidenceSearch, build_query_plan, clean, contains
+from learning_cards import CARD_PROMPT, learning_details, markdown_text, render_learning_card, research_card
 
 
 ROOT = Path(__file__).resolve().parent
 ALLOWED_ACTIONS = {"analyze", "search_more", "finish"}
 FINISH_REASONS = {"stop", "length", "content_filter", "tool_calls", "insufficient_system_resource", "aborted"}
+PROMPT_VERSION = "learning-v2.2"
 
 
 def safe_model_diagnostics(data: Any) -> dict[str, Any]:
@@ -66,6 +68,7 @@ class AgentState:
     search_calls: int = 0
     search_call_limit: int = 8
     model_trace: list[dict[str, Any]] = field(default_factory=list)
+    format_retry_count: int = 0
 
     def __post_init__(self) -> None:
         if type(self.max_steps) is not int or not 1 <= self.max_steps <= 10:
@@ -74,6 +77,8 @@ class AgentState:
             raise ValueError("search_mode must be weekly or external")
         if not isinstance(self.user_query, str) or not self.user_query.strip():
             raise ValueError("user_query must not be empty")
+        if len(self.user_query) > 600:
+            raise ValueError("user_query must be at most 600 characters")
         if not isinstance(self.task_id, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,63}", self.task_id):
             raise ValueError("task_id must be a safe identifier, not a path")
 
@@ -129,10 +134,19 @@ def build_agent_prompt(state: AgentState, weekly_markdown: str) -> list[dict[str
         "Search excerpts and abstracts establish only what they say, not that you read the full document. "
         "Group relevant findings into topics; distinguish clinical workflows from drug discovery when supported. "
         "Query expansions are search alternatives, not extra required subtopics. "
+        "Write short English search queries that preserve concrete user constraints such as Python, SDK or a named platform. "
+        "Prefer 2–5 useful keywords; do not join every part of a comparison into one restrictive query. "
         "Incidental healthcare mentions do not prove medical evaluation or deployment. "
+        "Distinguish LLM agents from reinforcement-learning/control agents; do not define all multi-agent "
+        "systems as LLM teams or conflate their algorithms. Mark cross-domain patterns as such. "
+        "For comparison questions disclose when no direct comparison baseline exists; supported design "
+        "choices do not establish the biggest or uniquely domain-specific engineering difference. "
         "Do not fill a quota or assert clinical efficacy. Put no URLs in prose; use evidence_ids. "
-        "Prefer 2–3 compact findings; keep each claim, application and try_next under 180 Chinese characters. "
-        "If dates, relevance or sources are insufficient, state the gap and return insufficient_evidence."
+        "Return at most 3 compact findings; keep each claim, application and try_next under 180 Chinese characters. "
+        "If dates, relevance or sources are insufficient, state the gap and return insufficient_evidence. "
+        "If asked about real-world deployment, explicitly distinguish prototypes, benchmarks and verified production use. "
+        "When deployment evidence is absent, disclose that gap and present implementation signals. "
+        + CARD_PROMPT
     )
     # Internal lexical filters must not become new research requirements.
     prompt_plan = {k: v for k, v in state.query_plan.items() if k != "relevance_groups"}
@@ -174,7 +188,10 @@ Return JSON only:
   "final_answer": "weekly-mode finish only",
   "verdict": "answer|insufficient_evidence (external finish only)",
   "findings": [{{"topic": "主题", "claim": "证据支持的发现", "claim_type": "signal|trend",
-    "evidence_ids": ["S1"], "application": "应用层意义", "try_next": "一个可执行学习建议"}}],
+    "evidence_ids": ["S1"], "application": "应用场景", "try_next": "一个小范围练习",
+    "level": "know|build|understand_why", "one_liner": "概念定义",
+    "learn": ["工程概念一", "工程概念二"], "practice_minutes": 20,
+    "done_when": "练习完成时可检查的结果"}}],
   "limitations": "简短说明证据和覆盖限制"
 }}
 
@@ -267,8 +284,8 @@ def validate_decision(raw: dict[str, Any], search_mode: str = "weekly") -> dict[
 
 def verify_findings(findings: Any, items: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Checks provenance and structure, not semantic truth or clinical efficacy."""
-    if not isinstance(findings, list) or not 1 <= len(findings) <= 6:
-        raise ValueError("answer needs 1–6 findings")
+    if not isinstance(findings, list) or not 1 <= len(findings) <= 3:
+        raise ValueError("answer needs 1–3 compact findings")
     allowed = {item["id"]: item for item in items}
     verified, used = [], set()
     for f in findings:
@@ -287,6 +304,7 @@ def verify_findings(findings: Any, items: list[dict[str, Any]]) -> list[dict[str
         if claim_type == "trend" and len({allowed[i]["url"] for i in ids if allowed[i]["date_kind"] == "published"}) < 2:
             raise ValueError("trend requires two different published sources; updated repository metadata is only an activity signal")
         result.update(evidence_ids=ids, claim_type=claim_type)
+        result.update(learning_details(f))
         verified.append(result)
         used.update(allowed[i]["url"] for i in ids)
     if len(used) < 2:
@@ -295,16 +313,14 @@ def verify_findings(findings: Any, items: list[dict[str, Any]]) -> list[dict[str
 
 
 def render_research_answer(state: AgentState, limitations: str = "") -> str:
-    lines = [f"检索范围：{state.query_plan['start_date']} 至 {state.query_plan['end_date']}。"]
+    lines = [f"检索范围：{state.query_plan['start_date']} 至 {state.query_plan['end_date']}。", "",
+             "先读学习卡，再挑一个小练习；动手时间是建议预算。", ""]
     sources = {i["id"]: i for i in state.selected_items}
-    for f in state.findings:
-        citations = " ".join(f"[{i}]({sources[i]['url']})" for i in f["evidence_ids"])
-        label = "趋势" if f["claim_type"] == "trend" else "信号"
-        lines.extend(["", f"**{f['topic']}（{label}）**", f"{f['claim']} {citations}",
-                      f"应用层：{f['application']}", f"动手建议：{f['try_next']}"])
+    for index, finding in enumerate(state.findings, 1):
+        lines.extend(render_learning_card(research_card(finding, sources), index))
     notes = list(dict.fromkeys(([limitations] if limitations else []) + state.warnings))
     if notes:
-        lines.extend(["", "证据限制：" + "；".join(notes)])
+        lines.extend(["", "证据限制：" + markdown_text("；".join(notes))])
     return "\n".join(lines)
 
 
@@ -348,13 +364,18 @@ def run_agent(
                 state.model_trace.append({"step": state.current_step, **diagnostics})
             decision = validate_decision(raw, state.search_mode)
         except (requests.RequestException, ValueError, TypeError, KeyError, RuntimeError) as exc:
-            state.status = "failed_decision"
             error = {"step": state.current_step, "action": "decision_error", "error_type": type(exc).__name__}
             if isinstance(exc, ModelResponseError):
                 error.update(error_code=exc.code, **exc.diagnostics)
             elif isinstance(exc, requests.HTTPError) and exc.response is not None:
                 error.update(safe_model_diagnostics({"http_status": exc.response.status_code}))
             state.observations.append(error)
+            if (isinstance(exc, ModelResponseError) and exc.code in ('invalid_json', 'truncated_response', 'empty_or_invalid_content')
+                    and state.format_retry_count < 1 and state.current_step < state.max_steps):
+                state.format_retry_count += 1
+                state.validation_errors = [f"Previous model response: {exc.code}. Return valid JSON with at most 3 compact cards; escape quotes correctly."]
+                continue
+            state.status = "failed_decision"
             state.final_answer = "模型调用或输出校验失败；已保存运行记录，没有生成未经校验的结论。"
             break
         action = decision["action"]
@@ -364,7 +385,16 @@ def run_agent(
             selected_urls = {item.get("url", "") for item in state.selected_items}
             if state.search_mode == "external":
                 # Reserve request budget for an evidence-driven follow-up search.
-                queries = list(dict.fromkeys(plan.expanded_queries + decision["query_terms"]))[:2] if not state.search_trace else decision["query_terms"]
+                if not state.search_trace:
+                    # Retain the model's grounded, task-specific rewrite instead of always
+                    # spending the first round on generic aliases (e.g. dropping Python).
+                    grounded = [q for q in decision["query_terms"] if q.casefold() != state.user_query.casefold()
+                                and all(any(contains(q, term) for term in group) for group in plan.relevance_groups)]
+                    # Pair one specific query with a broad topic alias. Two long rewrites
+                    # can exhaust the first-round budget without any recent matches.
+                    queries = list(dict.fromkeys(grounded[:1] + plan.expanded_queries))[:2]
+                else:
+                    queries = decision["query_terms"]
                 batch = searcher.search(plan, queries, selected_urls)
                 new_items = batch.items
                 for index, item in enumerate(new_items, start=len(state.selected_items) + 1):
@@ -380,6 +410,7 @@ def run_agent(
                     "step": state.current_step,
                     "action": action,
                     "reason": decision["reason"],
+                    "query_terms": queries if state.search_mode == "external" else decision["query_terms"],
                     "new_evidence": new_items,
                 }
             )

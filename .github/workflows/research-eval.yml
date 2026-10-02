@@ -37,7 +37,7 @@ jobs:
     # Secrets are used only for manually selected runs or the owner's in-repo PR.
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event.label.name == 'research-live-test' &&
+      ((github.event.label.name == 'research-live-test' || github.event.label.name == 'research-live-suite' || github.event.label.name == 'weekly-learning-preview') &&
        github.event.pull_request.head.repo.full_name == github.repository &&
        github.event.pull_request.author_association == 'OWNER')
     runs-on: ubuntu-latest
@@ -50,9 +50,10 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Evaluate selected scenario
+        if: github.event.label.name != 'weekly-learning-preview'
         env:
           EVAL_MODE: ${{ inputs.mode || 'live' }}
-          EVAL_CASE: ${{ inputs.case || 'medical-agent-trends' }}
+          EVAL_CASE: ${{ github.event.label.name == 'research-live-suite' && 'all' || inputs.case || 'medical-agent-trends' }}
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
@@ -65,6 +66,36 @@ jobs:
             python research_eval.py --mode "$EVAL_MODE" --output eval_results/evaluation.json
           else
             python research_eval.py --mode "$EVAL_MODE" --case "$EVAL_CASE" --output eval_results/evaluation.json
+          fi
+      - name: Preview Weekly learning cards
+        if: >-
+          always() && (github.event.label.name == 'research-live-suite' || github.event.label.name == 'weekly-learning-preview' ||
+          (inputs.case == 'all' && inputs.mode == 'live'))
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: |
+          python weekly_trends.py --evidence-output eval_results/weekly-evidence.json
+          python - <<'PY'
+          import json, shutil
+          from pathlib import Path
+          state = json.loads(Path('state/trending_terms.json').read_text())
+          cards = state.get('curated', {}).get('learning_cards', [])
+          output = Path('eval_results')
+          output.mkdir(exist_ok=True)
+          (output / 'weekly-preview.json').write_text(json.dumps(state, ensure_ascii=False, indent=2))
+          shutil.copyfile(sorted(Path('weekly').glob('*.md'))[-1], output / 'weekly-preview.md')
+          print(f'Weekly preview: {len(cards)} learning cards; no email or report commit.')
+          if not cards:
+              raise SystemExit('Weekly preview produced no learning cards.')
+          PY
+      - name: Show evaluation answers
+        if: always()
+        run: |
+          if [ -f eval_results/evaluation.md ]; then
+            cat eval_results/evaluation.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f eval_results/weekly-preview.md ]; then
+            cat eval_results/weekly-preview.md >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Preserve evaluation evidence
         if: always()

@@ -8,6 +8,25 @@
 - **Company Radar**：每日全球和中国 AI 公司动态简报。
 - **Weekly Learning Radar**：每周六把趋势信号压缩成应用层学习周报，同时继续反哺 Daily Radar 的动态加分和降权。
 - **Bounded Learning / Research Agent（实验性，V2.1）**：针对应用层学习问题扩展查询、检索外部来源，在步数和请求预算内生成带来源的学习发现。
+- **Ask Radar（V2.2）**：在 Actions 输入自由问题，直接阅读和周报一致的学习卡，包含概念、应用场景、学习深度、小练习、完成标准及来源。
+
+## 直接问一个问题
+
+在 GitHub 仓库打开 **Actions → Ask Radar → Run workflow**，输入最多 600 字的问题，例如“我想用 MCP 给一个 Python 工具加接口，有哪些值得学的实现？”。运行后，打开该次运行的 Overview 阅读学习卡。需要查看来源记录时，下载 `ask-radar-answer`，其中 `answer.md` 是可读回答，`run.json` 是检索和运行记录；artifact 保留 7 天。
+
+工作流在 GitHub 内使用已有的 `DEEPSEEK_API_KEY` Secret。此入口只生成回答，不发送邮件。新工作流需合并到默认分支后才会显示手动运行按钮；PR 阶段可用 `ask-radar-preview` 标签跑一个预览问题。
+
+每张卡回答：30 秒概念、为什么值得了解、用在哪里、应用层学到这里、15–30 分钟的小练习、完成标准及来源。`先知道 / 值得动手 / 理解原因` 表示学习深度；练习时间是建议预算，内容质量仍需要阅读判断。
+
+本地入口：
+
+```bash
+python ask_radar.py --question "最近 coding agent 有什么值得学？"
+```
+
+V2.2 的评测和范围见 [学习可用性说明](docs/V2_2_USABILITY.md)。
+
+想先体验练习，可以运行 `python examples/mcp_mock_dispatch.py`。这是本地工具分发模拟，包含两个正常调用、未知工具与错误参数；[问答样本与逐条复核](docs/eval/v2_2-review.md)说明了它与真实 MCP 接入的边界。
 
 ## 产品原则
 
@@ -87,7 +106,7 @@ Workflow：`.github/workflows/weekly-trends.yml`
 最近 7 天 HF Daily Papers / HF Spaces / arXiv
   -> 候选趋势词
   -> DeepSeek 精筛 tier1 / tier2 / downrank / noise
-  -> 5–8 张应用层学习卡片（Know / Build / Understand Why）
+  -> 最多 5 张应用层学习卡片（Know / Build / Understand Why）
   -> weekly/
   -> state/trending_terms.json
   -> 每周六邮件
@@ -138,7 +157,8 @@ final_answer
 - 医药查询覆盖 healthcare、clinical workflow、biomedical、drug discovery。当前扩展是可追踪的词表规则，不是 embedding / BM25 / 通用语义搜索。
 - 每条发现包含主题、信号/趋势等级、引用、应用层意义、动手建议。研究回答至少引用两个不同来源；“趋势”需要该条发现有两个带发布日期的来源。
 - 仓库 `pushed_at` 只表示活动日期；无日期和窗口外资料不能支撑“最近”。同一篇 HF/arXiv 论文只计一条来源。
-- 模型 JSON 出错、引用编造、结论校验失败会留下记录并停止；证据不足可正常返回 `finished_insufficient_evidence`。
+- 模型 JSON 出错、引用编造、结论校验失败会留下记录，按有限修复预算恢复或停止；证据不足可正常返回 `finished_insufficient_evidence`。
+- 格式错误最多重试一次，计入原有步数预算；研究回答最多三张紧凑学习卡。
 - 网页摘要、论文摘要及 Weekly Markdown 都是 untrusted evidence，不能给 Agent 新权限。
 - 达到预算仍未 finish 时状态为 `stopped_max_steps`，交给人决定是否继续。
 
