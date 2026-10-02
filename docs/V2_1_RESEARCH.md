@@ -81,7 +81,11 @@ python learning_agent.py "Agent memory" --mode weekly --weekly weekly/2026-09-27
 
 输出默认为 `state/agent_runs/TASK_ID.json`，便于查看日期、查询、trace、来源、校验错误和结论；它不是可恢复 checkpoint 或长期记忆。`--mode weekly` 保留原实验行为。V2.1 是独立提交，可在 PR 分支中 revert；现有生产 pipeline 不依赖新增模块。
 
-新增的 Research usability evaluation workflow 仅手动触发。合并后可使用 Actions 中已有的 DeepSeek Secret 运行 live，下载评测 artifact。新增工作流在合并到默认分支前不一定出现在 Actions 的手动运行列表。
+Research usability evaluation workflow 支持手动选择 replay / retrieval / live。合并后可在 Actions 中手动运行，下载评测 artifact；新增工作流在合并到默认分支前不一定出现在手动运行列表。
+
+合并前的真实评测入口：给仓库所有者创建、且分支位于本仓库的 PR 添加 `research-live-test` 标签，运行一个 `medical-agent-trends` live 场景。标签只在添加时触发，后续提交不会自动消耗模型调用；要评测新提交，移除后重新添加标签。Fork PR 不使用此入口。
+
+工作流通过环境变量使用现有 `DEEPSEEK_API_KEY` Secret，缺失时明确失败；不读取或展示密钥值，也不把它写入评测报告。先前本地缺失密钥不代表仓库 Secret 缺失。Tavily 仍为可选来源。此入口不发送邮件。
 
 ## 面试时可以如何解释
 

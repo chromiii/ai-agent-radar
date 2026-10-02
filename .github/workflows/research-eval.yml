@@ -1,6 +1,8 @@
 name: Research usability evaluation
 
 on:
+  pull_request:
+    types: [labeled]
   workflow_dispatch:
     inputs:
       mode:
@@ -26,8 +28,18 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: research-eval-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
 jobs:
   evaluate:
+    # Secrets are used only for manually selected runs or the owner's in-repo PR.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.label.name == 'research-live-test' &&
+       github.event.pull_request.head.repo.full_name == github.repository &&
+       github.event.pull_request.author_association == 'OWNER')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -39,12 +51,16 @@ jobs:
         run: pip install -r requirements.txt
       - name: Evaluate selected scenario
         env:
-          EVAL_MODE: ${{ inputs.mode }}
-          EVAL_CASE: ${{ inputs.case }}
+          EVAL_MODE: ${{ inputs.mode || 'live' }}
+          EVAL_CASE: ${{ inputs.case || 'medical-agent-trends' }}
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
         run: |
+          if [ "$EVAL_MODE" = "live" ] && [ -z "$DEEPSEEK_API_KEY" ]; then
+            echo "::error::Repository secret DEEPSEEK_API_KEY is unavailable to this run."
+            exit 1
+          fi
           if [ "$EVAL_CASE" = "all" ]; then
             python research_eval.py --mode "$EVAL_MODE" --output eval_results/evaluation.json
           else
