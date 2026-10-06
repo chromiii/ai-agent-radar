@@ -353,7 +353,7 @@ def run_agent(
         plan = build_query_plan(state.user_query, today, config.get("learning_agent", {}).get("lookback_days", 30))
         state.as_of = today.isoformat()
         state.query_plan = asdict(plan)
-        searcher = searcher or EvidenceSearch(config)
+        searcher = searcher or HybridEvidenceSearch(config)
         state.search_call_limit = getattr(searcher, "max_calls", 8)
     while state.status == "running" and state.current_step < state.max_steps:
         state.current_step += 1
@@ -488,7 +488,7 @@ def main() -> None:
     if args.retrieval_only:
         today = args.as_of or dt.datetime.now(ZoneInfo(config.get("learning_agent", {}).get("timezone", "Asia/Shanghai"))).date()
         plan = build_query_plan(args.query, today, config.get("learning_agent", {}).get("lookback_days", 30))
-        searcher = EvidenceSearch(config)
+        searcher = HybridEvidenceSearch(config)
         batch = searcher.search(plan, plan.expanded_queries, set())
         state.query_plan, state.search_trace, state.warnings = asdict(plan), batch.trace, batch.warnings
         state.selected_items, state.search_calls, state.as_of = batch.items, searcher.used_calls, today.isoformat()
