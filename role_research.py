@@ -19,6 +19,7 @@ from zoneinfo import ZoneInfo
 from learning_agent import ModelResponseError, call_deepseek, load_config, safe_model_diagnostics, verify_findings
 from learning_cards import markdown_text, render_learning_card, research_card
 from research_search import EvidenceSearch, build_query_plan, clean
+from hybrid_search import HybridEvidenceSearch
 
 
 ROOT = Path(__file__).resolve().parent
@@ -313,7 +314,7 @@ def run_role_research(
     plan = build_query_plan(state.user_query, today, config.get("learning_agent", {}).get("lookback_days", 30))
     state.as_of = today.isoformat()
     state.query_plan = asdict(plan)
-    searcher = searcher or EvidenceSearch(config)
+    searcher = searcher or HybridEvidenceSearch(config)
 
     # Seed retrieval is deterministic. The Research Agent only decides whether the
     # current evidence is enough or which bounded follow-up query to try.
