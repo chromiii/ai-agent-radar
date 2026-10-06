@@ -108,7 +108,7 @@ def parse_report(path: Path, root: Path = ROOT, config: dict[str, Any] | None = 
             title=title,
             text=text,
             source_path=source_path,
-            url=urls[0] if urls else fallback,
+            url=fallback,
             external_urls=urls,
             entity=_company_entity(title) if kind == "company" else None,
         ))
@@ -252,19 +252,28 @@ class HistoryIndex:
             score += 0.25 * ((date - start).days / max((end - start).days, 1))
             scored.append((score, doc))
         scored.sort(key=lambda pair: (pair[0], pair[1].report_date), reverse=True)
-        return [{
-            "title": f"[Radar {doc.report_date}] {doc.title}",
-            "url": doc.url,
-            "summary": clean(doc.text, 1400),
-            "date": doc.report_date,
-            "date_kind": "radar_observed",
-            "provider": "radar_history",
-            "evidence_kind": "radar_section",
-            "retrieved_query": clean(plan.original_query, 160),
-            "relevance_score": round(score, 3),
-            "source_path": doc.source_path,
-            "entity": doc.entity,
-        } for score, doc in scored[:limit]]
+        result, seen_reports = [], set()
+        for score, doc in scored:
+            if doc.source_path in seen_reports:
+                continue
+            seen_reports.add(doc.source_path)
+            result.append({
+                "title": f"[Radar {doc.report_date}] {doc.title}",
+                "url": doc.url,
+                "summary": clean(doc.text, 1400),
+                "date": doc.report_date,
+                "date_kind": "radar_observed",
+                "provider": "radar_history",
+                "evidence_kind": "radar_section",
+                "retrieved_query": clean(plan.original_query, 160),
+                "relevance_score": round(score, 3),
+                "source_path": doc.source_path,
+                "external_urls": doc.external_urls,
+                "entity": doc.entity,
+            })
+            if len(result) >= limit:
+                break
+        return result
 
 
 def main() -> None:
