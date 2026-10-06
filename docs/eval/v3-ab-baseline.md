@@ -83,3 +83,38 @@ Track:
 - whether V3 produces clearer failure attribution.
 
 Only after those results should the project decide whether LangGraph checkpointing / branching is justified.
+
+
+## Follow-up after tightening the Analyst contract
+
+A second live A/B run used the same case after adding explicit Analyst field-length budgets and JSON-safe quoting guidance.
+
+| Metric | V2.2 single Agent | V3 role-separated |
+| --- | ---: | ---: |
+| Status | finished | finished |
+| Selected sources | 12 | 12 |
+| Search API calls | 6 | 6 |
+| Model calls | 2 | 3 |
+| Reported total tokens | 8,548 | 13,875 |
+| End-to-end path latency | 16.2 s | 26.9 s |
+| Published findings | 3 | 3 |
+| Repair / model-format errors | 0 | 0 |
+
+Observed ratios in this run:
+
+- V3 / V2 token ratio: **1.623**
+- V3 / V2 latency ratio: **1.653**
+
+Most importantly, the Analyst repair count changed from **1 to 0**. All three V3 findings were accepted by the Verifier and passed the final deterministic provenance gate.
+
+Do not interpret the lower absolute token count relative to the first run as a controlled benchmark improvement: model behavior and the V2 step count varied between runs. The stable conclusion is narrower: the tightened contract removed the observed invalid-JSON repair in this repeat, while preserving a successful verified answer.
+
+The second run also shows that role separation has a real baseline cost even without retries. For this product, that supports keeping V2.2 as the default quick-learning path and V3 as an explicitly selected verified mode.
+
+## Why the learning-card fields were not made fully deterministic
+
+After the second run, the generated Analyst findings were inspected field by field. The visible learning-card content was already compact: topics, claims, applications, concept definitions and completion criteria stayed inside the new budgets.
+
+Replacing domain-specific practice tasks and completion criteria with generic deterministic text would reduce some output tokens, but it would also weaken the main personal-learning value of the Radar. V3 therefore keeps the application-layer teaching fields model-generated for now.
+
+The next optimization should be evidence-quality and verifier evaluation across multiple cases, not shaving tokens by making every learning card mechanically identical.
