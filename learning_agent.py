@@ -15,6 +15,7 @@ import requests
 
 from radar import load_config, normalize
 from research_search import EvidenceSearch, build_query_plan, clean, contains
+from hybrid_search import HybridEvidenceSearch
 from learning_cards import CARD_PROMPT, learning_details, markdown_text, render_learning_card, research_card
 
 
@@ -127,6 +128,8 @@ def build_agent_prompt(state: AgentState, weekly_markdown: str) -> list[dict[str
         "A useful answer needs at least two different retrieved sources in total. Each finding needs topic, claim, "
         "claim_type (signal or trend), evidence_ids, application and try_next. "
         "A trend requires at least two independent published sources for that finding. "
+        "Evidence with date_kind=radar_observed is prior Radar memory: use it to describe recurrence/history, "
+        "never as an independent publication proving a current trend. "
         "Describe a trend as a recurring direction in the retrieved recent research, not proven industry adoption. "
         "Without retrieved historical baseline evidence, do not claim a transition from older approaches, "
         "rapid expansion, increasing adoption or becoming mainstream. Say what these recent sources explore. "
@@ -302,13 +305,18 @@ def verify_findings(findings: Any, items: list[dict[str, Any]]) -> list[dict[str
         if claim_type not in ("signal", "trend"):
             raise ValueError("claim_type must be signal or trend")
         if claim_type == "trend" and len({allowed[i]["url"] for i in ids if allowed[i]["date_kind"] == "published"}) < 2:
-            raise ValueError("trend requires two different published sources; updated repository metadata is only an activity signal")
+            raise ValueError("trend requires two different published sources; updated repositories and radar_observed history are context signals only")
         result.update(evidence_ids=ids, claim_type=claim_type)
         result.update(learning_details(f))
         verified.append(result)
         used.update(allowed[i]["url"] for i in ids)
     if len(used) < 2:
         raise ValueError("research answer needs at least two different sources; otherwise report insufficient_evidence")
+    cited_items = [allowed[evidence_id] for finding in verified for evidence_id in finding["evidence_ids"]]
+    if cited_items and not any(item.get("date_kind") != "radar_observed" for item in cited_items):
+        raise ValueError(
+            "hybrid research answer needs at least one non-historical source; Radar memory alone can describe history but not current evidence"
+        )
     return verified
 
 
@@ -353,7 +361,7 @@ def run_agent(
         plan = build_query_plan(state.user_query, today, config.get("learning_agent", {}).get("lookback_days", 30))
         state.as_of = today.isoformat()
         state.query_plan = asdict(plan)
-        searcher = searcher or EvidenceSearch(config)
+        searcher = searcher or HybridEvidenceSearch(config)
         state.search_call_limit = getattr(searcher, "max_calls", 8)
     while state.status == "running" and state.current_step < state.max_steps:
         state.current_step += 1
@@ -488,7 +496,7 @@ def main() -> None:
     if args.retrieval_only:
         today = args.as_of or dt.datetime.now(ZoneInfo(config.get("learning_agent", {}).get("timezone", "Asia/Shanghai"))).date()
         plan = build_query_plan(args.query, today, config.get("learning_agent", {}).get("lookback_days", 30))
-        searcher = EvidenceSearch(config)
+        searcher = HybridEvidenceSearch(config)
         batch = searcher.search(plan, plan.expanded_queries, set())
         state.query_plan, state.search_trace, state.warnings = asdict(plan), batch.trace, batch.warnings
         state.selected_items, state.search_calls, state.as_of = batch.items, searcher.used_calls, today.isoformat()

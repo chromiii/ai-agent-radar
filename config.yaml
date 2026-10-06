@@ -19,6 +19,16 @@ learning_agent:
     hf_candidates: 40
     timeout_seconds: 12
 
+# Historical Radar memory is derived from committed reports. It is context,
+# not an independent publication source.
+history:
+  enabled: true
+  lookback_days: 180
+  max_results: 5
+  max_results_per_round: 4
+  repository_url: https://github.com/chromiii/ai-agent-radar
+  repository_branch: main
+
 weekly:
   output_dir: weekly
   state_dir: state
