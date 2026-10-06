@@ -126,7 +126,7 @@ def _weekly_trends(path: Path) -> list[tuple[str, str]]:
         elif stripped.startswith("## "):
             tier = None
         elif tier and stripped.startswith("- "):
-            term = clean(stripped[2:].strip("*\` "), 120).casefold()
+            term = clean(stripped[2:].strip("*` "), 120).casefold()
             if term:
                 result.append((term, tier))
     return result
