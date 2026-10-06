@@ -198,3 +198,28 @@ V3 role authority is intentionally narrow:
 **Consequence:** Multi-Agent is a product mode with an explicit reason, not a repository-wide default. Future evaluation should compare claim support, verifier rejection quality, repair frequency and failure attribution across several cases.
 
 **Framework consequence:** Do not introduce LangGraph merely because V3 now has three roles. Reconsider it only if persistent checkpoints, resumability, branching/re-entry, human approval, or more complex state transitions solve an observed problem that the current bounded Python executor cannot handle cleanly.
+
+
+## ADR-015 — Historical memory is derived from committed Radar reports
+
+**Status:** Experimental, V4
+
+**Decision:** Treat `inbox/*.md`, `weekly/*.md`, and `company/*.md` as the durable source of truth for cross-run Radar knowledge. Build Historical Knowledge, Entity Memory and Trend Memory deterministically from those reports. Generated index files are rebuildable caches and are not committed.
+
+**Why:** The project already has months of structured human-readable history. Writing model summaries directly into a new long-term memory database would create a second authority, make correction harder, and blur the difference between observed evidence and generated interpretation.
+
+**Provenance rule:** Historical retrieval emits `date_kind=radar_observed`. It can support recurrence/history statements but never counts as an independent publication for the current-trend gate. Hybrid research answers must retain at least one non-historical source.
+
+**Consequence:** Deleting the derived history cache loses no knowledge. Corrections should be made at the report/source layer and then rebuilt.
+
+## ADR-016 — Use lexical Historical RAG before embeddings
+
+**Status:** Experimental, V4
+
+**Decision:** Start Historical RAG with deterministic topic-gated BM25-style retrieval, Chinese bigrams, exact Trend/Entity Memory boosts and recurrence aggregation. Do not add a vector database yet.
+
+**Observed scale:** The V4 PR corpus builds roughly 1.8k searchable records, 15 entity memories and 44 trend memories in under a second after dependencies are installed. At this scale the lexical implementation is cheap and inspectable.
+
+**Why:** A vector layer adds embedding lifecycle/versioning, persistence, migration and semantic false-positive failure modes. It should be justified by measured recall/reranking gains rather than by architecture fashion.
+
+**Revisit when:** a labeled retrieval set shows material lexical recall failures, corpus growth makes local scoring expensive, or semantic reranking produces measurable quality gains.
