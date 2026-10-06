@@ -105,14 +105,15 @@ def test_snapshot_tracks_entity_and_weekly_trend_history(tmp_path):
     assert memory["last_seen"] == "2026-10-03"
 
 
-def test_history_search_returns_distinct_radar_observations(tmp_path):
+def test_history_search_exposes_memory_and_diversifies_results(tmp_path):
     root = fixture_repo(tmp_path)
     plan = build_query_plan("最近 agent memory 有什么变化？", dt.date(2026, 10, 7), 30)
     rows = HistoryIndex.from_repo(root, config()).search(plan, plan.expanded_queries, limit=4)
     assert len(rows) >= 2
     assert all(row["provider"] == "radar_history" for row in rows)
     assert all(row["date_kind"] == "radar_observed" for row in rows)
-    assert len({row["source_path"] for row in rows}) == len(rows)
+    assert any(row["evidence_kind"] == "radar_memory" for row in rows)
+    assert any("Trend memory: agent memory" in row["title"] for row in rows)
     assert all("/blob/main/" in row["url"] for row in rows)
 
 
@@ -173,3 +174,25 @@ def test_hybrid_search_prepends_history_without_spending_external_budget(tmp_pat
     assert any(item["provider"] == "arxiv" for item in batch.items)
     assert hybrid.used_calls == 2
     assert any("不能替代" in warning for warning in batch.warnings)
+
+
+def test_repeated_external_observations_are_collapsed_with_recurrence_metadata(tmp_path):
+    root = fixture_repo(tmp_path)
+    write_report(
+        root,
+        "inbox",
+        "2026-10-03.md",
+        """# Daily
+
+### MemoryBench: Agent memory benchmark
+- 链接：https://arxiv.org/abs/2610.33333
+- AI 判断：agent memory benchmark repeated observation
+""",
+    )
+    plan = build_query_plan("agent memory benchmark", dt.date(2026, 10, 7), 30)
+    rows = HistoryIndex.from_repo(root, config()).search(plan, plan.expanded_queries, limit=8)
+    matching = [row for row in rows if "MemoryBench" in row["title"]]
+    assert len(matching) == 1
+    assert matching[0]["observation_count"] == 2
+    assert matching[0]["first_seen"] == "2026-10-01"
+    assert matching[0]["last_seen"] == "2026-10-03"
