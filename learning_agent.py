@@ -312,6 +312,11 @@ def verify_findings(findings: Any, items: list[dict[str, Any]]) -> list[dict[str
         used.update(allowed[i]["url"] for i in ids)
     if len(used) < 2:
         raise ValueError("research answer needs at least two different sources; otherwise report insufficient_evidence")
+    cited_items = [allowed[evidence_id] for finding in verified for evidence_id in finding["evidence_ids"]]
+    if cited_items and not any(item.get("date_kind") != "radar_observed" for item in cited_items):
+        raise ValueError(
+            "hybrid research answer needs at least one non-historical source; Radar memory alone can describe history but not current evidence"
+        )
     return verified
 
 
