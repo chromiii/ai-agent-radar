@@ -158,13 +158,16 @@ Return exactly:
 }}
 
 Rules:
-- Return 1-3 findings.
+- Return 1-3 findings; prefer fewer when evidence overlaps.
 - Every evidence_id must exist in Evidence JSON.
 - A trend requires at least two different publication-dated sources for that finding.
 - Do not infer adoption growth, production deployment, clinical efficacy, or a historical transition unless supplied evidence directly supports it.
 - GitHub pushed dates indicate activity, not publication or deployment.
 - Distinguish direct comparisons from inferred engineering implications.
-- Keep each claim/application/try_next compact and do not put URLs in prose.
+- Keep topic <= 30 Chinese characters; claim <= 220; application <= 120; try_next <= 120.
+- Keep one_liner <= 80; learn has 2-3 items, each <= 30; done_when <= 100.
+- Use plain text or Chinese quotation marks inside JSON strings; avoid literal double quotes that can break JSON.
+- Do not put URLs, Markdown links, citation brackets or explanatory prose outside the JSON object.
 """.strip()
     return [{"role": "system", "content": system}, {"role": "user", "content": user}]
 
