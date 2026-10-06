@@ -196,3 +196,52 @@ def test_repeated_external_observations_are_collapsed_with_recurrence_metadata(t
     assert matching[0]["observation_count"] == 2
     assert matching[0]["first_seen"] == "2026-10-01"
     assert matching[0]["last_seen"] == "2026-10-03"
+
+
+def test_topic_gate_keeps_mcp_history_specific(tmp_path):
+    root = fixture_repo(tmp_path)
+    write_report(
+        root,
+        "inbox",
+        "2026-10-04.md",
+        """# Daily
+
+### MCP tool validation
+- 链接：https://example.com/mcp
+- AI 判断：Model Context Protocol tool schema validation for agents
+
+### Generic Agent Harness
+- 链接：https://example.com/harness
+- AI 判断：generic agent tool workflow
+""",
+    )
+    plan = build_query_plan("MCP 最近有哪些值得学的实现？", dt.date(2026, 10, 7), 30)
+    rows = HistoryIndex.from_repo(root, config()).search(plan, plan.expanded_queries, limit=8)
+    assert rows
+    assert all(
+        "mcp" in (row["title"] + " " + row["summary"]).casefold()
+        or "model context protocol" in (row["title"] + " " + row["summary"]).casefold()
+        for row in rows
+    )
+    assert not any("Generic Agent Harness" in row["title"] for row in rows)
+
+
+def test_exact_trend_memory_is_prioritized_for_change_question(tmp_path):
+    root = fixture_repo(tmp_path)
+    plan = build_query_plan("最近 agent memory 有什么变化？", dt.date(2026, 10, 7), 30)
+    rows = HistoryIndex.from_repo(root, config()).search(plan, plan.expanded_queries, limit=5)
+    assert rows[0]["evidence_kind"] == "radar_memory"
+    assert "Trend memory: agent memory" in rows[0]["title"]
+    assert "2 Weekly Radar reports" in rows[0]["summary"]
+
+
+def test_history_can_be_disabled_without_local_results(tmp_path):
+    root = fixture_repo(tmp_path)
+    cfg = config()
+    cfg["history"]["enabled"] = False
+    hybrid = HybridEvidenceSearch(cfg, history_index=HistoryIndex.from_repo(root, config()))
+    hybrid.external = FakeExternal()
+    plan = build_query_plan("agent memory", dt.date(2026, 10, 7), 30)
+    batch = hybrid.search(plan, plan.expanded_queries, set())
+    assert [item["provider"] for item in batch.items] == ["arxiv"]
+    assert not any("历史 Radar" in warning for warning in batch.warnings)
