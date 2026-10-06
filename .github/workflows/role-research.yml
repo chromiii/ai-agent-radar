@@ -1,0 +1,76 @@
+name: Role-separated Research
+
+on:
+  pull_request:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      question:
+        description: 想让 Research → Analyst → Verifier 分析什么？（最多 600 字）
+        required: true
+        type: string
+        default: 最近医药 Agent 有什么趋势？
+
+permissions:
+  contents: read
+
+concurrency:
+  group: role-research-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  research:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.label.name == 'research-live-test' &&
+       github.event.pull_request.head.repo.full_name == github.repository &&
+       github.event.pull_request.author_association == 'OWNER')
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run role-separated research
+        env:
+          RADAR_QUESTION: ${{ inputs.question || '最近医药 Agent 有什么趋势？' }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -o pipefail
+          if [ -z "$DEEPSEEK_API_KEY" ]; then
+            echo "::error::DEEPSEEK_API_KEY is unavailable to this run."
+            exit 1
+          fi
+          mkdir -p role_results
+          python role_research.py "$RADAR_QUESTION" --output role_results/run.json | tee role_results/console.txt
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          result = json.loads(Path("role_results/run.json").read_text(encoding="utf-8"))
+          state = result["state"]
+          answer = "# Role-separated Research\n\n" + state["final_answer"] + "\n"
+          Path("role_results/answer.md").write_text(answer, encoding="utf-8")
+          summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+          if summary_path:
+              with Path(summary_path).open("a", encoding="utf-8") as summary:
+                  summary.write(answer)
+          PY
+
+      - name: Preserve answer and traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: role-research-result
+          path: role_results/
+          retention-days: 7

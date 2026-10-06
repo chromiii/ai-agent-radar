@@ -1,0 +1,67 @@
+name: Research A/B
+
+on:
+  pull_request:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      case:
+        description: Usability case to compare
+        type: choice
+        default: medical-agent-trends
+        options:
+          - medical-agent-trends
+          - coding-agent-learning
+          - mcp-application-value
+          - multi-agent-application
+          - agent-memory-changes
+          - agentic-rag-learning
+          - medical-agent-engineering
+
+permissions:
+  contents: read
+
+concurrency:
+  group: research-ab-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  compare:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.label.name == 'research-ab-test' &&
+       github.event.pull_request.head.repo.full_name == github.repository &&
+       github.event.pull_request.author_association == 'OWNER')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Compare V2.2 and V3
+        env:
+          AB_CASE: ${{ inputs.case || 'medical-agent-trends' }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$DEEPSEEK_API_KEY" ]; then
+            echo "::error::DEEPSEEK_API_KEY is unavailable to this run."
+            exit 1
+          fi
+          python research_ab.py --case "$AB_CASE" --output ab_results/comparison.json
+          cat ab_results/comparison.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Preserve A/B evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-ab
+          path: ab_results/
+          retention-days: 7
