@@ -12,7 +12,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
-from research_search import QueryPlan, TOPICS, canonical_url, clean
+from research_search import QueryPlan, TOPICS, canonical_url, clean, contains
 
 ROOT = Path(__file__).resolve().parent
 REPORT_DIRS = {"inbox": "daily", "weekly": "weekly", "company": "company"}
