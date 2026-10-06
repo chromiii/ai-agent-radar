@@ -1,6 +1,8 @@
 name: Historical Radar Memory
 
 on:
+  pull_request:
+    types: [labeled]
   workflow_dispatch:
     inputs:
       query:
@@ -14,6 +16,11 @@ permissions:
 
 jobs:
   memory:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.label.name == 'history-memory-test' &&
+       github.event.pull_request.head.repo.full_name == github.repository &&
+       github.event.pull_request.author_association == 'OWNER')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
