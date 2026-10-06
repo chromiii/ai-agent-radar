@@ -245,3 +245,53 @@ def test_history_can_be_disabled_without_local_results(tmp_path):
     batch = hybrid.search(plan, plan.expanded_queries, set())
     assert [item["provider"] for item in batch.items] == ["arxiv"]
     assert not any("历史 Radar" in warning for warning in batch.warnings)
+
+
+def test_history_only_signal_cannot_be_published_as_current_research():
+    items = [
+        {"id": "S1", "url": "https://github.com/chromiii/ai-agent-radar/blob/main/weekly/2026-09-27.md",
+         "date_kind": "radar_observed"},
+        {"id": "S2", "url": "https://github.com/chromiii/ai-agent-radar/blob/main/weekly/2026-10-03.md",
+         "date_kind": "radar_observed"},
+    ]
+    findings = [
+        {
+            "topic": "Agent memory history",
+            "claim": "Radar 过去多次记录 agent memory。",
+            "claim_type": "signal",
+            "evidence_ids": ["S1", "S2"],
+            "application": "用于回顾历史。",
+            "try_next": "整理两次历史记录。",
+            "level": "know",
+            "one_liner": "历史记录不是当前独立证据。",
+            "learn": ["历史上下文", "当前证据"],
+            "practice_minutes": 15,
+            "done_when": "列出两次 Radar 日期。",
+        }
+    ]
+    with pytest.raises(ValueError, match="non-historical source"):
+        verify_findings(findings, items)
+
+
+def test_history_plus_current_source_can_support_signal_answer():
+    items = [
+        {"id": "S1", "url": "https://github.com/chromiii/ai-agent-radar/blob/main/weekly/2026-10-03.md",
+         "date_kind": "radar_observed"},
+        {"id": "S2", "url": "https://arxiv.org/abs/2610.44444", "date_kind": "published"},
+    ]
+    findings = [
+        {
+            "topic": "Agent memory context",
+            "claim": "Radar 历史和当前论文都出现了 agent memory 相关信号。",
+            "claim_type": "signal",
+            "evidence_ids": ["S1", "S2"],
+            "application": "区分历史观察和当前来源。",
+            "try_next": "比较历史记录与当前论文。",
+            "level": "know",
+            "one_liner": "混合检索把历史上下文与当前证据分开。",
+            "learn": ["历史上下文", "当前证据"],
+            "practice_minutes": 15,
+            "done_when": "分别标注 Radar 与 published 来源。",
+        }
+    ]
+    assert verify_findings(findings, items)[0]["evidence_ids"] == ["S1", "S2"]
