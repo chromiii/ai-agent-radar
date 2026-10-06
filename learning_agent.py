@@ -127,6 +127,8 @@ def build_agent_prompt(state: AgentState, weekly_markdown: str) -> list[dict[str
         "A useful answer needs at least two different retrieved sources in total. Each finding needs topic, claim, "
         "claim_type (signal or trend), evidence_ids, application and try_next. "
         "A trend requires at least two independent published sources for that finding. "
+        "Evidence with date_kind=radar_observed is prior Radar memory: use it to describe recurrence/history, "
+        "never as an independent publication proving a current trend. "
         "Describe a trend as a recurring direction in the retrieved recent research, not proven industry adoption. "
         "Without retrieved historical baseline evidence, do not claim a transition from older approaches, "
         "rapid expansion, increasing adoption or becoming mainstream. Say what these recent sources explore. "
@@ -302,7 +304,7 @@ def verify_findings(findings: Any, items: list[dict[str, Any]]) -> list[dict[str
         if claim_type not in ("signal", "trend"):
             raise ValueError("claim_type must be signal or trend")
         if claim_type == "trend" and len({allowed[i]["url"] for i in ids if allowed[i]["date_kind"] == "published"}) < 2:
-            raise ValueError("trend requires two different published sources; updated repository metadata is only an activity signal")
+            raise ValueError("trend requires two different published sources; updated repositories and radar_observed history are context signals only")
         result.update(evidence_ids=ids, claim_type=claim_type)
         result.update(learning_details(f))
         verified.append(result)
