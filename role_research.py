@@ -16,7 +16,7 @@ from typing import Any, Callable
 from uuid import uuid4
 from zoneinfo import ZoneInfo
 
-from learning_agent import call_deepseek, load_config, safe_model_diagnostics, verify_findings
+from learning_agent import ModelResponseError, call_deepseek, load_config, safe_model_diagnostics, verify_findings
 from learning_cards import markdown_text, render_learning_card, research_card
 from research_search import EvidenceSearch, build_query_plan, clean
 
@@ -24,7 +24,8 @@ from research_search import EvidenceSearch, build_query_plan, clean
 ROOT = Path(__file__).resolve().parent
 RESEARCH_ACTIONS = {"search_more", "ready", "insufficient_evidence"}
 VERIFIER_VERDICTS = {"accept", "reject"}
-PROMPT_VERSION = "role-research-v3"
+REPAIRABLE_MODEL_ERRORS = {"invalid_json", "truncated_response", "empty_or_invalid_content"}
+PROMPT_VERSION = "role-research-v3.1"
 
 
 @dataclass
@@ -256,6 +257,44 @@ def _record_model_trace(role: str, raw: dict[str, Any], target: list[dict[str, A
     target.append({"role": role, **diagnostics})
 
 
+def _call_role_with_retry(
+    role: str,
+    decide: Callable[[list[dict[str, str]], dict[str, Any]], dict[str, Any]],
+    messages: list[dict[str, str]],
+    config: dict[str, Any],
+    trace: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Allow one bounded repair for malformed/truncated JSON, preserving safe diagnostics."""
+    current_messages = messages
+    for attempt in range(2):
+        try:
+            raw = decide(current_messages, config)
+            _record_model_trace(role, raw, trace)
+            return raw
+        except ModelResponseError as exc:
+            trace.append(
+                {
+                    "role": role,
+                    "attempt": attempt + 1,
+                    "error_type": type(exc).__name__,
+                    "error_code": exc.code,
+                    **exc.diagnostics,
+                }
+            )
+            if exc.code not in REPAIRABLE_MODEL_ERRORS or attempt >= 1:
+                raise
+            current_messages = list(messages) + [
+                {
+                    "role": "user",
+                    "content": (
+                        "Previous response was invalid or truncated. Return the same requested JSON contract again, "
+                        "but make it more compact. Output JSON only; at most 3 findings; keep strings concise."
+                    ),
+                }
+            ]
+    raise RuntimeError("unreachable role retry state")
+
+
 def run_role_research(
     state: RoleResearchState,
     config: dict[str, Any],
@@ -294,8 +333,9 @@ def run_role_research(
     research_ready = False
     for round_no in range(1, state.max_research_rounds + 1):
         try:
-            raw = research_decide(build_research_prompt(state), config)
-            _record_model_trace("research", raw, state.research_trace)
+            raw = _call_role_with_retry(
+                "research", research_decide, build_research_prompt(state), config, state.research_trace
+            )
             decision = validate_research_decision(raw)
         except Exception as exc:
             state.status = "failed_research"
@@ -346,8 +386,9 @@ def run_role_research(
         return state
 
     try:
-        raw_analyst = analyst_decide(build_analyst_prompt(state), config)
-        _record_model_trace("analyst", raw_analyst, state.research_trace)
+        raw_analyst = _call_role_with_retry(
+            "analyst", analyst_decide, build_analyst_prompt(state), config, state.research_trace
+        )
         findings, limitations = validate_analyst_output(raw_analyst, state.selected_items)
     except Exception as exc:
         state.status = "failed_analysis"
@@ -357,8 +398,9 @@ def run_role_research(
     state.analyst_findings = findings
 
     try:
-        raw_verifier = verifier_decide(build_verifier_prompt(state, findings), config)
-        _record_model_trace("verifier", raw_verifier, state.verifier_trace)
+        raw_verifier = _call_role_with_retry(
+            "verifier", verifier_decide, build_verifier_prompt(state, findings), config, state.verifier_trace
+        )
         verdicts = validate_verifier_output(raw_verifier, len(findings))
     except Exception as exc:
         state.status = "failed_verification"
