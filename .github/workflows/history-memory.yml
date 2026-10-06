@@ -39,7 +39,7 @@ jobs:
 
       - name: Search history
         env:
-          HISTORY_QUERY: ${{ inputs.query }}
+          HISTORY_QUERY: ${{ github.event_name == 'workflow_dispatch' && inputs.query || '最近 agent memory 有什么变化？' }}
         run: |
           python historical_memory.py search "$HISTORY_QUERY" --limit 8 > history_results/search.json
           python - <<'PY'
