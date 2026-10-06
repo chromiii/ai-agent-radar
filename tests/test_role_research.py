@@ -2,6 +2,7 @@ import datetime as dt
 
 import pytest
 
+from learning_agent import ModelResponseError
 from role_research import (
     RoleResearchState,
     run_role_research,
@@ -206,3 +207,31 @@ def test_verifier_cannot_change_analyst_claim_in_published_state():
 def test_research_round_limit_is_bounded():
     with pytest.raises(ValueError):
         RoleResearchState(task_id="t", user_query="agent", max_research_rounds=6)
+
+
+def test_analyst_gets_one_bounded_format_repair():
+    calls = {"count": 0}
+
+    def flaky_analyst(*_):
+        calls["count"] += 1
+        if calls["count"] == 1:
+            raise ModelResponseError(
+                "invalid_json",
+                {"finish_reason": "stop", "prompt_tokens": 120, "completion_tokens": 80, "total_tokens": 200},
+            )
+        return analyst()
+
+    result = run_role_research(
+        state(),
+        {},
+        research_decide=ready,
+        analyst_decide=flaky_analyst,
+        verifier_decide=accept_all,
+        searcher=FixedSearch(),
+    )
+    assert result.status == "finished"
+    assert calls["count"] == 2
+    assert any(
+        row.get("role") == "analyst" and row.get("error_code") == "invalid_json"
+        for row in result.research_trace
+    )
