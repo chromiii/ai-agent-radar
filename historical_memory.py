@@ -156,7 +156,8 @@ def build_snapshot(root: Path = ROOT, config: dict[str, Any] | None = None) -> H
             "appearances": len({row.report_date for row in rows}),
             "first_seen": rows[0].report_date,
             "last_seen": rows[-1].report_date,
-            "recent_items": [{"date": r.report_date, "title": r.title, "source_path": r.source_path, "url": r.url} for r in rows[-5:]],
+            "recent_items": [{"date": r.report_date, "title": r.title, "source_path": r.source_path,
+                              "url": r.url, "external_urls": r.external_urls} for r in rows[-5:]],
         }
 
     trends = {}
@@ -169,6 +170,44 @@ def build_snapshot(root: Path = ROOT, config: dict[str, Any] | None = None) -> H
             "first_seen": history[0]["date"], "last_seen": history[-1]["date"],
             "history": history[-12:],
         }
+
+    # Derived memory documents make recurrence searchable without turning memory into a publication.
+    for entity, row in entities.items():
+        latest = row["recent_items"][-1]
+        history_text = "; ".join(f"{item['date']} {item['title']}" for item in row["recent_items"])
+        documents.append(HistoryDocument(
+            id=_doc_id(latest["source_path"], f"Entity memory: {entity}", history_text),
+            report_date=row["last_seen"],
+            report_kind="entity_memory",
+            title=f"Entity memory: {entity}",
+            text=(
+                f"{entity} appeared on {row['appearances']} Radar dates from {row['first_seen']} to {row['last_seen']}. "
+                f"Recent observations: {history_text}"
+            ),
+            source_path=latest["source_path"],
+            url=_report_url(latest["source_path"], config),
+            external_urls=list(dict.fromkeys(
+                url for item in row["recent_items"] for url in item.get("external_urls", [])
+            ))[:8],
+            entity=entity,
+        ))
+
+    for term, row in trends.items():
+        latest = row["history"][-1]
+        history_text = "; ".join(f"{item['date']} {item['tier']}" for item in row["history"])
+        documents.append(HistoryDocument(
+            id=_doc_id(latest["source_path"], f"Trend memory: {term}", history_text),
+            report_date=row["last_seen"],
+            report_kind="trend_memory",
+            title=f"Trend memory: {term}",
+            text=(
+                f"{term} appeared in {row['appearances']} Weekly Radar reports from {row['first_seen']} to {row['last_seen']}; "
+                f"tier1={row['tier1_count']}, tier2={row['tier2_count']}. History: {history_text}"
+            ),
+            source_path=latest["source_path"],
+            url=_report_url(latest["source_path"], config),
+            external_urls=[],
+        ))
 
     documents.sort(key=lambda d: (d.report_date, d.report_kind, d.title))
     return HistorySnapshot(documents, entities, trends)
@@ -248,28 +287,60 @@ class HistoryIndex:
             score += sum(1.5 for phrase in [plan.original_query, *queries] if len(clean(phrase, 160)) >= 4 and clean(phrase, 160).casefold() in lower)
             if score <= 0:
                 continue
-            score += {"weekly": 0.35, "daily": 0.2, "company": 0.15}.get(doc.report_kind, 0)
+            score += {"trend_memory": 0.9, "entity_memory": 0.8, "weekly": 0.35, "daily": 0.2, "company": 0.15}.get(doc.report_kind, 0)
             score += 0.25 * ((date - start).days / max((end - start).days, 1))
             scored.append((score, doc))
         scored.sort(key=lambda pair: (pair[0], pair[1].report_date), reverse=True)
-        result, seen_reports = [], set()
+
+        # Collapse repeated observations of the same underlying external item. Recurrence
+        # stays visible as metadata instead of consuming every retrieval slot.
+        groups: dict[str, list[tuple[float, HistoryDocument]]] = {}
+        order: list[str] = []
         for score, doc in scored:
-            if doc.source_path in seen_reports:
+            if doc.report_kind in ("trend_memory", "entity_memory"):
+                key = f"{doc.report_kind}:{doc.title.casefold()}"
+            elif doc.external_urls:
+                key = "external:" + doc.external_urls[0]
+            else:
+                key = "report:" + doc.source_path
+            if key not in groups:
+                groups[key] = []
+                order.append(key)
+            groups[key].append((score, doc))
+
+        result = []
+        for key in order:
+            rows = groups[key]
+            if any(canonical_url(doc.url) in selected for _, doc in rows):
                 continue
-            seen_reports.add(doc.source_path)
+            score, doc = rows[0]
+            dates = sorted({item.report_date for _, item in rows})
+            paths = list(dict.fromkeys(item.source_path for _, item in rows))
+            external_urls = list(dict.fromkeys(url for _, item in rows for url in item.external_urls))[:8]
+            recurrence = ""
+            if len(dates) > 1:
+                recurrence = (
+                    f"Historical recurrence: observed on {len(dates)} Radar dates from {dates[0]} to {dates[-1]}. "
+                )
             result.append({
-                "title": f"[Radar {doc.report_date}] {doc.title}",
+                "title": (f"[Radar Memory] {doc.title}" if doc.report_kind.endswith("_memory")
+                          else f"[Radar {doc.report_date}] {doc.title}"),
                 "url": doc.url,
-                "summary": clean(doc.text, 1400),
+                "summary": clean(recurrence + doc.text, 1400),
                 "date": doc.report_date,
                 "date_kind": "radar_observed",
                 "provider": "radar_history",
-                "evidence_kind": "radar_section",
+                "evidence_kind": "radar_memory" if doc.report_kind.endswith("_memory") else "radar_section",
                 "retrieved_query": clean(plan.original_query, 160),
                 "relevance_score": round(score, 3),
                 "source_path": doc.source_path,
-                "external_urls": doc.external_urls,
+                "source_paths": paths[:12],
+                "external_urls": external_urls,
                 "entity": doc.entity,
+                "observation_count": len(dates),
+                "first_seen": dates[0],
+                "last_seen": dates[-1],
+                "observation_dates": dates[-12:],
             })
             if len(result) >= limit:
                 break
