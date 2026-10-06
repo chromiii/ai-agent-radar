@@ -1,23 +1,30 @@
 name: Role-separated Research
 
 on:
+  pull_request:
+    types: [labeled]
   workflow_dispatch:
     inputs:
       question:
         description: 想让 Research → Analyst → Verifier 分析什么？（最多 600 字）
         required: true
         type: string
-        default: 最近医药 Agent 有哪些值得关注的应用层信号？
+        default: 最近医药 Agent 有什么趋势？
 
 permissions:
   contents: read
 
 concurrency:
-  group: role-research-${{ github.ref }}
+  group: role-research-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
 
 jobs:
   research:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.label.name == 'research-live-test' &&
+       github.event.pull_request.head.repo.full_name == github.repository &&
+       github.event.pull_request.author_association == 'OWNER')
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
@@ -32,7 +39,7 @@ jobs:
 
       - name: Run role-separated research
         env:
-          RADAR_QUESTION: ${{ inputs.question }}
+          RADAR_QUESTION: ${{ inputs.question || '最近医药 Agent 有什么趋势？' }}
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
