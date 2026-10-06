@@ -5,6 +5,7 @@ import pytest
 from learning_agent import ModelResponseError
 from role_research import (
     RoleResearchState,
+    build_analyst_prompt,
     run_role_research,
     validate_research_decision,
     validate_verifier_output,
@@ -235,3 +236,14 @@ def test_analyst_gets_one_bounded_format_repair():
         row.get("role") == "analyst" and row.get("error_code") == "invalid_json"
         for row in result.research_trace
     )
+
+
+def test_analyst_prompt_keeps_first_attempt_compact_and_json_safe():
+    s = state()
+    s.query_plan = {"start_date": "2026-09-08", "end_date": "2026-10-07"}
+    s.selected_items = [dict(item, id=f"S{i}") for i, item in enumerate(evidence(), 1)]
+    prompt = build_analyst_prompt(s)[1]["content"]
+    assert "claim <= 220" in prompt
+    assert "learn has 2-3 items" in prompt
+    assert "avoid literal double quotes" in prompt
+    assert "outside the JSON object" in prompt
