@@ -110,7 +110,8 @@ def render_learning_card(card: dict[str, Any], number: int) -> list[str]:
     for source in card.get("sources", []):
         link = source_link(source["id"], source["url"])
         if source.get("date"):
-            kind = "发布" if source.get("date_kind") == "published" else "仓库活动"
+            date_kind = source.get("date_kind")
+            kind = "发布" if date_kind == "published" else "Radar 记录" if date_kind == "radar_observed" else "仓库活动"
             link += f"（{kind} {source['date']}）"
         links.append(link)
     if not links:
