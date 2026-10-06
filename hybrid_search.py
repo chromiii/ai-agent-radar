@@ -13,7 +13,6 @@ class HybridEvidenceSearch:
     def __init__(self, config: dict[str, Any], session: Any = None, history_index: HistoryIndex | None = None):
         self.config = config
         self.external = EvidenceSearch(config, session=session)
-        self.history = history_index or HistoryIndex.from_repo(ROOT, config)
         cfg = config.get("history", {})
         self.history_enabled = bool(cfg.get("enabled", True))
         self.history_limit = int(cfg.get("max_results_per_round", 4))
