@@ -103,6 +103,7 @@ Rules:
 - search_more must name 1-4 short search queries grounded in the user's question and a concrete evidence gap.
 - Do not output findings, recommendations, URLs, or facts not present in the evidence.
 - For recent/trend questions, prefer at least two publication-dated sources; repository updated dates are activity signals only.
+- date_kind=radar_observed is historical Radar memory: use it to establish prior observation/recurrence, never as an independent publication proving a current trend.
 """.strip()
     return [{"role": "system", "content": system}, {"role": "user", "content": user}]
 
@@ -164,6 +165,7 @@ Rules:
 - A trend requires at least two different publication-dated sources for that finding.
 - Do not infer adoption growth, production deployment, clinical efficacy, or a historical transition unless supplied evidence directly supports it.
 - GitHub pushed dates indicate activity, not publication or deployment.
+- radar_observed evidence can support statements about what the Radar saw before, but cannot replace published evidence for current trend claims.
 - Distinguish direct comparisons from inferred engineering implications.
 - Keep topic <= 30 Chinese characters; claim <= 220; application <= 120; try_next <= 120.
 - Keep one_liner <= 80; learn has 2-3 items, each <= 30; done_when <= 100.
