@@ -1,0 +1,69 @@
+name: Historical Radar Memory
+
+on:
+  workflow_dispatch:
+    inputs:
+      query:
+        description: Search the historical Radar corpus
+        required: true
+        type: string
+        default: 最近 agent memory 有什么变化？
+
+permissions:
+  contents: read
+
+jobs:
+  memory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build derived memory
+        run: |
+          python historical_memory.py build --output-dir history_results/state
+
+      - name: Search history
+        env:
+          HISTORY_QUERY: \${{ inputs.query }}
+        run: |
+          python historical_memory.py search "$HISTORY_QUERY" --limit 8 > history_results/search.json
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          rows = json.loads(Path("history_results/search.json").read_text(encoding="utf-8"))
+          lines = ["# Historical Radar Memory", "", f"Query: {os.environ['HISTORY_QUERY']}", ""]
+          for i, row in enumerate(rows, 1):
+              lines.extend([
+                  f"## {i}. {row['title']}",
+                  "",
+                  f"- Radar date: {row['date']}",
+                  f"- Report: {row.get('source_path', '')}",
+                  f"- Score: {row['relevance_score']}",
+                  f"- Source: {row['url']}",
+                  "",
+                  row['summary'],
+                  "",
+              ])
+          report = "\n".join(lines)
+          Path("history_results/search.md").write_text(report, encoding="utf-8")
+          summary = os.environ.get("GITHUB_STEP_SUMMARY")
+          if summary:
+              Path(summary).write_text(report, encoding="utf-8")
+          PY
+
+      - name: Preserve index and memory
+        uses: actions/upload-artifact@v4
+        with:
+          name: historical-radar-memory
+          path: history_results/
+          retention-days: 7
