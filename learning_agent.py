@@ -15,6 +15,7 @@ import requests
 
 from radar import load_config, normalize
 from research_search import EvidenceSearch, build_query_plan, clean, contains
+from hybrid_search import HybridEvidenceSearch
 from learning_cards import CARD_PROMPT, learning_details, markdown_text, render_learning_card, research_card
 
 
