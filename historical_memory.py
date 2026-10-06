@@ -284,9 +284,36 @@ class HistoryIndex:
                 idf = math.log(1 + (n_docs - df + 0.5) / (df + 0.5))
                 score += idf * (tf * (k1 + 1) / (tf + k1 * (1 - b + b * length / max(self.avg_len, 1)))) * min(qf, 2)
             lower = (doc.title + " " + doc.text).casefold()
-            score += sum(1.5 for phrase in [plan.original_query, *queries] if len(clean(phrase, 160)) >= 4 and clean(phrase, 160).casefold() in lower)
+
+            # Once the query planner recognizes a domain, historical retrieval must
+            # actually mention that domain. This prevents generic "agent/tool" overlap
+            # from polluting MCP, memory, RAG, healthcare, etc. history results.
+            topic_groups = [TOPICS[name]["terms"] for name in plan.topics if name in TOPICS]
+            if topic_groups and not all(any(contains(lower, term) for term in group) for group in topic_groups):
+                continue
+
+            score += sum(
+                1.5
+                for phrase in [plan.original_query, *queries]
+                if len(clean(phrase, 160)) >= 4 and clean(phrase, 160).casefold() in lower
+            )
             if score <= 0:
                 continue
+
+            if doc.report_kind == "trend_memory":
+                memory_term = clean(doc.title.split(":", 1)[-1], 120)
+                if memory_term and (
+                    contains(plan.original_query, memory_term)
+                    or any(contains(query, memory_term) for query in queries)
+                ):
+                    score += 6.0
+                if any(word in plan.original_query.casefold() for word in ("变化", "趋势", "历史", "反复", "过去", "change", "trend", "history")):
+                    score += 2.0
+            elif doc.report_kind == "entity_memory":
+                entity_term = clean(doc.title.split(":", 1)[-1], 120)
+                if entity_term and contains(plan.original_query, entity_term):
+                    score += 5.0
+
             score += {"trend_memory": 0.9, "entity_memory": 0.8, "weekly": 0.35, "daily": 0.2, "company": 0.15}.get(doc.report_kind, 0)
             score += 0.25 * ((date - start).days / max((end - start).days, 1))
             scored.append((score, doc))
