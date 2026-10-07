@@ -1,10 +1,5 @@
 {
   "seen": {
-    "https://www.zhipuai.cn/zh/research/156": "2026-09-24",
-    "https://www.zhipuai.cn/zh/research/155": "2026-09-24",
-    "https://www.zhipuai.cn/zh/research/145": "2026-09-24",
-    "https://www.cursor.com/automate": "2026-09-24",
-    "https://mistral.ai/pricing/api/": "2026-09-24",
     "https://status.deepseek.com/": "2026-09-25",
     "https://api-docs.deepseek.com/guides/vision": "2026-09-25",
     "https://api-docs.deepseek.com/api/create-chat-completion": "2026-09-25",
@@ -74,6 +69,11 @@
     "https://seed.bytedance.com/en/blog/one-take-creation-flexible-referencing-introducing-seedance-2-5": "2026-10-06",
     "https://www.minimax.io/models/text/m3": "2026-10-06",
     "https://code.minimax.io": "2026-10-06",
-    "https://mistral.ai/news/mistral-x-cloudera/": "2026-10-07"
+    "https://mistral.ai/news/mistral-x-cloudera/": "2026-10-07",
+    "https://www.cursor.com/changelog/remote-control-local-agents": "2026-10-08",
+    "https://www.zhipuai.cn/zh/research/156": "2026-10-08",
+    "https://www.zhipuai.cn/zh/research/155": "2026-10-08",
+    "https://www.zhipuai.cn/zh/research/145": "2026-10-08",
+    "https://www.cursor.com/automate": "2026-10-08"
   }
 }
