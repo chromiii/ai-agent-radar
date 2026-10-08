@@ -1,11 +1,5 @@
 {
   "seen": {
-    "https://status.deepseek.com/": "2026-09-25",
-    "https://api-docs.deepseek.com/guides/vision": "2026-09-25",
-    "https://api-docs.deepseek.com/api/create-chat-completion": "2026-09-25",
-    "https://api-docs.deepseek.com/updates": "2026-09-25",
-    "https://cursor.com/automations": "2026-09-25",
-    "https://zcode.z.ai/cn": "2026-09-25",
     "https://www.kimi.com/agent": "2026-09-26",
     "https://www.microsoft.com/en-us/copilot/resources/agents": "2026-09-26",
     "https://www.kimi.com/code": "2026-09-26",
@@ -74,6 +68,12 @@
     "https://www.zhipuai.cn/zh/research/156": "2026-10-08",
     "https://www.zhipuai.cn/zh/research/155": "2026-10-08",
     "https://www.zhipuai.cn/zh/research/145": "2026-10-08",
-    "https://www.cursor.com/automate": "2026-10-08"
+    "https://www.cursor.com/automate": "2026-10-08",
+    "https://status.deepseek.com/": "2026-10-09",
+    "https://api-docs.deepseek.com/guides/vision": "2026-10-09",
+    "https://api-docs.deepseek.com/api/create-chat-completion": "2026-10-09",
+    "https://api-docs.deepseek.com/updates": "2026-10-09",
+    "https://cursor.com/automations": "2026-10-09",
+    "https://zcode.z.ai/cn": "2026-10-09"
   }
 }
