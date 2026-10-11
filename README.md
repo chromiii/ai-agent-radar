@@ -11,7 +11,7 @@
 - **Ask Radar（V2.2）**：在 Actions 输入自由问题，直接阅读和周报一致的学习卡，包含概念、应用场景、学习深度、小练习、完成标准及来源。
 - **Verified Research（V3，实验性）**：把深度研究拆成 Research → Analyst → Verifier 三个有边界的角色；Verifier 只能接受/拒绝 claim，最终仍由确定性代码发布。
 - **Historical Radar Memory（V4，实验性）**：把已提交的 Daily / Weekly / Company Radar 构造成可重建的历史索引、Entity Memory 与 Trend Memory；Ask Radar / Verified Research 先查相关历史，再补当前外部来源。
-- **Learning Memory（V5，实验性）**：手动标记学习卡为收藏／已读／已练／跳过，生成进阶学习建议；进度文件不提交公开仓库。
+- **Learning Memory（V5）**：手动标记学习卡；根据你明确同意的公开模式，V6 将状态提交到仓库并支持 Actions 更新。
 
 ## 直接问一个问题
 
@@ -84,9 +84,33 @@ python learning_memory.py catalog --ask ask_results/run.json
 python learning_memory.py mark lc-xxxxxxxxxxxx practiced --ask ask_results/run.json
 ```
 
-`saved / studied / practiced / skipped` 分别表示收藏、已读、已做练习和主动跳过。CLI 中的示例 ID 要替换成 `catalog` 打印的实际 ID。数据保存在本地 `state/learning_progress.json`，被 Git 忽略。Weekly 不会把个人进度写进公开周报，而是生成 `state/private_recommendations/YYYY-MM-DD.md` 私有建议；Ask Radar 在本地有个人记录时才附加学习提示。
+`saved / studied / practiced / skipped` 分别表示收藏、已读、已做练习和主动跳过。CLI 中的示例 ID 要替换成 `catalog` 打印的实际 ID。在 V6 中你明确选择了**公开记录进度**：`state/learning_progress.json` 和 `state/learning_path.json` 可由 GitHub Actions 提交，其他人可见。普通周报仍保留原始证据；周六综合简报读取公开进度给出学习建议。
 
-**注意：当前 GitHub Actions 云端工作流没有跨运行的私有个人进度同步。** 详细使用方法和限制见 [V5 Learning Memory](docs/V5_LEARNING_MEMORY.md)。
+V6 不采用私有跨运行同步，而是由你授权将**非敏感学习进度公开保存在仓库**。不要在进度或新闻队列里放 Key/隐私笔记。V5 的历史设计见 [V5 Learning Memory](docs/V5_LEARNING_MEMORY.md)。
+
+## V6 · 从 LangChain 开始 + 周度新闻 + Breaking Desk
+
+学习不再从随机新闻词开始，而是按前置课程进行。第 1 课不需要调用模型：
+
+~~~bash
+pip install -r requirements-learning.txt
+python examples/learning/langchain_01_runnables.py
+python learning_path.py next
+python learning_path.py mark lc01-runnables practiced
+~~~
+
+后续依次进入 messages、tools、create_agent、RAG、checkpoint、长期 Store 和 Router。进度必须手动标记，练习完成不等于专业能力认证。
+
+普通新闻每天**静默采集**，每周六通过\`weekly_briefing.py\`整合成一封邮件（含公司动态和学习路线）。Breaking News 使用有来源的待核验队列，官方 Release 约六小时扫描一次，**不会自动发送紧急邮件**；人工批准后可主动通知：
+
+~~~bash
+python breaking_news.py scan --lookback-days 7
+python breaking_news.py list
+python breaking_news.py mark bn-xxxxxxxxxxxx approved
+python breaking_news.py notify bn-xxxxxxxxxxxx
+~~~
+
+合并后 GitHub Actions 会有 **Breaking News Desk** 和 **Update Public Learning Progress** 两个手动管理入口。细节见 [V6 设计与使用说明](docs/V6_MEMORY_NEWS.md)。
 
 ## 产品原则
 
