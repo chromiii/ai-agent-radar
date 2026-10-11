@@ -166,3 +166,30 @@ def test_public_progress_initial_states_do_not_contain_secrets():
     ignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
     assert "state/learning_progress.json" not in ignore
     assert "state/agent_runs/" in ignore
+
+
+def test_manual_breaking_notification_requires_approval_and_is_deduplicated(tmp_path):
+    write_report(tmp_path, "2026-10-09.md", DAILY)
+    queue_path = tmp_path / "breaking.json"
+    state = bn.scan_reports(tmp_path, queue_path, as_of=DAY)
+    cid = next(iter(state["items"]))
+    sent = []
+    with pytest.raises(ValueError, match="human-approved"):
+        bn.notify_approved(cid, queue_path=queue_path, sender=lambda item: sent.append(item))
+    assert sent == []
+    bn.mark_item(cid, "approved", queue_path=queue_path, today=DAY)
+    at = dt.datetime(2026, 10, 10, tzinfo=dt.timezone.utc)
+    row = bn.notify_approved(cid, queue_path=queue_path, sender=lambda item: sent.append(item), at=at)
+    assert row["notified_at"] == "2026-10-10T00:00:00+00:00"
+    bn.notify_approved(cid, queue_path=queue_path, sender=lambda item: sent.append(item), at=at)
+    assert len(sent) == 1
+    bn.scan_reports(tmp_path, queue_path, as_of=DAY)
+    assert bn.read_queue(queue_path)["items"][cid]["notified_at"] == row["notified_at"]
+
+
+def test_no_mail_or_progress_writes_on_read():
+    workflow = (ROOT / ".github/workflows/breaking-desk.yml").read_text(encoding="utf-8")
+    assert "notify) python breaking_news.py notify" in workflow
+    assert "*/6" in workflow
+    assert "send_email.py" not in workflow
+    assert "state/learning_progress.json" not in (ROOT / ".gitignore").read_text()
