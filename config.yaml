@@ -19,6 +19,11 @@ learning_agent:
     hf_candidates: 40
     timeout_seconds: 12
 
+# V5 personal learning records are opt-in and private to the machine running Radar.
+# GitHub Actions do not have these records unless a private file is explicitly supplied.
+learning_memory:
+  path: state/learning_progress.json
+
 # Historical Radar memory is derived from committed reports. It is context,
 # not an independent publication source.
 history:
