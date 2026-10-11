@@ -10,7 +10,7 @@ on:
         description: Manage candidate queue
         required: true
         type: choice
-        options: [watch, scan, mark]
+        options: [watch, scan, mark, notify]
         default: watch
       item_id:
         description: Candidate bn-... ID (for mark)
@@ -46,11 +46,18 @@ jobs:
           NEWS_ACTION: ${{ inputs.action || 'watch' }}
           NEWS_ID: ${{ inputs.item_id }}
           NEWS_STATUS: ${{ inputs.status }}
+          QQ_MAIL_USERNAME: ${{ secrets.QQ_MAIL_USERNAME }}
+          QQ_MAIL_PASSWORD: ${{ secrets.QQ_MAIL_PASSWORD }}
+          QQ_MAIL_TO: ${{ secrets.QQ_MAIL_TO }}
+          QQ_SMTP_HOST: ${{ secrets.QQ_SMTP_HOST }}
+          QQ_SMTP_PORT: ${{ secrets.QQ_SMTP_PORT }}
+          QQ_MAIL_FROM: ${{ secrets.QQ_MAIL_FROM }}
         run: |
           case "$NEWS_ACTION" in
             scan) python breaking_news.py scan --lookback-days 7 ;;
             watch) python breaking_news.py watch ;;
             mark) python breaking_news.py mark "$NEWS_ID" "$NEWS_STATUS" ;;
+            notify) python breaking_news.py notify "$NEWS_ID" ;;
             *) echo 'Unknown action' >&2; exit 2 ;;
           esac
       - name: Commit public triage state
