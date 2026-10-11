@@ -175,3 +175,26 @@ The exact frontend stack is not locked in during V0.
 **Why:** A cited research paragraph alone does not give the user a manageable learning task. Existing examples also need broader real-model evaluation before additional architecture is justified.
 
 **Limits:** A schema can check required fields and timebox values, but cannot prove that a task fits the timebox or that a citation entails a claim. Recorded token usage is not a currency cost estimate. Excerpt-level review is separate from structural PASS and full-document validation.
+
+
+## ADR-014 — Keep quick learning and verified research as separate execution modes
+
+**Status:** Experimental, V3
+
+**Decision:** Keep V2.2 Ask Radar as the default quick-learning path. Add V3 Research → Analyst → Verifier as an explicit verified-research mode rather than replacing every Agent request with Multi-Agent orchestration.
+
+V3 role authority is intentionally narrow:
+
+- Research may assess evidence coverage and request bounded search, but cannot publish findings.
+- Analyst may propose source-backed findings, but cannot execute search/tool actions.
+- Verifier may accept or reject exact findings, but cannot rewrite claims or invent replacement evidence.
+- Publisher remains deterministic.
+- Deterministic provenance checks run before and after semantic verification.
+
+**Why:** Live A/B runs show that role separation adds inspectability but also measurable latency/token overhead. The product benefit is strongest when claim-level evidence review matters; ordinary learning questions do not automatically justify that cost.
+
+**Observed baseline:** In one post-prompt-tightening live medical-Agent case, V2.2 finished with 2 model calls / 8,548 reported tokens / 16.2 s, while V3 finished with 3 calls / 13,875 tokens / 26.9 s. Both produced three findings from 12 selected sources. This is one run, not a stable quality benchmark.
+
+**Consequence:** Multi-Agent is a product mode with an explicit reason, not a repository-wide default. Future evaluation should compare claim support, verifier rejection quality, repair frequency and failure attribution across several cases.
+
+**Framework consequence:** Do not introduce LangGraph merely because V3 now has three roles. Reconsider it only if persistent checkpoints, resumability, branching/re-entry, human approval, or more complex state transitions solve an observed problem that the current bounded Python executor cannot handle cleanly.

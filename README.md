@@ -8,7 +8,7 @@
 - **Company Radar**：每日全球和中国 AI 公司动态简报。
 - **Weekly Learning Radar**：每周六把趋势信号压缩成应用层学习周报，同时继续反哺 Daily Radar 的动态加分和降权。
 - **Bounded Learning / Research Agent（实验性，V2.1）**：针对应用层学习问题扩展查询、检索外部来源，在步数和请求预算内生成带来源的学习发现。
-- **Ask Radar（V2.2）**：在 Actions 输入自由问题，直接阅读和周报一致的学习卡，包含概念、应用场景、学习深度、小练习、完成标准及来源。
+- **Ask Radar（V2.2）**：在 Actions 输入自由问题，直接阅读和周报一致的学习卡，包含概念、应用场景、学习深度、小练习、完成标准及来源。\n- **Verified Research（V3，实验性）**：把深度研究拆成 Research → Analyst → Verifier 三个有边界的角色；Verifier 只能接受/拒绝 claim，最终仍由确定性代码发布。
 
 ## 直接问一个问题
 
@@ -27,6 +27,34 @@ python ask_radar.py --question "最近 coding agent 有什么值得学？"
 V2.2 的评测和范围见 [学习可用性说明](docs/V2_2_USABILITY.md)。
 
 想先体验练习，可以运行 `python examples/mcp_mock_dispatch.py`。这是本地工具分发模拟，包含两个正常调用、未知工具与错误参数；[问答样本与逐条复核](docs/eval/v2_2-review.md)说明了它与真实 MCP 接入的边界。
+
+### 深度核验模式（V3 实验）
+
+普通学习问题继续优先使用 **Ask Radar / V2.2**。当问题更在意 claim 级证据审计时，可使用 V3：
+
+```bash
+python role_research.py "最近医药 Agent 有什么趋势？"
+```
+
+V3 的控制流是：
+
+```text
+deterministic query plan + seed retrieval
+  -> Research Agent: 只判断证据覆盖和是否继续搜索
+  -> Analyst Agent: 只基于已选证据提出 findings
+  -> deterministic provenance gate
+  -> Verifier Agent: 只能 accept / reject，不能改写 claim
+  -> deterministic provenance gate again
+  -> deterministic Publisher
+```
+
+GitHub Actions 中可使用 **Role-separated Research**。若要比较单 Agent 与角色分离的真实成本，可运行 **Research A/B** 或本地执行：
+
+```bash
+python research_ab.py --case medical-agent-trends
+```
+
+首次 live A/B 基线显示，V3 在一个医药 Agent 场景中以额外 token / latency 换取独立的 Research coverage 与 Verifier support trace；这只是一次观察，不代表 V3 已证明语义质量更高。见 [V3 A/B baseline](docs/eval/v3-ab-baseline.md) 和 [V3 设计说明](docs/V3_ROLE_RESEARCH.md)。
 
 ## 产品原则
 
