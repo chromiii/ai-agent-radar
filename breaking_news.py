@@ -133,6 +133,75 @@ def scan_reports(root: Path = ROOT, queue_path: Path = QUEUE, *, as_of: dt.date 
     return data
 
 
+OFFICIAL_REPOS = (
+    "langchain-ai/langchain",
+    "langchain-ai/langgraph",
+    "langchain-ai/deepagents",
+    "crewAIInc/crewAI",
+    "run-llama/llama_index",
+)
+
+
+def watch_official_releases(*, queue_path: Path = QUEUE, as_of: dt.datetime | None = None,
+                            request=None) -> dict[str, Any]:
+    """Review recent first-party release notes. No automatic notices are sent.
+
+    Reads a fixed allowlist of public GitHub release APIs; never executes release text.
+    """
+    import requests
+
+    as_of = as_of or dt.datetime.now(dt.timezone.utc)
+    request = request or requests.get
+    data = read_queue(queue_path)
+    for repo in OFFICIAL_REPOS:
+        url = f"https://api.github.com/repos/{repo}/releases?per_page=5"
+        try:
+            response = request(url, headers={"Accept": "application/vnd.github+json",
+                                             "User-Agent": "ai-agent-radar-breaking/1"},
+                               timeout=12)
+            response.raise_for_status()
+            payload = response.json()
+            if not isinstance(payload, list):
+                continue
+        except (requests.RequestException, ValueError, TypeError):
+            # A failed provider is not a confirmed absence of breaking news.
+            continue
+        for release in payload[:5]:
+            if not isinstance(release, dict):
+                continue
+            title = clean(release.get("name") or release.get("tag_name"), 160)
+            body = clean(release.get("body"), 1600)
+            published = str(release.get("published_at") or "")
+            link = canonical_url(release.get("html_url"))
+            if not title or not link or not link.startswith(f"https://github.com/{repo}/releases/"):
+                continue
+            try:
+                published_dt = dt.datetime.fromisoformat(published.replace("Z", "+00:00"))
+            except ValueError:
+                continue
+            if published_dt.tzinfo is None:
+                continue
+            if not dt.timedelta(0) <= as_of - published_dt <= dt.timedelta(hours=72):
+                continue
+            categories = [category for regex, category in SEVERE if regex.search(title + " " + body[:600])]
+            if not categories:
+                continue
+            cid = candidate_id(link)
+            if cid in data["items"]:
+                continue
+            data["items"][cid] = {
+                "id": cid, "title": f"{repo}: {title}", "source_url": link,
+                "first_seen": published_dt.date().isoformat(),
+                "last_seen": published_dt.date().isoformat(),
+                "report_paths": [], "impact_categories": categories,
+                "official_source_candidate": True,
+                "severity": "high" if any(x in categories for x in ("security", "breaking_change")) else "review",
+                "status": "pending", "history": [], "source_kind": "official_github_release",
+            }
+    write_queue(queue_path, data)
+    return data
+
+
 def mark_item(item_id: str, status: str, *, queue_path: Path = QUEUE, today: dt.date | None = None) -> dict[str, Any]:
     if status not in {"approved", "dismissed", "resolved", "pending"}:
         raise ValueError("unknown decision")
@@ -170,6 +239,7 @@ def main() -> None:
     sub = parser.add_subparsers(dest="command", required=True)
     scan = sub.add_parser("scan")
     scan.add_argument("--lookback-days", type=int, default=7)
+    sub.add_parser("watch")
     sub.add_parser("list")
     mark = sub.add_parser("mark")
     mark.add_argument("item_id")
@@ -177,6 +247,8 @@ def main() -> None:
     args = parser.parse_args()
     if args.command == "scan":
         data = scan_reports(queue_path=args.queue, lookback_days=args.lookback_days)
+    elif args.command == "watch":
+        data = watch_official_releases(queue_path=args.queue)
     elif args.command == "mark":
         mark_item(args.item_id, args.status, queue_path=args.queue)
         data = read_queue(args.queue)
