@@ -19,8 +19,8 @@ learning_agent:
     hf_candidates: 40
     timeout_seconds: 12
 
-# V5 personal learning records are opt-in and private to the machine running Radar.
-# GitHub Actions do not have these records unless a private file is explicitly supplied.
+# V6: user-approved public, non-sensitive learning records, committed by GitHub Actions.
+# Never store API keys, credentials, personal secrets or free-text private notes here.
 learning_memory:
   path: state/learning_progress.json
 
