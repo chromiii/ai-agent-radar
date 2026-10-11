@@ -12,6 +12,7 @@ from historical_memory import parse_report
 from research_search import canonical_url, clean
 from breaking_news import read_queue
 from learning_path import format_plan
+from learning_memory import weekly_recommendations
 
 ROOT = Path(__file__).resolve().parent
 
@@ -75,9 +76,13 @@ def build_briefing(root: Path = ROOT, as_of: dt.date | None = None,
         lines.append(f"- [{row['title']}]({row['source_url']}) — {marker}，{row['severity']}，ID：\u0060{row['id']}\u0060")
     if not pending:
         lines.append("没有符合本周窗口的 Breaking 候选。")
+    learning_report = root / "weekly" / f"{as_of.isoformat()}.md"
+    personal_section = (weekly_recommendations(
+        learning_report.read_text(encoding="utf-8"), root / "state/learning_progress.json", as_of.isoformat())
+        if learning_report.is_file() else "")
     lines.extend(["", "注意：Breaking 候选需要复核真实性、影响范围和是否已经解决；默认不触发独立邮件。", "",
                   format_plan(progress_path=path_progress or (root / "state/learning_path.json"), today=as_of),
-                  "", "## 深入阅读", "",
+                  "", personal_section, "", "## 深入阅读", "",
                   f"- 本周学习周报：weekly/{as_of.isoformat()}.md",
                   "- 历史 Radar：参见 inbox/、company/ 与 state/ 下的 Breaking 状态记录",
                   ""])
