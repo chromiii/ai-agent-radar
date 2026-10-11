@@ -177,3 +177,34 @@ def test_weekly_parser_ignores_trend_index_and_unreferenced_content():
     report = REPORT.replace("## Tier 1 热词", "### 4. No source\n- 你好\n\n## Tier 1 热词")
     assert len(lm.cards_from_weekly(report)) == 3
     assert lm.cards_from_weekly("## Tier 1 热词\n### 1. Agent memory") == []
+
+
+def test_weekly_public_report_stays_unpersonalized_and_private_sidecar_is_ignored(tmp_path, monkeypatch):
+    import weekly_trends
+
+    progress = tmp_path / "private-progress.json"
+    lm.mark_progress(cards()[0], "studied", progress)
+    monkeypatch.setattr(weekly_trends, "ROOT", tmp_path)
+    monkeypatch.setattr(weekly_trends, "load_config", lambda: {
+        "weekly": {"lookback_days": 7, "output_dir": "weekly", "state_dir": "state"},
+        "learning_memory": {"path": str(progress)},
+    })
+    monkeypatch.setattr(weekly_trends, "today_local", lambda: dt.date(2026, 10, 10))
+    monkeypatch.setattr(weekly_trends, "fetch_weekly_hf_papers", lambda *_: [])
+    monkeypatch.setattr(weekly_trends, "fetch_weekly_hf_spaces", lambda *_: [])
+    monkeypatch.setattr(weekly_trends, "fetch_recent_arxiv", lambda *_: [])
+    monkeypatch.setattr(weekly_trends, "dedupe", lambda items: items)
+    monkeypatch.setattr(weekly_trends, "extract_candidate_terms", lambda *_: [])
+    monkeypatch.setattr(weekly_trends, "select_representative_items", lambda *_: [])
+    monkeypatch.setattr(weekly_trends, "call_deepseek_json", lambda *_: None)
+    monkeypatch.setattr(weekly_trends, "save_empty_trending_state", lambda *_: None)
+    monkeypatch.setattr(weekly_trends, "render_weekly_markdown", lambda *_: REPORT)
+    weekly_trends.main()
+
+    public = (tmp_path / "weekly/2026-10-10.md").read_text()
+    private = (tmp_path / "state/private_recommendations/2026-10-10.md").read_text()
+    assert public == REPORT
+    assert "结合你的学习记录" not in public
+    assert "结合你的学习记录" in private
+    assert "优先补做" in private
+    assert "state/private_recommendations/" in (Path(__file__).parents[1] / ".gitignore").read_text()
