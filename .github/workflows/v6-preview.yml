@@ -1,0 +1,36 @@
+name: V6 Weekly and Breaking Preview
+
+on:
+  pull_request:
+    types: [labeled]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.label.name == 'v6-preview' &&
+       github.event.pull_request.head.repo.full_name == github.repository &&
+       github.event.pull_request.author_association == 'OWNER')
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - name: Build real-corpus preview (no email or push)
+        run: |
+          mkdir -p v6_results
+          python breaking_news.py scan --lookback-days 7 > v6_results/breaking.md
+          python weekly_briefing.py --as-of 2026-10-10 --output-dir v6_results
+          python learning_path.py next > v6_results/learning.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v6-news-learning-preview
+          path: v6_results/
+          retention-days: 7
