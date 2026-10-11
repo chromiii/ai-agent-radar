@@ -32,6 +32,12 @@ OFFICIAL_HOSTS = {
     "openai.com", "www.openai.com", "anthropic.com", "www.anthropic.com",
     "blog.google", "developers.googleblog.com", "huggingface.co",
 }
+NEGATED_IMPACT = re.compile(
+    r"\b(?:no|not|without|none of|isn't|wasn't)\s+(?:an?\s+)?"
+    r"(?:major\s+|critical\s+)?(?:outage|breaking change|security advisory|vulnerability|data breach|major release)s?\b",
+    re.I,
+)
+
 STATUS_NAMES = {"pending":"待核验", "approved":"已确认/待处理", "dismissed":"已忽略", "resolved":"已处理"}
 
 
@@ -85,9 +91,12 @@ def identify(doc) -> dict[str, Any] | None:
     # Match impact in the headline/first paragraph, NOT random quoted body/sidebar.
     title = clean(doc.title, 200)
     snippet = clean(doc.text[:300], 300)
+    # Avoid false positives like "not an outage or breaking change".
+    signal = NEGATED_IMPACT.sub("", title + " " + snippet)
+    signal = re.sub(r"\bor\s+(?:a\s+)?(?:breaking change|outage|major release)\b", "", signal, flags=re.I) if NEGATED_IMPACT.search(title + " " + snippet) else signal
     impact = []
     for pattern, category in SEVERE:
-        if pattern.search(title + " " + snippet):
+        if pattern.search(signal):
             impact.append(category)
     if not impact:
         return None
