@@ -720,12 +720,17 @@ def main(evidence_output: Path | None = None) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"{end_day.isoformat()}.md"
     report = render_weekly_markdown(end_day, start_day, candidate_terms, representative_items, curated)
-    # Personalization only when the user explicitly created a private progress file.
-    # Curation and trend state remain independent of personal progress.
+    output_path.write_text(report, encoding="utf-8")
+    # IMPORTANT: weekly/*.md is committed to a public repository by GitHub Actions.
+    # Never put personal learning progress in that published report.
     private_section = weekly_recommendations(report, memory_path(config), end_day.isoformat())
     if private_section:
-        report += "\n\n" + private_section + "\n"
-    output_path.write_text(report, encoding="utf-8")
+        private_dir = ROOT / "state" / "private_recommendations"
+        private_dir.mkdir(parents=True, exist_ok=True)
+        (private_dir / f"{end_day.isoformat()}.md").write_text(
+            "# 私人学习建议 — " + end_day.isoformat() + "\n\n" + private_section + "\n",
+            encoding="utf-8",
+        )
     print(f"Wrote {output_path} with {len(candidate_terms)} candidate terms from {len(items)} items")
 
 
