@@ -1,3 +1,5 @@
+> **V6 update:** The user opted into publicly committed non-sensitive learning progress. V6 adds a public Actions workflow for explicit updates, so the private-only limitations below describe V5's original design rather than the V6 configuration. See [V6 architecture](V6_MEMORY_NEWS.md).
+
 # V5 Learning Memory (opt-in)
 
 Learning Memory is separate from V4 Historical Radar Memory.
