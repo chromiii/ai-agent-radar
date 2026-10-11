@@ -9,3 +9,6 @@ ask_results/
 
 state/history/
 history_results/
+
+# Personal learning records must not enter the public Git history.
+state/learning_progress.json
