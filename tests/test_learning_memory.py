@@ -208,3 +208,37 @@ def test_weekly_public_report_stays_unpersonalized_and_private_sidecar_is_ignore
     assert "结合你的学习记录" in private
     assert "优先补做" in private
     assert "state/private_recommendations/" in (Path(__file__).parents[1] / ".gitignore").read_text()
+
+
+def test_actual_repository_weekly_cards_can_be_catalogued(tmp_path):
+    report = Path(__file__).parents[1] / "weekly" / "2026-10-03.md"
+    items = lm.items_from_file(report)
+    assert len(items) >= 3
+    assert all(item.source_url.startswith("https://") for item in items)
+    assert all(item.card_id.startswith("lc-") for item in items)
+    assert len({item.card_id for item in items}) == len(items)
+
+    private = tmp_path / "state/learning_progress.json"
+    lm.mark_progress(items[0], "saved", private)
+    assert private.is_file()
+    assert lm.read_memory(private)["entries"][items[0].card_id]["status"] == "saved"
+
+
+def test_public_github_action_avoids_personal_learning_data(tmp_path, monkeypatch):
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+    private = tmp_path / "private-progress.json"
+    item = cards()[0]
+    lm.mark_progress(item, "studied", private)
+    monkeypatch.setenv("RADAR_LEARNING_MEMORY_PATH", str(private))
+
+    def fake_run(state, markdown, config, **kwargs):
+        state.status = "finished"
+        state.findings = [{"topic": item.title, "evidence_ids": ["S1"], "level": "know"}]
+        state.selected_items = [{"id": "S1", "url": item.source_url, "date_kind": "published"}]
+        state.final_answer = "当前来源回答。"
+        return state
+
+    monkeypatch.setattr(ask_radar, "run_agent", fake_run)
+    _, answer = ask_radar.run_request("Agent memory", {}, tmp_path / "public")
+    assert "当前来源回答" in answer
+    assert "结合你的学习记录" not in answer
