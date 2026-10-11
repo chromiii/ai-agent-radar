@@ -8,7 +8,10 @@
 - **Company Radar**：每日全球和中国 AI 公司动态简报。
 - **Weekly Learning Radar**：每周六把趋势信号压缩成应用层学习周报，同时继续反哺 Daily Radar 的动态加分和降权。
 - **Bounded Learning / Research Agent（实验性，V2.1）**：针对应用层学习问题扩展查询、检索外部来源，在步数和请求预算内生成带来源的学习发现。
-- **Ask Radar（V2.2）**：在 Actions 输入自由问题，直接阅读和周报一致的学习卡，包含概念、应用场景、学习深度、小练习、完成标准及来源。\n- **Verified Research（V3，实验性）**：把深度研究拆成 Research → Analyst → Verifier 三个有边界的角色；Verifier 只能接受/拒绝 claim，最终仍由确定性代码发布。\n- **Historical Radar Memory（V4，实验性）**：把已提交的 Daily / Weekly / Company Radar 构造成可重建的历史索引、Entity Memory 与 Trend Memory；Ask Radar / Verified Research 先查相关历史，再补当前外部来源。
+- **Ask Radar（V2.2）**：在 Actions 输入自由问题，直接阅读和周报一致的学习卡，包含概念、应用场景、学习深度、小练习、完成标准及来源。
+- **Verified Research（V3，实验性）**：把深度研究拆成 Research → Analyst → Verifier 三个有边界的角色；Verifier 只能接受/拒绝 claim，最终仍由确定性代码发布。
+- **Historical Radar Memory（V4，实验性）**：把已提交的 Daily / Weekly / Company Radar 构造成可重建的历史索引、Entity Memory 与 Trend Memory；Ask Radar / Verified Research 先查相关历史，再补当前外部来源。
+- **Learning Memory（V5，实验性）**：手动标记学习卡为收藏／已读／已练／跳过，生成进阶学习建议；进度文件不提交公开仓库。
 
 ## 直接问一个问题
 
@@ -66,6 +69,22 @@ python research_ab.py --case medical-agent-trends
 
 首次 live A/B 基线显示，V3 在一个医药 Agent 场景中以额外 token / latency 换取独立的 Research coverage 与 Verifier support trace；这只是一次观察，不代表 V3 已证明语义质量更高。见 [V3 A/B baseline](docs/eval/v3-ab-baseline.md) 和 [V3 设计说明](docs/V3_ROLE_RESEARCH.md)。
 
+## 记录个人学习进度（V5）
+
+收到邮件或打开周报不会被当成已学习。先列出学习卡 ID，再手动选择学习状态：
+
+```bash
+python learning_memory.py catalog
+python learning_memory.py mark lc-xxxxxxxxxxxx studied
+python learning_memory.py mark lc-xxxxxxxxxxxx practiced
+python learning_memory.py status
+python learning_memory.py recommend
+```
+
+`saved / studied / practiced / skipped` 分别表示收藏、已读、已做练习和主动跳过。CLI 中的示例 ID 要替换成 `catalog` 打印的实际 ID。数据保存在本地 `state/learning_progress.json`，被 Git 忽略。Weekly 不会把个人进度写进公开周报，而是生成 `state/private_recommendations/YYYY-MM-DD.md` 私有建议；Ask Radar 在本地有个人记录时才附加学习提示。
+
+**注意：当前 GitHub Actions 云端工作流没有跨运行的私有个人进度同步。** 详细使用方法和限制见 [V5 Learning Memory](docs/V5_LEARNING_MEMORY.md)。
+
 ## 产品原则
 
 ```text
@@ -87,6 +106,8 @@ state.json                       # Daily 已处理内容
 state/company_seen.json          # Company 14 天内已处理链接
 state/trending_terms.json        # Weekly 生成的趋势词
 state/agent_runs/TASK_ID.json    # 按任务保存的 Agent 运行记录（默认不提交）
+state/learning_progress.json     # V5 本地学习进度（Git 忽略）
+state/private_recommendations/   # V5 私有学习建议（Git 忽略）
 ```
 
 ## 工作流
