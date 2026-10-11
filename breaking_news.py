@@ -226,6 +226,59 @@ def mark_item(item_id: str, status: str, *, queue_path: Path = QUEUE, today: dt.
     return row
 
 
+def notify_approved(item_id: str, *, queue_path: Path = QUEUE, sender=None,
+                    at: dt.datetime | None = None) -> dict[str, Any]:
+    """Manually send an *approved* alert once, recording the successful send.
+
+    This is a deliberate user action, never invoked by the scheduled watcher.
+    """
+    data = read_queue(queue_path)
+    item = data["items"].get(item_id)
+    if item is None:
+        raise ValueError("unknown candidate")
+    if item["status"] != "approved":
+        raise ValueError("notification requires a human-approved candidate")
+    if item.get("notified_at"):
+        return item
+    if sender is None:
+        sender = _mail_approved_alert
+    # No state change occurs if the provider fails; external delivery may be
+    # at-least-once if a process crashes after mail but before writing state.
+    sender(item)
+    now = (at or dt.datetime.now(dt.timezone.utc)).astimezone(dt.timezone.utc).isoformat()
+    item["notified_at"] = now
+    write_queue(queue_path, data)
+    return item
+
+
+def _mail_approved_alert(item: dict[str, Any]) -> None:
+    import smtplib
+    from email.message import EmailMessage
+
+    username = os.environ.get("QQ_MAIL_USERNAME", "").strip()
+    password = os.environ.get("QQ_MAIL_PASSWORD", "").strip()
+    recipient = os.environ.get("QQ_MAIL_TO", "").strip()
+    if not all((username, password, recipient)):
+        raise RuntimeError("alert email is unavailable: required mail secrets not configured")
+    msg = EmailMessage()
+    msg["Subject"] = "AI Agent Radar · Breaking Alert (manually approved)"
+    msg["From"] = os.environ.get("QQ_MAIL_FROM") or username
+    msg["To"] = recipient
+    msg.set_content(
+        "This alert was manually approved, not auto-generated as confirmed fact.\n\n"
+        f"Title: {item['title']}\n"
+        f"Source: {item['source_url']}\n"
+        f"First seen: {item['first_seen']}\n"
+        f"Impact review categories: {', '.join(item['impact_categories'])}\n\n"
+        "Please verify scope, date and impact in the primary source."
+    )
+    host = os.environ.get("QQ_SMTP_HOST") or "smtp.qq.com"
+    port = int(os.environ.get("QQ_SMTP_PORT") or "465")
+    with smtplib.SMTP_SSL(host, port, timeout=30) as smtp:
+        smtp.login(username, password)
+        smtp.send_message(msg)
+
+
 def render_desk(data: dict[str, Any], *, include_dismissed: bool = False) -> str:
     rows = [v for v in data["items"].values() if include_dismissed or v["status"] != "dismissed"]
     rows.sort(key=lambda v: (v["status"] == "pending", v["severity"] == "high", v["last_seen"]), reverse=True)
@@ -249,6 +302,8 @@ def main() -> None:
     scan = sub.add_parser("scan")
     scan.add_argument("--lookback-days", type=int, default=7)
     sub.add_parser("watch")
+    notify = sub.add_parser("notify", help="Send a manually approved candidate once")
+    notify.add_argument("item_id")
     sub.add_parser("list")
     mark = sub.add_parser("mark")
     mark.add_argument("item_id")
@@ -258,6 +313,9 @@ def main() -> None:
         data = scan_reports(queue_path=args.queue, lookback_days=args.lookback_days)
     elif args.command == "watch":
         data = watch_official_releases(queue_path=args.queue)
+    elif args.command == "notify":
+        notify_approved(args.item_id, queue_path=args.queue)
+        data = read_queue(args.queue)
     elif args.command == "mark":
         mark_item(args.item_id, args.status, queue_path=args.queue)
         data = read_queue(args.queue)
