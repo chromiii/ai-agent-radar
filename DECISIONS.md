@@ -223,3 +223,15 @@ V3 role authority is intentionally narrow:
 **Why:** A vector layer adds embedding lifecycle/versioning, persistence, migration and semantic false-positive failure modes. It should be justified by measured recall/reranking gains rather than by architecture fashion.
 
 **Revisit when:** a labeled retrieval set shows material lexical recall failures, corpus growth makes local scoring expensive, or semantic reranking produces measurable quality gains.
+
+## ADR-017 — Learning progress is an explicit user action, not model inference
+
+**Status:** Experimental, V5
+
+**Decision:** Store an opt-in, card-source-identified progress state with only `saved`, `studied`, `practiced` and `skipped`. Generating or reading Radar content never creates progress automatically. The record is local, gitignored and is not placed in publicly committed Weekly reports.
+
+**Why:** News consumption is not the same as study; study is not verified competency. Automatic promotion would inflate confidence and make personalized recommendations less trustworthy.
+
+**Scope:** Topic-level prior practice changes the suggested *next action*, but does not claim mastery or hide every new card in that topic. No private learning data is sent to the research model or used for the public trend scoring.
+
+**Cloud boundary:** Hosted Actions have no durable private progress storage yet. Adding an opt-in encrypted/private backend must precede any cloud sync claim.

@@ -272,3 +272,9 @@ For every implementation phase:
 7. document what changed and what remains experimental;
 8. prepare a concise interview explanation;
 9. stop before implementing the next phase.
+
+## V5 — Personal Learning Memory (experimental)
+
+A separate progress layer now records only explicitly marked learning-card state: saved, studied, practiced or skipped. Its source-based card identity, conservative topic guidance and progress-aware recommendations are implemented for local Weekly / Ask usage. Private recommendations stay outside public Weekly reports.
+
+Not implemented: durable encrypted/cloud sync, spaced repetition scheduling, mastery assessment or a cross-domain prerequisite graph. See [V5 documentation](docs/V5_LEARNING_MEMORY.md).

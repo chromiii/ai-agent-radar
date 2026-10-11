@@ -16,6 +16,7 @@ import requests
 
 from radar import dedupe, fetch_hf_daily_papers, fetch_hf_spaces, get_text, load_config, normalize, today_local
 from learning_cards import CARD_PROMPT, render_learning_card, weekly_cards
+from learning_memory import memory_path, weekly_recommendations
 
 
 ROOT = Path(__file__).resolve().parent
@@ -718,10 +719,18 @@ def main(evidence_output: Path | None = None) -> None:
     output_dir = ROOT / weekly.get("output_dir", "weekly")
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"{end_day.isoformat()}.md"
-    output_path.write_text(
-        render_weekly_markdown(end_day, start_day, candidate_terms, representative_items, curated),
-        encoding="utf-8",
-    )
+    report = render_weekly_markdown(end_day, start_day, candidate_terms, representative_items, curated)
+    output_path.write_text(report, encoding="utf-8")
+    # IMPORTANT: weekly/*.md is committed to a public repository by GitHub Actions.
+    # Never put personal learning progress in that published report.
+    private_section = weekly_recommendations(report, memory_path(config), end_day.isoformat())
+    if private_section:
+        private_dir = ROOT / "state" / "private_recommendations"
+        private_dir.mkdir(parents=True, exist_ok=True)
+        (private_dir / f"{end_day.isoformat()}.md").write_text(
+            "# 私人学习建议 — " + end_day.isoformat() + "\n\n" + private_section + "\n",
+            encoding="utf-8",
+        )
     print(f"Wrote {output_path} with {len(candidate_terms)} candidate terms from {len(items)} items")
 
 
