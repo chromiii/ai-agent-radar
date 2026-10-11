@@ -41,6 +41,21 @@ NEGATED_IMPACT = re.compile(
 STATUS_NAMES = {"pending":"待核验", "approved":"已确认/待处理", "dismissed":"已忽略", "resolved":"已处理"}
 
 
+def normalized_news_url(url: str) -> str:
+    """Dedup only obvious analytics query params; keep semantic identifiers."""
+    from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
+    valid = canonical_url(url)
+    if not valid:
+        return ""
+    parsed = urlsplit(valid)
+    clean_query = [
+        (k, v) for k, v in parse_qsl(parsed.query, keep_blank_values=True)
+        if k.casefold() not in {"view_from", "fbclid", "gclid", "ref", "referrer"}
+        and not k.casefold().startswith("utm_")
+    ]
+    return urlunsplit((parsed.scheme, parsed.netloc, parsed.path, urlencode(clean_query), ""))
+
+
 def is_official(url: str) -> bool:
     from urllib.parse import urlparse
     host = urlparse(url).hostname or ""
@@ -80,11 +95,11 @@ def write_queue(path: Path, data: dict[str, Any]) -> None:
 
 
 def candidate_id(url: str) -> str:
-    return "bn-" + hashlib.sha256(canonical_url(url).encode("utf-8")).hexdigest()[:12]
+    return "bn-" + hashlib.sha256(normalized_news_url(url).encode("utf-8")).hexdigest()[:12]
 
 
 def identify(doc) -> dict[str, Any] | None:
-    urls = [canonical_url(u) for u in doc.external_urls if canonical_url(u)]
+    urls = [normalized_news_url(u) for u in doc.external_urls if normalized_news_url(u)]
     urls = [u for u in urls if "chromiii/ai-agent-radar/" not in u]
     if not urls:
         return None
@@ -99,6 +114,10 @@ def identify(doc) -> dict[str, Any] | None:
         if pattern.search(signal):
             impact.append(category)
     if not impact:
+        return None
+    # A generic blog/category page that merely contains a release link is not
+    # an actual breaking headline. Major release signals need headline evidence.
+    if impact == ["major_release"] and not SEVERE[2][0].search(title):
         return None
     official_url = next((u for u in urls if is_official(u)), None)
     url = official_url or urls[0]
