@@ -1,0 +1,3 @@
+# Optional learning exercises; not required by Radar scheduled jobs.
+langchain-core>=1.0,<2
+langchain>=1.0,<2
