@@ -119,7 +119,8 @@ def render_learning_card(card: dict[str, Any], number: int) -> list[str]:
         links = [source_link(f"来源 {i}", url) for i, url in enumerate(card.get("source_urls", []), 1)]
     lines.extend(["- **来源**：" + " / ".join(link for link in links if link), ""])
     # A public, non-personal identifier lets readers mark a card explicitly.
-    primary_url = next((source.get("url") for source in card.get("sources", []) if canonical_url(source.get("url"))), None)
+    prioritized_sources = sorted(card.get("sources", []), key=lambda src: src.get("date_kind") == "radar_observed")
+    primary_url = next((source.get("url") for source in prioritized_sources if canonical_url(source.get("url"))), None)
     if not primary_url:
         primary_url = next((url for url in card.get("source_urls", []) if canonical_url(url)), None)
     if primary_url:
