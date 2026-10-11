@@ -113,3 +113,20 @@ def test_retention_never_deletes_unrecognized_filenames(tmp_path):
     p.parent.mkdir(parents=True)
     p.write_text("keep")
     assert not ar.expired_reports(tmp_path, as_of=dt.date(2026, 10, 11))
+
+
+def test_real_weekly_teaching_cards_lead_finished_newsletter(tmp_path):
+    from weekly_briefing import build_briefing
+
+    root = Path(__file__).parents[1]
+    markdown = build_briefing(root=root, as_of=dt.date(2026, 10, 11))
+    assert "本周先看这 3 件事" in markdown
+    assert "Agent Harness 优化" in markdown
+    assert "发生了什么" in markdown
+    assert "实际有什么用" in markdown
+    assert "你可以怎么练" in markdown
+    assert "https://arxiv.org/abs/2610.00906" in markdown
+    assert "无需下载 Markdown" in markdown
+    rendered = er.render_html(markdown)
+    assert "Agent Harness" in rendered
+    assert "href=\"https://arxiv.org/abs/2610.00906\"" in rendered
