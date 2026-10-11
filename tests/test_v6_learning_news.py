@@ -193,3 +193,44 @@ def test_no_mail_or_progress_writes_on_read():
     assert "*/6" in workflow
     assert "send_email.py" not in workflow
     assert "state/learning_progress.json" not in (ROOT / ".gitignore").read_text()
+
+
+def test_weekly_filters_generic_old_headlines_and_tracking_duplicates(tmp_path):
+    write_report(tmp_path, "2026-10-09.md", """# Company
+### Vendor: Tech blog
+- Link: https://example.com/news?view_from=homepage_tab
+- Body: Important new model release mentioned inside a broad index page.
+
+### Provider: New API general availability
+- Link: https://example.com/news?view_from=homepage_tab
+- Body: Current release notes and technical details.
+
+### Mistral News: Legacy changes September 9, 2026
+- Link: https://example.com/old
+- Body: Historical technical story from September, shown in a newly scraped page.
+
+### Provider: Fresh source
+- Link: https://example.com/fresh?utm_source=feed
+- Body: New technical content and official examples.
+""", folder="company")
+    write_report(tmp_path, "2026-10-08.md", """# Company
+### Provider: Fresh source
+- Link: https://example.com/fresh
+- Body: Same event observed again, query differs by analytics only.
+""", folder="company")
+    rows = wb.collect(tmp_path, DAY)["companies"]
+    assert len(rows) == 2
+    assert all("Tech blog" not in x["title"] for x in rows)
+    assert all("September 9" not in x["title"] for x in rows)
+    assert len({x["url"] for x in rows}) == 2
+    assert "utm_" not in "\n".join(x["url"] for x in rows)
+
+
+def test_generic_category_page_is_not_breaking_even_if_body_mentions_release(tmp_path):
+    write_report(tmp_path, "2026-10-09.md", """# Company
+### ByteDance Seed: Tech blog
+- Link: https://example.org/blog/launch
+- Body: One article inside this index states general availability of a new model.
+""", folder="company")
+    data = bn.scan_reports(tmp_path, tmp_path / "breaking.json", as_of=DAY)
+    assert data["items"] == {}
