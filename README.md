@@ -79,6 +79,9 @@ python learning_memory.py mark lc-xxxxxxxxxxxx studied
 python learning_memory.py mark lc-xxxxxxxxxxxx practiced
 python learning_memory.py status
 python learning_memory.py recommend
+# Ask Radar 的卡片也能记录（本地已有 ask_results/run.json 时）
+python learning_memory.py catalog --ask ask_results/run.json
+python learning_memory.py mark lc-xxxxxxxxxxxx practiced --ask ask_results/run.json
 ```
 
 `saved / studied / practiced / skipped` 分别表示收藏、已读、已做练习和主动跳过。CLI 中的示例 ID 要替换成 `catalog` 打印的实际 ID。数据保存在本地 `state/learning_progress.json`，被 Git 忽略。Weekly 不会把个人进度写进公开周报，而是生成 `state/private_recommendations/YYYY-MM-DD.md` 私有建议；Ask Radar 在本地有个人记录时才附加学习提示。
