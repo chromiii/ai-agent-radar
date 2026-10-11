@@ -6,6 +6,8 @@ import sys
 from email.message import EmailMessage
 from pathlib import Path
 
+from email_render import render_html, render_text
+
 
 def env(name: str) -> str:
     return os.environ.get(name, "").strip()
@@ -37,7 +39,10 @@ def main() -> None:
     message["Subject"] = subject
     message["From"] = mail_from
     message["To"] = mail_to
-    message.set_content(body)
+    # Real HTML email with a readable, non-Markdown fallback. Gmail, QQ Mail,
+    # Outlook and Apple Mail receive multipart/alternative, not raw MD text.
+    message.set_content(render_text(body))
+    message.add_alternative(render_html(body, subject), subtype="html")
 
     with smtplib.SMTP_SSL(smtp_host, smtp_port, timeout=30) as smtp:
         smtp.login(username, password)

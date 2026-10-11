@@ -1,0 +1,52 @@
+name: HTML Newsletter Preview
+
+on:
+  pull_request:
+    types: [labeled]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      ((github.event.label.name == 'html-newsletter-preview' ||
+        github.event.label.name == 'html-newsletter-send-once') &&
+       github.event.pull_request.head.repo.full_name == github.repository &&
+       github.event.pull_request.author_association == 'OWNER')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - name: Build a current-week email sample from remaining reports
+        run: |
+          mkdir -p email_preview
+          python breaking_news.py scan --lookback-days 7 > /dev/null
+          python weekly_briefing.py --as-of 2026-10-11 --output-dir email_preview
+          python email_render.py email_preview/2026-10-11.md --output email_preview/2026-10-11.html
+      - name: Save HTML and readable text preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-weekly-email-sample
+          path: email_preview/
+          retention-days: 7
+      - name: Send the requested sample email only when owner explicitly labeled
+        if: github.event_name == 'pull_request' && github.event.label.name == 'html-newsletter-send-once'
+        env:
+          QQ_MAIL_USERNAME: ${{ secrets.QQ_MAIL_USERNAME }}
+          QQ_MAIL_PASSWORD: ${{ secrets.QQ_MAIL_PASSWORD }}
+          QQ_MAIL_TO: ${{ secrets.QQ_MAIL_TO }}
+          QQ_SMTP_HOST: ${{ secrets.QQ_SMTP_HOST }}
+          QQ_SMTP_PORT: ${{ secrets.QQ_SMTP_PORT }}
+          QQ_MAIL_FROM: ${{ secrets.QQ_MAIL_FROM }}
+        run: |
+          test -n "$QQ_MAIL_USERNAME" || { echo 'Missing sender account secret' >&2; exit 1; }
+          test -n "$QQ_MAIL_PASSWORD" || { echo 'Missing SMTP password secret' >&2; exit 1; }
+          test -n "$QQ_MAIL_TO" || { echo 'Missing email recipient secret' >&2; exit 1; }
+          python send_email.py email_preview/2026-10-11.md 'AI Agent Radar · HTML 周报样刊（2026-10-11）'

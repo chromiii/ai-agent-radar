@@ -88,6 +88,21 @@ python learning_memory.py mark lc-xxxxxxxxxxxx practiced --ask ask_results/run.j
 
 V6 不采用私有跨运行同步，而是由你授权将**非敏感学习进度公开保存在仓库**。不要在进度或新闻队列里放 Key/隐私笔记。V5 的历史设计见 [V5 Learning Memory](docs/V5_LEARNING_MEMORY.md)。
 
+## V7 · 邮件即成品，旧归档自动清理
+
+每周六的综合简报会先从本周通过验证的学习卡提炼 **3 条重点**：发生了什么、有什么工程价值、建议做什么练习；后面保留少量论文、公司动态和 Breaking Desk 待处理状态。邮件正文是兼容 QQ 邮箱、Gmail、Outlook 的 **HTML 卡片式排版**，含可点击的原始来源，同时附带适合纯文本客户端的无 Markdown 备份。**不需要自行解析 `.md` 文件**。
+
+本地预览：
+
+~~~bash
+python weekly_briefing.py
+python email_render.py briefings/YYYY-MM-DD.md
+~~~
+
+每周邮件发送成功后，自动执行滚动清理：Daily / Company 保留约 14 天、Weekly 保留最近 2 期、综合简报保留最近 4 期。合并 V7 时首次清理 276 个旧归档文件，并把旧的 2,000 条 Daily 去重标记压缩为 300 条。保留 **公开学习进度、课程、Breaking 审批记录及密钥配置**。历史 Git 提交仍存在，删除当前分支文件不等于抹除历史。
+
+新的邮件发送流程和清理边界见 [V7 使用说明](docs/V7_HTML_EMAIL_CLEANUP.md)。
+
 ## V6 · 从 LangChain 开始 + 周度新闻 + Breaking Desk
 
 学习不再从随机新闻词开始，而是按前置课程进行。第 1 课不需要调用模型：
