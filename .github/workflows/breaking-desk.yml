@@ -1,0 +1,64 @@
+name: Breaking News Desk
+
+on:
+  schedule:
+    # Candidate watch every six hours; no routine email is sent.
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      action:
+        description: Manage candidate queue
+        required: true
+        type: choice
+        options: [watch, scan, mark]
+        default: watch
+      item_id:
+        description: Candidate bn-... ID (for mark)
+        required: false
+        type: string
+      status:
+        description: Decision (for mark)
+        required: false
+        type: choice
+        options: [pending, approved, dismissed, resolved]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: breaking-desk-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - name: Scan and triage
+        env:
+          NEWS_ACTION: ${{ inputs.action || 'watch' }}
+          NEWS_ID: ${{ inputs.item_id }}
+          NEWS_STATUS: ${{ inputs.status }}
+        run: |
+          case "$NEWS_ACTION" in
+            scan) python breaking_news.py scan --lookback-days 7 ;;
+            watch) python breaking_news.py watch ;;
+            mark) python breaking_news.py mark "$NEWS_ID" "$NEWS_STATUS" ;;
+            *) echo 'Unknown action' >&2; exit 2 ;;
+          esac
+      - name: Commit public triage state
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add state/breaking_queue.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Update Breaking News desk'
+          git pull --rebase --autostash origin main
+          git push origin main
