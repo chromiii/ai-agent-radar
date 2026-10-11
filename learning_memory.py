@@ -2,7 +2,7 @@
 
 Only an explicit \`mark\` changes progress. Reading, generating or emailing
 learning cards is never interpreted as the user having learned something.
-Local progress is private and is deliberately not committed to the public repo.
+Progress is public only by explicit owner choice; never store secrets or private notes.
 """
 from __future__ import annotations
 
