@@ -140,7 +140,8 @@ def test_no_private_file_or_no_manual_marks_means_no_personalized_section(tmp_pa
     assert lm.research_recommendations([], [], path) == ""
     path.write_text(json.dumps({"schema_version": 1, "entries": {}}))
     assert lm.weekly_recommendations(REPORT, path) == ""
-    assert "state/learning_progress.json" in (Path(__file__).parents[1] / ".gitignore").read_text()
+    # User explicitly opted in to public progress, but there is still no implicit mark.
+    assert "state/learning_progress.json" not in (Path(__file__).parents[1] / ".gitignore").read_text()
 
 
 def test_personalized_ask_radar_uses_explicit_memory_only(tmp_path, monkeypatch):
@@ -225,7 +226,7 @@ def test_actual_repository_weekly_cards_can_be_catalogued(tmp_path):
     assert lm.read_memory(private)["entries"][items[0].card_id]["status"] == "saved"
 
 
-def test_public_github_action_avoids_personal_learning_data(tmp_path, monkeypatch):
+def test_public_github_action_can_use_explicit_public_progress(tmp_path, monkeypatch):
     monkeypatch.setenv("GITHUB_ACTIONS", "true")
     private = tmp_path / "private-progress.json"
     item = cards()[0]
@@ -242,7 +243,7 @@ def test_public_github_action_avoids_personal_learning_data(tmp_path, monkeypatc
     monkeypatch.setattr(ask_radar, "run_agent", fake_run)
     _, answer = ask_radar.run_request("Agent memory", {}, tmp_path / "public")
     assert "当前来源回答" in answer
-    assert "结合你的学习记录" not in answer
+    assert "结合你的学习记录" in answer
 
 
 def test_ask_run_artifact_can_be_catalogued_and_marked(tmp_path):

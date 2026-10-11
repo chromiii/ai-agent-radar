@@ -10,6 +10,6 @@ ask_results/
 state/history/
 history_results/
 
-# Personal learning records must not enter the public Git history.
-state/learning_progress.json
+# User explicitly opted to keep non-sensitive learning progress public.
+# Secrets, token-bearing exports and raw Agent runs remain ignored.
 state/private_recommendations/

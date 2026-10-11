@@ -57,7 +57,23 @@ jobs:
           git pull --rebase --autostash origin main
           git push origin main
 
-      - name: Send weekly learning radar email
+      - name: Build weekly combined briefing
         run: |
-          REPORT_PATH="$(ls -1t weekly/*.md | head -n 1)"
-          python send_email.py "$REPORT_PATH" "AI Agent 应用层学习周报"
+          python breaking_news.py scan --lookback-days 7 > /dev/null
+          python weekly_briefing.py
+
+      - name: Commit combined weekly briefing and Breaking queue
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add briefings/*.md state/breaking_queue.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Add one weekly consolidated learning and news briefing"
+            git pull --rebase --autostash origin main
+            git push origin main
+          fi
+
+      - name: Send one weekly briefing email
+        run: |
+          REPORT_PATH="$(ls -1 briefings/*.md | sort | tail -n 1)"
+          python send_email.py "$REPORT_PATH" "AI Agent Radar · 周度学习与情报"

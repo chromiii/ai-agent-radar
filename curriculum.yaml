@@ -1,0 +1,69 @@
+title: 从 LangChain 到可靠 AI Agent
+version: 1
+# Stable concept IDs are independent of weekly news URLs.
+lessons:
+  - id: lc01-runnables
+    title: LangChain Runnable 与调用链
+    prerequisites: []
+    minutes: 25
+    objective: 用 RunnableLambda 和管道组合两个确定性步骤，区分输入、转换、输出
+    exercise: examples/learning/langchain_01_runnables.py
+    done_when: 运行示例后修改关键词映射，使两个输入得到不同结果
+    docs: https://docs.langchain.com/oss/python/langchain/overview
+    topics: [langchain, python]
+  - id: lc02-prompts-messages
+    title: PromptTemplate 与 Messages
+    prerequisites: [lc01-runnables]
+    minutes: 25
+    objective: 区分 System、Human、Tool 消息，理解模板变量而非把所有内容拼成字符串
+    docs: https://docs.langchain.com/oss/python/langchain/overview
+    topics: [langchain, prompts]
+  - id: lc03-model-tools
+    title: Tool Schema 与错误处理
+    prerequisites: [lc02-prompts-messages]
+    minutes: 30
+    objective: 用 @tool 建立带类型的本地工具，区分模型意图与执行器权限
+    docs: https://docs.langchain.com/oss/python/langchain/overview
+    topics: [langchain, tools]
+  - id: lc04-create-agent
+    title: create_agent 单智能体
+    prerequisites: [lc03-model-tools]
+    minutes: 30
+    objective: 用现代 create_agent API 调用有界工具并检查消息状态及失败路径
+    docs: https://docs.langchain.com/oss/python/langchain/overview
+    topics: [langchain, agent]
+  - id: lc05-retrieval
+    title: Document、Chunk 与 Retrieval
+    prerequisites: [lc01-runnables]
+    minutes: 25
+    objective: 在四篇玩具文档上比较关键词召回和向量检索的边界
+    docs: https://docs.langchain.com/oss/python/learn
+    topics: [rag, retrieval]
+  - id: lc06-rag-citations
+    title: RAG 引用和可验证性
+    prerequisites: [lc05-retrieval, lc04-create-agent]
+    minutes: 30
+    objective: 用引用 ID 约束回答，并检查 claim 是否真的被引用来源支持
+    docs: https://docs.langchain.com/oss/python/learn
+    topics: [rag, evaluation]
+  - id: lc07-thread-checkpoints
+    title: LangGraph Thread State 与 Checkpoint
+    prerequisites: [lc04-create-agent]
+    minutes: 30
+    objective: 区分一次运行的 state 与跨运行的 checkpoint，演示从同一 thread_id 恢复
+    docs: https://docs.langchain.com/oss/python/langgraph/overview
+    topics: [memory, langgraph]
+  - id: lc08-long-term-store
+    title: 长期 Store、namespace 与 Memory 生命周期
+    prerequisites: [lc07-thread-checkpoints, lc06-rag-citations]
+    minutes: 30
+    objective: 设计 source/provenance、有效期、冲突更新和撤销的记忆结构
+    docs: https://docs.langchain.com/oss/python/learn
+    topics: [memory, langgraph]
+  - id: lc09-routing-evaluation
+    title: LangGraph 多 Agent Router 与评测
+    prerequisites: [lc08-long-term-store]
+    minutes: 30
+    objective: 在已有 Radar 上实现可回放 Router 和 bounded execution，比较真实收益
+    docs: https://docs.langchain.com/oss/python/learn
+    topics: [langgraph, evaluation]
