@@ -318,11 +318,12 @@ def weekly_recommendations(markdown: str, path: Path = DEFAULT_PATH, report_date
 def research_recommendations(findings: list[dict[str, Any]], selected: list[dict[str, Any]], path: Path = DEFAULT_PATH) -> str:
     if not Path(path).is_file():
         return ""
-    sources = {source.get("id"): source.get("url") for source in selected}
+    sources = {source.get("id"): source for source in selected if isinstance(source, dict)}
     items = []
     for finding in findings:
-        urls = [canonical_url(sources.get(i)) for i in finding.get("evidence_ids", [])]
-        url = next((url for url in urls if url), None)
+        evidence = [sources[i] for i in finding.get("evidence_ids", []) if i in sources]
+        evidence.sort(key=lambda source: source.get("date_kind") == "radar_observed")
+        url = next((u for source in evidence if (u := canonical_url(source.get("url")))), None)
         if not url:
             continue
         title = clean(finding.get("topic"), 240)
