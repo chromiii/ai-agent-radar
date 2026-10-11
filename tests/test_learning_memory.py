@@ -243,3 +243,37 @@ def test_public_github_action_avoids_personal_learning_data(tmp_path, monkeypatc
     _, answer = ask_radar.run_request("Agent memory", {}, tmp_path / "public")
     assert "当前来源回答" in answer
     assert "结合你的学习记录" not in answer
+
+
+def test_ask_run_artifact_can_be_catalogued_and_marked(tmp_path):
+    run_path = tmp_path / "run.json"
+    run_path.write_text(json.dumps({
+        "state": {
+            "status": "finished",
+            "as_of": "2026-10-11",
+            "findings": [{"topic": "Agent memory checkpoint", "level": "build", "evidence_ids": ["S1", "S2"]}],
+            "selected_items": [
+                {"id": "S1", "url": "https://github.com/chromiii/ai-agent-radar/blob/main/weekly/2026-10-03.md",
+                 "date_kind": "radar_observed"},
+                {"id": "S2", "url": "https://arxiv.org/abs/2610.12345",
+                 "date_kind": "published"},
+            ],
+        }
+    }, ensure_ascii=False), encoding="utf-8")
+    items = lm.items_from_ask(run_path)
+    assert len(items) == 1
+    assert items[0].card_id == cards()[0].card_id  # prefers published source
+    assert items[0].report_date == "2026-10-11"
+    path = tmp_path / "progress.json"
+    lm.mark_progress(items[0], "practiced", path)
+    assert lm.read_memory(path)["entries"][items[0].card_id]["status"] == "practiced"
+
+
+def test_ask_does_not_catalog_failed_or_unverified_answers(tmp_path):
+    run_path = tmp_path / "run.json"
+    run_path.write_text(json.dumps({
+        "state": {"status": "finished_insufficient_evidence",
+                  "findings": [{"topic": "unverified", "evidence_ids": ["S1"]}],
+                  "selected_items": [{"id": "S1", "url": "https://example.com/unverified"}]}
+    }), encoding="utf-8")
+    assert lm.items_from_ask(run_path) == []
