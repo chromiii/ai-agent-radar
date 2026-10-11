@@ -12,3 +12,4 @@ history_results/
 
 # Personal learning records must not enter the public Git history.
 state/learning_progress.json
+state/private_recommendations/
