@@ -125,6 +125,38 @@ def items_from_file(path: Path) -> list[LearningItem]:
     )
 
 
+def items_from_ask(path: Path) -> list[LearningItem]:
+    """Read verified learning cards from an Ask Radar run.json artifact."""
+    try:
+        payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+        raise ValueError("Ask Radar run.json is unreadable") from exc
+    state = payload.get("state", payload) if isinstance(payload, dict) else {}
+    if not isinstance(state, dict) or state.get("status") != "finished":
+        return []
+    evidence = {row.get("id"): row for row in state.get("selected_items", [])
+                if isinstance(row, dict) and isinstance(row.get("id"), str)}
+    items, seen = [], set()
+    for finding in state.get("findings", []):
+        if not isinstance(finding, dict):
+            continue
+        sources = [evidence[ref] for ref in finding.get("evidence_ids", [])
+                   if isinstance(ref, str) and ref in evidence]
+        # Prefer a real publication/source over a historical Radar report.
+        sources.sort(key=lambda row: row.get("date_kind") == "radar_observed")
+        url = next((u for row in sources if (u := canonical_url(row.get("url")))), None)
+        title = clean(finding.get("topic"), 240)
+        if not url or not title:
+            continue
+        ident = card_id_for(url)
+        if ident in seen:
+            continue
+        seen.add(ident)
+        items.append(LearningItem(ident, title, url, topic_for(title),
+                                  clean(finding.get("level"), 30), clean(state.get("as_of"), 20)))
+    return items
+
+
 def latest_weekly(root: Path = ROOT) -> Path:
     paths = sorted((root / "weekly").glob("????-??-??.md"))
     if not paths:
@@ -302,14 +334,20 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--memory", type=Path, default=None, help="Local private progress JSON path")
     sub = parser.add_subparsers(dest="command", required=True)
-    catalog = sub.add_parser("catalog", help="List IDs from a Weekly Radar report")
-    catalog.add_argument("--weekly", type=Path, default=None)
-    mark = sub.add_parser("mark", help="Explicitly record progress for a known Weekly card")
+    catalog = sub.add_parser("catalog", help="List learning card IDs from Weekly or Ask")
+    catalog_source = catalog.add_mutually_exclusive_group()
+    catalog_source.add_argument("--weekly", type=Path, default=None)
+    catalog_source.add_argument("--ask", type=Path, default=None, help="Ask Radar run.json")
+    mark = sub.add_parser("mark", help="Explicitly record progress for a Weekly or Ask card")
     mark.add_argument("card_id")
     mark.add_argument("status", choices=sorted(STATUSES))
-    mark.add_argument("--weekly", type=Path, default=None)
-    recommend = sub.add_parser("recommend", help="Rank Weekly cards against your private progress")
-    recommend.add_argument("--weekly", type=Path, default=None)
+    mark_source = mark.add_mutually_exclusive_group()
+    mark_source.add_argument("--weekly", type=Path, default=None)
+    mark_source.add_argument("--ask", type=Path, default=None, help="Ask Radar run.json")
+    recommend = sub.add_parser("recommend", help="Rank Weekly or Ask cards against your private progress")
+    recommend_source = recommend.add_mutually_exclusive_group()
+    recommend_source.add_argument("--weekly", type=Path, default=None)
+    recommend_source.add_argument("--ask", type=Path, default=None, help="Ask Radar run.json")
     sub.add_parser("status", help="Show explicitly marked learning progress")
     args = parser.parse_args()
     path = args.memory or memory_path()
@@ -321,8 +359,11 @@ def main() -> None:
         print(f"Total manually marked: {len(data['entries'])}")
         return
 
-    weekly = args.weekly or latest_weekly()
-    items = items_from_file(weekly)
+    if args.ask:
+        items = items_from_ask(args.ask)
+    else:
+        weekly = args.weekly or latest_weekly()
+        items = items_from_file(weekly)
     if args.command == "catalog":
         for item in items:
             print(f"{item.card_id} | {item.title} | {TOPIC_LABELS[item.topic]} | {item.source_url}")
@@ -330,7 +371,7 @@ def main() -> None:
     if args.command == "mark":
         item = next((c for c in items if c.card_id == args.card_id), None)
         if item is None:
-            raise SystemExit("card ID not found in selected Weekly report; inspect 'catalog' or choose --weekly")
+            raise SystemExit("card ID not found in selected Weekly/Ask result; inspect 'catalog' or choose --weekly/--ask")
         row = mark_progress(item, args.status, path)
         print(f"{item.card_id}: {STATUS_NAMES[row['status']]} ({path})")
         return
