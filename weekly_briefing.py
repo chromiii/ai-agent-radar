@@ -6,15 +6,46 @@ The weekly digest is a reading queue, not an LLM-written factual verdict.
 from __future__ import annotations
 import argparse
 import datetime as dt
+import re
 from pathlib import Path
 from typing import Any
 from historical_memory import parse_report
 from research_search import canonical_url, clean
-from breaking_news import read_queue
+from breaking_news import read_queue, normalized_news_url
 from learning_path import format_plan
 from learning_memory import weekly_recommendations
 
 ROOT = Path(__file__).resolve().parent
+
+
+GENERIC_HEADINGS = {"必看索引", "tech blog", "blog", "homepage", "最新资讯", "news", "updates", "overview"}
+EMBEDDED_DATE = re.compile(
+    r"\b(January|February|March|April|May|June|July|August|September|October|November|December|"
+    r"Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\s+(\d{1,2}),?\s+(\d{4})\b", re.I
+)
+
+
+def stale_headline(title: str, start: dt.date, end: dt.date) -> bool:
+    """Reject explicit old publication dates in a headline; unknown dates stay qualified."""
+    match = EMBEDDED_DATE.search(title)
+    if not match:
+        return False
+    month, day, year = match.groups()
+    if month.casefold() == "sept":
+        month = "Sep"
+    date = None
+    for fmt in ("%B %d %Y", "%b %d %Y"):
+        try:
+            date = dt.datetime.strptime(f"{month} {day} {year}", fmt).date()
+            break
+        except ValueError:
+            pass
+    return date is not None and not start <= date <= end
+
+
+def generic_heading(title: str) -> bool:
+    normalized = clean(title, 180).casefold().split(":")[-1].strip()
+    return normalized in GENERIC_HEADINGS
 
 
 def collect(root: Path, end: dt.date, days: int = 7, limit_each: int = 8) -> dict[str, list[dict[str, Any]]]:
@@ -34,12 +65,14 @@ def collect(root: Path, end: dt.date, days: int = 7, limit_each: int = 8) -> dic
             if not (end - dt.timedelta(days=days - 1)) <= date <= end:
                 continue
             for doc in parse_report(path, root):
-                if not doc.external_urls:
+                if not doc.external_urls or generic_heading(doc.title):
                     continue
-                url = next((u for u in doc.external_urls if canonical_url(u)), None)
+                if stale_headline(doc.title, end - dt.timedelta(days=days - 1), end):
+                    continue
+                url = next((u for u in doc.external_urls if normalized_news_url(u)), None)
                 if not url:
                     continue
-                key_url = canonical_url(url)
+                key_url = normalized_news_url(url)
                 if key_url in seen or "chromiii/ai-agent-radar" in key_url:
                     continue
                 seen.add(key_url)
@@ -65,7 +98,7 @@ def build_briefing(root: Path = ROOT, as_of: dt.date | None = None,
         lines.append(f"{index}. [{row['title']}]({row['url']})（Radar {row['date']}）")
     if not articles["research"]:
         lines.append("本周没有可引用的新研究条目。")
-    lines.extend(["", "## 本周公司与产品动态", ""])
+    lines.extend(["", "## 本周公司与产品线索（以 Radar 收录日为准）", ""])
     for index, row in enumerate(articles["companies"], 1):
         lines.append(f"{index}. [{row['title']}]({row['url']})（Radar {row['date']}）")
     if not articles["companies"]:
