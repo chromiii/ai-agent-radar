@@ -7,6 +7,7 @@ from typing import Any
 from urllib.parse import quote
 
 from research_search import canonical_url, clean
+from learning_memory import card_id_for
 
 
 LEVEL_NAMES = {"know": "先知道", "build": "值得动手", "understand_why": "理解原因"}
@@ -117,4 +118,11 @@ def render_learning_card(card: dict[str, Any], number: int) -> list[str]:
     if not links:
         links = [source_link(f"来源 {i}", url) for i, url in enumerate(card.get("source_urls", []), 1)]
     lines.extend(["- **来源**：" + " / ".join(link for link in links if link), ""])
+    # A public, non-personal identifier lets readers mark a card explicitly.
+    primary_url = next((source.get("url") for source in card.get("sources", []) if canonical_url(source.get("url"))), None)
+    if not primary_url:
+        primary_url = next((url for url in card.get("source_urls", []) if canonical_url(url)), None)
+    if primary_url:
+        lines.append(f"- **学习卡 ID**：`{card_id_for(primary_url)}`")
+    lines.append("")
     return lines
