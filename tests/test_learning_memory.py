@@ -277,3 +277,20 @@ def test_ask_does_not_catalog_failed_or_unverified_answers(tmp_path):
                   "selected_items": [{"id": "S1", "url": "https://example.com/unverified"}]}
     }), encoding="utf-8")
     assert lm.items_from_ask(run_path) == []
+
+
+def test_ask_personalization_prefers_published_source_id(tmp_path):
+    private = tmp_path / "progress.json"
+    item = cards()[0]
+    lm.mark_progress(item, "studied", private)
+    text = lm.research_recommendations(
+        [{"topic": item.title, "evidence_ids": ["S1", "S2"], "level": "build"}],
+        [
+            {"id": "S1", "url": "https://github.com/chromiii/ai-agent-radar/blob/main/weekly/2026-10-03.md",
+             "date_kind": "radar_observed"},
+            {"id": "S2", "url": item.source_url, "date_kind": "published"},
+        ],
+        private,
+    )
+    assert "优先补做" in text
+    assert item.card_id in text
