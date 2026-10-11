@@ -62,11 +62,16 @@ jobs:
           python breaking_news.py scan --lookback-days 7 > /dev/null
           python weekly_briefing.py
 
+      - name: Render HTML newsletter
+        run: |
+          REPORT_PATH="$(ls -1 briefings/*.md | sort | tail -n 1)"
+          python email_render.py "$REPORT_PATH" --output "${REPORT_PATH%.md}.html"
+
       - name: Commit combined weekly briefing and Breaking queue
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add briefings/*.md state/breaking_queue.json
+          git add briefings/*.md briefings/*.html state/breaking_queue.json
           if ! git diff --cached --quiet; then
             git commit -m "Add one weekly consolidated learning and news briefing"
             git pull --rebase --autostash origin main
@@ -77,3 +82,19 @@ jobs:
         run: |
           REPORT_PATH="$(ls -1 briefings/*.md | sort | tail -n 1)"
           python send_email.py "$REPORT_PATH" "AI Agent Radar · 周度学习与情报"
+
+      - name: Prune old raw news archives after delivery
+        run: python archive_retention.py --apply --raw-days 14 --weekly-keep 2 --briefing-keep 4
+
+      - name: Commit rolling archive cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u inbox company weekly briefings
+          if git diff --cached --quiet; then
+            echo "No expired news archives."
+            exit 0
+          fi
+          git commit -m "Prune old raw Radar reports after weekly delivery"
+          git pull --rebase --autostash origin main
+          git push origin main
