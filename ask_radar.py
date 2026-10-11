@@ -27,9 +27,8 @@ def run_request(question, config, output_dir, *, decide=None, searcher=None):
               "latency_ms": round((time.monotonic() - started) * 1000), "state": asdict(state)}
     (output_dir / 'run.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     answer = f"# Ask Radar 学习卡\n\n**你的问题**：{markdown_text(question)}\n\n{state.final_answer}\n"
-    # Public GitHub Actions artifacts can be accessible to repository readers.
-    # Keep personal progress out of hosted artifacts until private storage/delivery exists.
-    if state.status == 'finished' and state.findings and os.environ.get('GITHUB_ACTIONS') != 'true':
+    # Public learning history is user-approved, never infer competence automatically.
+    if state.status == 'finished' and state.findings:
         private_section = research_recommendations(state.findings, state.selected_items, memory_path(config))
         if private_section:
             answer += "\n" + private_section + "\n"
