@@ -23,6 +23,13 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install -r requirements.txt
+      - name: Run real LangChain lesson 01
+        run: |
+          pip install -r requirements-learning.txt
+          mkdir -p v6_results
+          python examples/learning/langchain_01_runnables.py > v6_results/langchain-lesson-01.txt
+          grep -q 'Topic=agent memory' v6_results/langchain-lesson-01.txt
+          grep -q 'Topic=mcp' v6_results/langchain-lesson-01.txt
       - name: Build real-corpus preview (no email or push)
         run: |
           mkdir -p v6_results
