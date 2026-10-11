@@ -124,7 +124,7 @@ Exit criteria:
 
 ## Stage 3 — Memory model
 
-**Status:** planned.
+**Status:** partially implemented in V4. Entity Memory and Trend Memory are deterministically derived from committed Radar reports; user preference/learning memory and conflict-resolution policies remain future work.
 
 Separate:
 
@@ -177,7 +177,7 @@ Exit criteria:
 
 ## Stage 5 — Historical RAG
 
-**Status:** planned.
+**Status:** partially implemented in V4. Report ingestion, metadata/provenance, topic-gated lexical retrieval, recurrence aggregation and history-first hybrid search are implemented. Embeddings, semantic fusion and learned reranking remain planned.
 
 Build a searchable knowledge layer from Radar history and selected source material.
 

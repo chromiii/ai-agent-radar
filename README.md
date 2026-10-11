@@ -8,7 +8,7 @@
 - **Company Radar**：每日全球和中国 AI 公司动态简报。
 - **Weekly Learning Radar**：每周六把趋势信号压缩成应用层学习周报，同时继续反哺 Daily Radar 的动态加分和降权。
 - **Bounded Learning / Research Agent（实验性，V2.1）**：针对应用层学习问题扩展查询、检索外部来源，在步数和请求预算内生成带来源的学习发现。
-- **Ask Radar（V2.2）**：在 Actions 输入自由问题，直接阅读和周报一致的学习卡，包含概念、应用场景、学习深度、小练习、完成标准及来源。\n- **Verified Research（V3，实验性）**：把深度研究拆成 Research → Analyst → Verifier 三个有边界的角色；Verifier 只能接受/拒绝 claim，最终仍由确定性代码发布。
+- **Ask Radar（V2.2）**：在 Actions 输入自由问题，直接阅读和周报一致的学习卡，包含概念、应用场景、学习深度、小练习、完成标准及来源。\n- **Verified Research（V3，实验性）**：把深度研究拆成 Research → Analyst → Verifier 三个有边界的角色；Verifier 只能接受/拒绝 claim，最终仍由确定性代码发布。\n- **Historical Radar Memory（V4，实验性）**：把已提交的 Daily / Weekly / Company Radar 构造成可重建的历史索引、Entity Memory 与 Trend Memory；Ask Radar / Verified Research 先查相关历史，再补当前外部来源。
 
 ## 直接问一个问题
 
@@ -25,6 +25,16 @@ python ask_radar.py --question "最近 coding agent 有什么值得学？"
 ```
 
 V2.2 的评测和范围见 [学习可用性说明](docs/V2_2_USABILITY.md)。
+
+历史查询可直接运行：
+
+```bash
+python historical_memory.py search "最近 agent memory 有什么变化？"
+python historical_memory.py trend "agent memory"
+python historical_memory.py entity "Manus"
+```
+
+历史记录使用 `date_kind=radar_observed`，只表示“Radar 过去记录过”，不能替代独立论文来源证明当前趋势。详细设计和真实语料验证见 [V4 Historical Memory](docs/V4_HISTORY_MEMORY.md)。
 
 想先体验练习，可以运行 `python examples/mcp_mock_dispatch.py`。这是本地工具分发模拟，包含两个正常调用、未知工具与错误参数；[问答样本与逐条复核](docs/eval/v2_2-review.md)说明了它与真实 MCP 接入的边界。
 
