@@ -54,6 +54,16 @@ python learning_memory.py catalog --weekly weekly/2026-10-03.md
 python learning_memory.py mark lc-xxxxxxxxxxxx practiced --weekly weekly/2026-10-03.md
 \`\`\`
 
+You can also record progress from an Ask Radar artifact (only completed, verified answers qualify):
+
+```bash
+python learning_memory.py catalog --ask ask_results/run.json
+python learning_memory.py mark lc-xxxxxxxxxxxx practiced --ask ask_results/run.json
+python learning_memory.py recommend --ask ask_results/run.json
+```
+
+The ID printed inside a learning card corresponds to its preferred source, so you can copy it instead of calculating a hash. For mixed historical/current evidence, Ask uses a non-historical source as its primary ID whenever available.
+
 Inspect your private state and see prioritized next cards:
 
 \`\`\`bash
@@ -73,7 +83,7 @@ You can also set \`RADAR_LEARNING_MEMORY_PATH\`, or configure \`learning_memory.
 ## Product integration
 
 - **Weekly:** builds the public Weekly Markdown exactly as before. If private progress exists, also generates \`state/private_recommendations/YYYY-MM-DD.md\`. This *separate* recommendation report contains your progress-aware next actions; it is not committed or emailed.
-- **Ask Radar:** when a local private memory file exists, appends a tailored next-action section to its already-ignored \`ask_results/answer.md\`. The model's source/evidence validity rules are unchanged.
+- **Ask Radar:** when a local private memory file exists, appends a tailored next-action section to its already-ignored \`ask_results/answer.md\`. The model's source/evidence validity rules are unchanged. On hosted/public GitHub Actions, the optional personal advice is suppressed to prevent leaking progress through a public workflow artifact.
 - **Daily and Company:** unchanged.
 - **Trend Memory:** unchanged; no personal preference data enters global Weekly trend ranking/state.
 
