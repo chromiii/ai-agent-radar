@@ -144,6 +144,7 @@ def test_no_private_file_or_no_manual_marks_means_no_personalized_section(tmp_pa
 
 
 def test_personalized_ask_radar_uses_explicit_memory_only(tmp_path, monkeypatch):
+    monkeypatch.delenv("GITHUB_ACTIONS", raising=False)  # explicitly emulate local, private execution
     progress = tmp_path / "learning.json"
     old = cards()[0]
     lm.mark_progress(old, "studied", progress)
