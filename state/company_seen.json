@@ -1,22 +1,5 @@
 {
   "seen": {
-    "https://manus.im/features/manus-browser-operator": "2026-10-03",
-    "https://mistral.ai/products/vibe/code/": "2026-10-03",
-    "https://qwenlm.github.io/blog/page/2/": "2026-10-03",
-    "https://manus.im/features/webapp": "2026-10-03",
-    "https://manus.im/features/wide-research": "2026-10-03",
-    "https://manus.im/features/mail": "2026-10-03",
-    "https://manus.im/compare/vs-chatgpt": "2026-10-03",
-    "https://mistral.ai/products/studio/": "2026-10-03",
-    "https://www.anthropic.com/news/claude-frontier-academy": "2026-10-03",
-    "https://blog.google/innovation-and-ai/technology/developers-tools/": "2026-10-03",
-    "https://www.microsoft.com/en-us/ai/financial-services/capital-markets": "2026-10-03",
-    "https://www.microsoft.com/en-us/microsoft-agent-365": "2026-10-03",
-    "https://microsoft.com/en-us/ai/agent-factory": "2026-10-03",
-    "https://github.blog/developer-skills/": "2026-10-03",
-    "https://github.blog/developer-skills/application-development/": "2026-10-03",
-    "https://www.minimax.io/models/text/m27": "2026-10-03",
-    "https://www.minimax.io/models/text": "2026-10-03",
     "https://www.anthropic.com/news/accenture-embedded-evaluation": "2026-10-04",
     "https://www.minimax.io/news/minimax-speech-28": "2026-10-04",
     "https://design.minimax.io/": "2026-10-04",
@@ -76,6 +59,19 @@
     "https://www.kimi.com/en/blog/perception-bench": "2026-10-15",
     "https://www.kimi.com/en/blog/kimi-k2-6": "2026-10-15",
     "https://www.kimi.com/business": "2026-10-15",
-    "https://seed.bytedance.com/en/blog/seed-alignment-preparedness-team-looking-for-global-talents": "2026-10-15"
+    "https://seed.bytedance.com/en/blog/seed-alignment-preparedness-team-looking-for-global-talents": "2026-10-15",
+    "https://qwenlm.github.io/blog/page/2/": "2026-10-17",
+    "https://manus.im/features/webapp": "2026-10-17",
+    "https://manus.im/features/wide-research": "2026-10-17",
+    "https://manus.im/models": "2026-10-17",
+    "https://manus.im/compare/vs-chatgpt": "2026-10-17",
+    "https://blog.google/innovation-and-ai/technology/developers-tools/": "2026-10-17",
+    "https://www.microsoft.com/en-us/ai/financial-services/capital-markets": "2026-10-17",
+    "https://www.microsoft.com/en-us/microsoft-agent-365": "2026-10-17",
+    "https://microsoft.com/en-us/ai/agent-factory": "2026-10-17",
+    "https://github.blog/developer-skills/": "2026-10-17",
+    "https://github.blog/developer-skills/application-development/": "2026-10-17",
+    "https://www.minimax.io/models/text/m27": "2026-10-17",
+    "https://www.minimax.io/models/text": "2026-10-17"
   }
 }
