@@ -1,11 +1,5 @@
 {
   "seen": {
-    "https://seed.bytedance.com/en/blog/seed2-1-officially-released-advancing-ai-productivity": "2026-10-06",
-    "https://mistral.ai/news/legacy-code-modernization/": "2026-10-06",
-    "https://seed.bytedance.com/en/blog/seedrealtime-audio-visual-full-duplex-llm-released-toward-omni-modal-natural-interaction": "2026-10-06",
-    "https://seed.bytedance.com/en/blog/one-take-creation-flexible-referencing-introducing-seedance-2-5": "2026-10-06",
-    "https://www.minimax.io/models/text/m3": "2026-10-06",
-    "https://code.minimax.io": "2026-10-06",
     "https://mistral.ai/news/mistral-x-cloudera/": "2026-10-07",
     "https://www.cursor.com/changelog/remote-control-local-agents": "2026-10-08",
     "https://www.zhipuai.cn/zh/research/156": "2026-10-08",
@@ -73,6 +67,12 @@
     "https://seed.bytedance.com/en/research?view_from=homepage_tab": "2026-10-19",
     "https://seed.bytedance.com/models?view_from=homepage_tab": "2026-10-19",
     "https://seed.bytedance.com/research?view_from=homepage_tab": "2026-10-19",
-    "https://ai.byteplus.com/en/playground/model/gen_chat?model=dola-seed-2-1-turbo-260628": "2026-10-19"
+    "https://ai.byteplus.com/en/playground/model/gen_chat?model=dola-seed-2-1-turbo-260628": "2026-10-19",
+    "https://seed.bytedance.com/en/blog/seed2-1-officially-released-advancing-ai-productivity": "2026-10-20",
+    "https://mistral.ai/news/legacy-code-modernization/": "2026-10-20",
+    "https://seed.bytedance.com/en/blog/seedrealtime-audio-visual-full-duplex-llm-released-toward-omni-modal-natural-interaction": "2026-10-20",
+    "https://www.minimax.io/blog/minimax-m31f": "2026-10-20",
+    "https://www.minimax.io/models/text/m3": "2026-10-20",
+    "https://design.minimax.io/media-plan/subscribe": "2026-10-20"
   }
 }
