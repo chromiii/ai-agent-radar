@@ -1,6 +1,5 @@
 {
   "seen": {
-    "https://mistral.ai/news/mistral-x-cloudera/": "2026-10-07",
     "https://www.cursor.com/changelog/remote-control-local-agents": "2026-10-08",
     "https://www.zhipuai.cn/zh/research/156": "2026-10-08",
     "https://www.zhipuai.cn/zh/research/155": "2026-10-08",
@@ -73,6 +72,10 @@
     "https://seed.bytedance.com/en/blog/seedrealtime-audio-visual-full-duplex-llm-released-toward-omni-modal-natural-interaction": "2026-10-20",
     "https://www.minimax.io/blog/minimax-m31f": "2026-10-20",
     "https://www.minimax.io/models/text/m3": "2026-10-20",
-    "https://design.minimax.io/media-plan/subscribe": "2026-10-20"
+    "https://design.minimax.io/media-plan/subscribe": "2026-10-20",
+    "https://www.anthropic.com/claude-opus-5-5": "2026-10-21",
+    "https://www.anthropic.com/claude-haiku-5-5": "2026-10-21",
+    "https://mistral.ai/news/voxtral-3/": "2026-10-21",
+    "https://mistral.ai/news/mistral-x-cloudera/": "2026-10-21"
   }
 }
