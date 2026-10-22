@@ -1,11 +1,5 @@
 {
   "seen": {
-    "https://status.deepseek.com/": "2026-10-09",
-    "https://api-docs.deepseek.com/guides/vision": "2026-10-09",
-    "https://api-docs.deepseek.com/api/create-chat-completion": "2026-10-09",
-    "https://api-docs.deepseek.com/updates": "2026-10-09",
-    "https://cursor.com/automations": "2026-10-09",
-    "https://zcode.z.ai/cn": "2026-10-09",
     "https://www.kimi.com/agent": "2026-10-10",
     "https://manus.im/features/automations": "2026-10-10",
     "https://www.microsoft.com/en-us/copilot/resources/agents": "2026-10-10",
@@ -72,6 +66,12 @@
     "https://www.anthropic.com/claude-haiku-5-5": "2026-10-21",
     "https://mistral.ai/news/voxtral-3/": "2026-10-21",
     "https://mistral.ai/news/mistral-x-cloudera/": "2026-10-21",
-    "https://www.cursor.com/automate": "2026-10-22"
+    "https://www.cursor.com/automate": "2026-10-22",
+    "https://status.deepseek.com/": "2026-10-23",
+    "https://api-docs.deepseek.com/guides/vision": "2026-10-23",
+    "https://api-docs.deepseek.com/api/create-chat-completion": "2026-10-23",
+    "https://api-docs.deepseek.com/updates": "2026-10-23",
+    "https://seed.bytedance.com/en/blog/seed2-1-officially-released-advancing-ai-productivity?view_from=homepage_tab": "2026-10-23",
+    "https://seed.bytedance.com/en/blog/seedrealtime-audio-visual-full-duplex-llm-released-toward-omni-modal-natural-interaction?view_from=homepage_tab": "2026-10-23"
   }
 }
