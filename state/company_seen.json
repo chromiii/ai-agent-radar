@@ -1,13 +1,5 @@
 {
   "seen": {
-    "https://www.kimi.com/agent": "2026-10-10",
-    "https://manus.im/features/automations": "2026-10-10",
-    "https://www.microsoft.com/en-us/copilot/resources/agents": "2026-10-10",
-    "https://www.kimi.com/code": "2026-10-10",
-    "https://autoglm.zhipuai.cn/?channel=official": "2026-10-10",
-    "https://autoglm.zhipuai.cn": "2026-10-10",
-    "https://bigmodel.cn": "2026-10-10",
-    "https://www.minimax.io/blog/minimax-h3": "2026-10-10",
     "http://manus.im/blog/introducing-manus-2-0": "2026-10-13",
     "https://manus.im/features": "2026-10-14",
     "https://www.cloudbees.com/blog/enterprise-jenkins-now-builds-from-cursor-origin": "2026-10-14",
@@ -72,6 +64,17 @@
     "https://api-docs.deepseek.com/api/create-chat-completion": "2026-10-23",
     "https://api-docs.deepseek.com/updates": "2026-10-23",
     "https://seed.bytedance.com/en/blog/seed2-1-officially-released-advancing-ai-productivity?view_from=homepage_tab": "2026-10-23",
-    "https://seed.bytedance.com/en/blog/seedrealtime-audio-visual-full-duplex-llm-released-toward-omni-modal-natural-interaction?view_from=homepage_tab": "2026-10-23"
+    "https://seed.bytedance.com/en/blog/seedrealtime-audio-visual-full-duplex-llm-released-toward-omni-modal-natural-interaction?view_from=homepage_tab": "2026-10-23",
+    "https://www.kimi.com/agent": "2026-10-24",
+    "https://www.microsoft.com/en-us/copilot/resources/agents": "2026-10-24",
+    "https://www.kimi.com/code": "2026-10-24",
+    "https://autoglm.zhipuai.cn/?channel=official": "2026-10-24",
+    "https://www.zhipuai.cn/zh/research/156": "2026-10-24",
+    "https://www.zhipuai.cn/zh/research/155": "2026-10-24",
+    "https://www.zhipuai.cn/zh/research/145": "2026-10-24",
+    "https://autoglm.zhipuai.cn": "2026-10-24",
+    "https://zcode.z.ai/cn": "2026-10-24",
+    "https://bigmodel.cn": "2026-10-24",
+    "https://www.minimax.io/blog/minimax-h3": "2026-10-24"
   }
 }
