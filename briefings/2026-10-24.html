@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AI Agent Radar · 每周精选</title></head>
+<body style="padding:0;margin:0;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,'PingFang SC','Microsoft YaHei',sans-serif">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f1f5f9">
+<tr><td align="center" style="padding:24px 12px 34px">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0"
+style="max-width:680px;background:#f8fafc;border-radius:20px;overflow:hidden">
+<tr><td style="background:#0f172a;padding:32px 28px 30px">
+<p style="color:#93c5fd;font-size:11px;letter-spacing:2px;font-weight:700;margin:0 0 14px">AI AGENT RADAR · WEEKLY EDITION</p>
+<h1 style="color:#ffffff;font-size:27px;line-height:1.35;margin:0 0 9px">你的每周 AI Agent 情报</h1>
+<p style="color:#cbd5e1;font-size:14px;line-height:1.65;margin:0">重要进展 · 公司动态 · Breaking Desk · 本周 LangChain 学习任务</p>
+</td></tr>
+<tr><td style="padding:22px 26px 14px">
+<p style="font-size:12px;line-height:1.6;color:#64748b;margin:0">
+一封邮件看完本周变化。每条消息可点开原始来源；Breaking 候选仍需人工确认。</p>
+</td></tr>
+<tr><td style="padding:0 26px 18px"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #e2e8f0;border-radius:14px;background:#ffffff"><tr><td style="padding:22px 24px"><p style="margin:8px 0 14px;color:#475569;font-size:14px;line-height:1.75">覆盖区间：2026-10-18 至 2026-10-24。资讯按已收集报告整理，报告日不等于事件发布日期。</p></td></tr></table></td></tr>
+<tr><td style="padding:0 26px 18px"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #e2e8f0;border-radius:14px;background:#ffffff"><tr><td style="padding:22px 24px"><h2 style="color:#0f172a;margin:0 0 16px;font-size:19px;line-height:1.4;font-weight:750">本周先看这 3 件事</h2>
+<p style="margin:8px 0 14px;color:#475569;font-size:14px;line-height:1.75">下面是已在 Weekly Radar 中整理过、带原始来源的工程要点；不是让你自己再去解读一长串标题。</p>
+<ol style="padding-left:23px;margin:8px 0 12px;color:#334155;font-size:14px;line-height:1.75">
+<li style="padding:5px 0"><strong>通用计算机使用代理（GCUA）</strong></li>
+</ol>
+<ul style="padding-left:23px;margin:8px 0 12px;color:#334155;font-size:14px;line-height:1.75">
+<li style="padding:5px 0"><strong>发生了什么</strong>：OpenGCUA 提出开放栈，指出前沿实现多为闭源，限制了对设计选择的系统研究。</li>
+<li style="padding:5px 0"><strong>实际有什么用</strong>：需要跨应用、跨界面完成桌面任务的自动化助手。</li>
+<li style="padding:5px 0"><strong>你可以怎么练</strong>：用本地模拟：给三个假想任务各写一条观察方式与动作方式的选择理由，不接真实环境。</li>
+<li style="padding:5px 0"><strong>原始来源</strong>：<a href="https://arxiv.org/abs/2610.22200" style="color:#2563eb;text-decoration:underline;font-weight:600" target="_blank" rel="noopener noreferrer">点此阅读</a></li>
+</ul>
+<ol style="padding-left:23px;margin:8px 0 12px;color:#334155;font-size:14px;line-height:1.75">
+<li style="padding:5px 0"><strong>GUI 代理一体化评测与训练平台</strong></li>
+</ol>
+<ul style="padding-left:23px;margin:8px 0 12px;color:#334155;font-size:14px;line-height:1.75">
+<li style="padding:5px 0"><strong>发生了什么</strong>：MAI-Gym 指出交互环境成本高、真实训练任务稀缺，尝试用共享 rollout 流水线统一评测与训练。</li>
+<li style="padding:5px 0"><strong>实际有什么用</strong>：需要跨移动与桌面环境复现评测并采集训练数据的团队。</li>
+<li style="padding:5px 0"><strong>你可以怎么练</strong>：用本地模拟：为两个假想GUI任务写评测记录字段（环境、动作、结果），并对比字段是否一致。</li>
+<li style="padding:5px 0"><strong>原始来源</strong>：<a href="https://arxiv.org/abs/2610.20939" style="color:#2563eb;text-decoration:underline;font-weight:600" target="_blank" rel="noopener noreferrer">点此阅读</a></li>
+</ul>
+<ol style="padding-left:23px;margin:8px 0 12px;color:#334155;font-size:14px;line-height:1.75">
+<li style="padding:5px 0"><strong>长程代理的过程有效性</strong></li>
+</ol>
+<ul style="padding-left:23px;margin:8px 0 12px;color:#334155;font-size:14px;line-height:1.75">
+<li style="padding:5px 0"><strong>发生了什么</strong>：BizBench 指出既有长程基准偏重最终成功，对中间执行有效性评估有限，并以支付等高风险场景说明后果。</li>
+<li style="padding:5px 0"><strong>实际有什么用</strong>：支付、合规等中间违规会造成实际损失的业务代理。</li>
+<li style="padding:5px 0"><strong>你可以怎么练</strong>：用本地模拟：给一个假想支付流程写三个中间检查点及各自通过条件，不接真实系统。</li>
+<li style="padding:5px 0"><strong>原始来源</strong>：<a href="https://arxiv.org/abs/2610.20424" style="color:#2563eb;text-decoration:underline;font-weight:600" target="_blank" rel="noopener noreferrer">点此阅读</a></li>
+</ul></td></tr></table></td></tr>
+<tr><td style="padding:0 26px 18px"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #e2e8f0;border-radius:14px;background:#ffffff"><tr><td style="padding:22px 24px"><h2 style="color:#0f172a;margin:0 0 16px;font-size:19px;line-height:1.4;font-weight:750">本周值得查看的论文 / 工程项目</h2>
+<ol style="padding-left:23px;margin:8px 0 12px;color:#334155;font-size:14px;line-height:1.75">
+<li style="padding:5px 0"><a href="https://arxiv.org/abs/2610.31518" style="color:#2563eb;text-decoration:underline;font-weight:600" target="_blank" rel="noopener noreferrer">SCOPE: Scene-graph Construction Optimized by Plan Error-correction for Robot Long-term Planning Datasets</a>（Radar 2026-10-24）</li>
+<li style="padding:5px 0"><a href="https://arxiv.org/abs/2610.31636" style="color:#2563eb;text-decoration:underline;font-weight:600" target="_blank" rel="noopener noreferrer">Can an Agent Debug a Web Corpus? Agentic Auditing of Slovak FineWeb2</a>（Radar 2026-10-24）</li>
+<li style="padding:5px 0"><a href="https://arxiv.org/abs/2610.31544" style="color:#2563eb;text-decoration:underline;font-weight:600" target="_blank" rel="noopener noreferrer">Same Luck, Different Choice: Twin-World Credit Assignment for Agentic Reinforcement Learning</a>（Radar 2026-10-24）</li>
+<li style="padding:5px 0"><a href="https://arxiv.org/abs/2610.30949" style="color:#2563eb;text-decoration:underline;font-weight:600" target="_blank" rel="noopener noreferrer">IQuest-Q1: Advancing Foundation Capabilities for Agentic CLI Systems</a>（Radar 2026-10-24）</li>
+<li style="padding:5px 0"><a href="https://arxiv.org/abs/2610.31624" style="color:#2563eb;text-decoration:underline;font-weight:600" target="_blank" rel="noopener noreferrer">Questioning Instrumental Convergence in RLVR: Checkpoint Evidence from OLMo-3</a>（Radar 2026-10-24）</li>
+</ol></td></tr></table></td></tr>
+<tr><td style="padding:0 26px 18px"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #e2e8f0;border-radius:14px;background:#ffffff"><tr><td style="padding:22px 24px"><h2 style="color:#0f172a;margin:0 0 16px;font-size:19px;line-height:1.4;font-weight:750">本周公司与产品线索（以 Radar 收录日为准）</h2>
+<ol style="padding-left:23px;margin:8px 0 12px;color:#334155;font-size:14px;line-height:1.75">
+<li style="padding:5px 0"><a href="https://zhipuai.cn/zh/research/156" style="color:#2563eb;text-decoration:underline;font-weight:600" target="_blank" rel="noopener noreferrer">Zhipu AI: GLM-5V-Turbo</a>（Radar 2026-10-24）</li>
+<li style="padding:5px 0"><a href="https://zhipuai.cn/zh/research/155" style="color:#2563eb;text-decoration:underline;font-weight:600" target="_blank" rel="noopener noreferrer">Zhipu AI: GLM-5-Turbo</a>（Radar 2026-10-24）</li>
+<li style="padding:5px 0"><a href="https://zhipuai.cn/zh/research/145" style="color:#2563eb;text-decoration:underline;font-weight:600" target="_blank" rel="noopener noreferrer">Zhipu AI: AutoGLM</a>（Radar 2026-10-24）</li>
+<li style="padding:5px 0"><a href="https://minimax.io/blog/minimax-h3" style="color:#2563eb;text-decoration:underline;font-weight:600" target="_blank" rel="noopener noreferrer">MiniMax: MiniMax H3</a>（Radar 2026-10-24）</li>
+<li style="padding:5px 0"><a href="https://kimi.com/agent" style="color:#2563eb;text-decoration:underline;font-weight:600" target="_blank" rel="noopener noreferrer">Moonshot AI: AI Agent</a>（Radar 2026-10-24）</li>
+</ol></td></tr></table></td></tr>
+<tr><td style="padding:0 26px 18px"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #e2e8f0;border-radius:14px;background:#ffffff"><tr><td style="padding:22px 24px"><h2 style="color:#0f172a;margin:0 0 16px;font-size:19px;line-height:1.4;font-weight:750">Breaking Desk · 待核验 / 已确认</h2>
+<p style="margin:8px 0 14px;color:#475569;font-size:14px;line-height:1.75">没有符合本周窗口的 Breaking 候选。</p>
+<p style="margin:8px 0 14px;color:#475569;font-size:14px;line-height:1.75">注意：Breaking 候选需要复核真实性、影响范围和是否已经解决；默认不触发独立邮件。</p></td></tr></table></td></tr>
+<tr><td style="padding:0 26px 18px"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #e2e8f0;border-radius:14px;background:#ffffff"><tr><td style="padding:22px 24px"><h2 style="color:#0f172a;margin:0 0 16px;font-size:19px;line-height:1.4;font-weight:750">本周 LangChain 学习路线</h2>
+<p style="margin:8px 0 14px;color:#475569;font-size:14px;line-height:1.75">进度由你主动标记；复习日期只是一条建议，不代表自动测出的掌握水平。</p>
+<ol style="padding-left:23px;margin:8px 0 12px;color:#334155;font-size:14px;line-height:1.75">
+<li style="padding:5px 0"><strong>LangChain Runnable 与调用链</strong>（开始，约 25 分钟）</li>
+</ol>
+<ul style="padding-left:23px;margin:8px 0 12px;color:#334155;font-size:14px;line-height:1.75">
+<li style="padding:5px 0">目标：用 RunnableLambda 和管道组合两个确定性步骤，区分输入、转换、输出</li>
+<li style="padding:5px 0">完成标准：运行示例后修改关键词映射，使两个输入得到不同结果</li>
+<li style="padding:5px 0"><a href="https://docs.langchain.com/oss/python/langchain/overview" style="color:#2563eb;text-decoration:underline;font-weight:600" target="_blank" rel="noopener noreferrer">官方文档</a></li>
+<li style="padding:5px 0">课程 ID：<code style="font-family:Consolas,monospace;background:#eef2f7;padding:2px 5px;border-radius:4px">lc01-runnables</code></li>
+</ul></td></tr></table></td></tr>
+<tr><td style="padding:0 26px 18px"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #e2e8f0;border-radius:14px;background:#ffffff"><tr><td style="padding:22px 24px"><h2 style="color:#0f172a;margin:0 0 16px;font-size:19px;line-height:1.4;font-weight:750">阅读与管理入口</h2>
+<ul style="padding-left:23px;margin:8px 0 12px;color:#334155;font-size:14px;line-height:1.75">
+<li style="padding:5px 0">所有来源链接都已直接放进上面的条目，邮件内即可读完重点；无需下载 Markdown。</li>
+<li style="padding:5px 0">需要更新学习状态或处理 Breaking 候选时，使用仓库 GitHub Actions 对应的手动入口。</li>
+</ul></td></tr></table></td></tr>
+<tr><td style="padding:10px 30px 25px">
+<p style="color:#94a3b8;font-size:11px;line-height:1.7;margin:0">
+此邮件由 AI Agent Radar 整理。Radar 收录日期不一定等于正式发布日期；
+新闻摘要仅供筛选阅读，不代表已完成独立事实核验。</p>
+</td></tr>
+</table>
+</td></tr></table></body></html>
