@@ -1,233 +1,223 @@
 {
-  "generated_at": "2026-10-17",
+  "generated_at": "2026-10-24",
   "range": {
-    "start": "2026-10-11",
-    "end": "2026-10-17"
+    "start": "2026-10-18",
+    "end": "2026-10-24"
   },
   "curated_by": "deepseek-v4-flash",
   "tier1": [
     "coding agent",
     "computer-use agent",
-    "computer use",
-    "agent memory",
+    "gui agent",
     "long-horizon task",
-    "osworld",
-    "terminal-bench",
-    "agent evaluation"
+    "agent evaluation",
+    "computer use",
+    "mobile agent",
+    "agent memory"
   ],
   "tier2": [
-    "gui agent",
-    "agent harness",
-    "agentic reinforcement learning",
-    "swe-bench",
+    "osworld",
     "gaia",
-    "mobileworld",
-    "reflection",
-    "agent benchmark",
+    "swe-bench",
+    "tool use",
     "long-horizon agents",
-    "agent training"
+    "research agent",
+    "enterprise agent",
+    "mobileworld",
+    "androidworld",
+    "agentic reinforcement learning"
   ],
   "downrank": [
     "planning",
-    "llm agents",
     "ai agents",
-    "coding agents",
-    "computer-use agents",
-    "agentic rl",
+    "llm agents",
+    "autonomous agents",
+    "memory systems",
     "agent benchmarks",
+    "tool call",
     "spatial reasoning"
   ],
   "noise": [
-    "existing benchmarks",
-    "benchmarks spanning",
-    "agents are increasingly",
-    "coding agents are increasingly",
+    "requires agents",
     "use agent",
-    "agent training.",
-    "reasoning performance.",
-    "further research",
-    "whether agents",
-    "gaia-benchmark-agent gaia"
+    "agents increasingly",
+    "evaluation across",
+    "benchmark comprising",
+    "existing benchmarks",
+    "gaia-benchmark-agent gaia",
+    "gaia-benchmark-agent gaia benchmark",
+    "model llm agents",
+    "language model llm agents"
   ],
   "curated": {
     "tier1": [
       "coding agent",
       "computer-use agent",
-      "computer use",
-      "agent memory",
+      "gui agent",
       "long-horizon task",
-      "osworld",
-      "terminal-bench",
-      "agent evaluation"
+      "agent evaluation",
+      "computer use",
+      "mobile agent",
+      "agent memory"
     ],
     "tier2": [
-      "gui agent",
-      "agent harness",
-      "agentic reinforcement learning",
-      "swe-bench",
+      "osworld",
       "gaia",
-      "mobileworld",
-      "reflection",
-      "agent benchmark",
+      "swe-bench",
+      "tool use",
       "long-horizon agents",
-      "agent training"
+      "research agent",
+      "enterprise agent",
+      "mobileworld",
+      "androidworld",
+      "agentic reinforcement learning"
     ],
     "downrank": [
       "planning",
-      "llm agents",
       "ai agents",
-      "coding agents",
-      "computer-use agents",
-      "agentic rl",
+      "llm agents",
+      "autonomous agents",
+      "memory systems",
       "agent benchmarks",
+      "tool call",
       "spatial reasoning"
     ],
     "noise": [
-      "existing benchmarks",
-      "benchmarks spanning",
-      "agents are increasingly",
-      "coding agents are increasingly",
+      "requires agents",
       "use agent",
-      "agent training.",
-      "reasoning performance.",
-      "further research",
-      "whether agents",
-      "gaia-benchmark-agent gaia"
+      "agents increasingly",
+      "evaluation across",
+      "benchmark comprising",
+      "existing benchmarks",
+      "gaia-benchmark-agent gaia",
+      "gaia-benchmark-agent gaia benchmark",
+      "model llm agents",
+      "language model llm agents"
     ],
     "notes": {
-      "coding agent": "编码代理持续多来源出现，应用层关注度高",
-      "computer-use agent": "GUI 操作代理训练与技能复用升温",
-      "computer use": "真实界面操作方向多来源持续出现",
-      "agent memory": "长任务上下文压缩与外部记忆受关注",
-      "long-horizon task": "长程任务训练与评测成为焦点",
-      "osworld": "桌面操作评测基准被多次引用",
-      "terminal-bench": "终端长程任务评测进入视野",
-      "agent evaluation": "代理评测方法学开始被单独讨论",
-      "gui agent": "GUI 代理相关但证据较窄",
-      "agent harness": "代理运行框架概念仍较新",
-      "agentic reinforcement learning": "代理式强化学习偏训练侧，应用证据弱",
-      "swe-bench": "软件工程基准相关但本周证据少",
-      "gaia": "通用助手基准，来源单一",
-      "mobileworld": "移动端评测仅单条证据",
-      "reflection": "反思机制相关但过泛，证据弱",
-      "agent benchmark": "基准类术语较宽，需结合具体基准",
-      "long-horizon agents": "长程代理相关但表述较泛",
-      "agent training": "训练侧术语，应用层关联较弱",
+      "coding agent": "编码代理与harness协同优化升温",
+      "computer-use agent": "通用计算机使用代理走向开放栈",
+      "gui agent": "跨移动与桌面GUI评测训练平台出现",
+      "long-horizon task": "长程任务的过程正确性受关注",
+      "agent evaluation": "过程感知与中间有效性评测增多",
+      "computer use": "从纯GUI扩展到视觉与程序接口",
+      "mobile agent": "开放移动代理环境与工具链推进",
+      "agent memory": "持久记忆作为代理评测维度出现",
+      "osworld": "作为GUI代理评测环境被多次引用",
+      "gaia": "通用助手基准持续被引用",
+      "swe-bench": "编码代理基准仍为常见参照",
+      "tool use": "工具调用是代理能力基础维度",
+      "long-horizon agents": "长程代理上下文与约束研究增多",
+      "research agent": "科研型代理评测开始出现",
+      "enterprise agent": "企业长程业务代理评测受关注",
+      "mobileworld": "移动环境基准被新平台引用",
+      "androidworld": "安卓环境基准被新平台引用",
+      "agentic reinforcement learning": "代理强化学习训练方法持续出现",
       "planning": "相关但过泛，需结合上下文",
-      "llm agents": "范围过宽，易过度召回",
-      "ai agents": "过于宽泛，缺乏区分度",
-      "coding agents": "与 coding agent 重复且更泛",
-      "computer-use agents": "与单数形式重复，易重复计分",
-      "agentic rl": "缩写泛化，证据不足",
-      "agent benchmarks": "泛称基准，区分度低",
-      "spatial reasoning": "偏多模态基础能力，非代理应用主线",
-      "existing benchmarks": "论文套话，非领域术语",
-      "benchmarks spanning": "句子片段，非术语",
-      "agents are increasingly": "句子片段，非术语",
-      "coding agents are increasingly": "句子片段，非术语",
-      "use agent": "截断片段，非完整术语",
-      "agent training.": "带标点片段，非术语",
-      "reasoning performance.": "带标点片段，非术语",
-      "further research": "论文套话",
-      "whether agents": "句子片段，非术语",
-      "gaia-benchmark-agent gaia": "仓库名与术语拼接，属噪声"
+      "ai agents": "过于宽泛，易过度排序",
+      "llm agents": "过于宽泛，需更具体限定",
+      "autonomous agents": "泛化表述，区分度低",
+      "memory systems": "泛称，需结合代理上下文",
+      "agent benchmarks": "泛称，建议用具体基准名",
+      "tool call": "过窄且易与普通调用混淆",
+      "spatial reasoning": "偏通用能力，非代理专属"
     },
     "learning_cards": [
       {
-        "title": "Computer-use Agent 训练环境合成",
-        "why_now": "SoftwareGym 提出自动合成 GUI 软件环境的流水线，用于规模化训练计算机使用代理。",
-        "application": "需要大量多样化桌面软件交互数据、但原生环境搭建成本高的代理训练场景。",
-        "hands_on": "用本地字典模拟三个“软件环境”配置（应用名、可用按钮、任务目标），写一个玩具调度器随机抽取环境并记录一次动作选择，说明为何需要多样化环境。",
+        "title": "通用计算机使用代理（GCUA）",
+        "why_now": "OpenGCUA 提出开放栈，指出前沿实现多为闭源，限制了对设计选择的系统研究。",
+        "application": "需要跨应用、跨界面完成桌面任务的自动化助手。",
+        "hands_on": "用本地模拟：给三个假想任务各写一条观察方式与动作方式的选择理由，不接真实环境。",
         "level": "understand_why",
-        "one_liner": "让代理在合成 GUI 软件环境中练习操作，以扩大覆盖并减少过拟合。",
+        "one_liner": "让模型在视觉与程序接口间自主选择观察与操作方式，完成用户电脑上的任务。",
         "learn": [
-          "GUI 环境合成与任务生成",
-          "原生环境与浏览器环境的取舍",
-          "应用特定过拟合风险"
+          "视觉与程序接口的观察/动作选择",
+          "开放栈与闭源实现的差异",
+          "任务组织与工作流编排"
         ],
         "practice_minutes": 20,
-        "done_when": "输出三份环境配置和一条动作记录，并写一句多样化环境对过拟合的作用。",
+        "done_when": "产出三条任务的选择理由记录，并标注一条可能失败的原因。",
         "source_urls": [
-          "https://huggingface.co/papers/2610.12611"
+          "https://huggingface.co/papers/2610.22200"
         ]
       },
       {
-        "title": "从人类 GUI 演示归纳可复用技能",
-        "why_now": "Work2Skill 提出捕获人类 GUI 经验并归纳为可复用技能，用于陌生软件与工作流。",
-        "application": "需要把人工操作经验沉淀为代理可复用流程的桌面自动化场景。",
-        "hands_on": "用本地 JSON 模拟两条人类点击序列（应用、按钮、目标），手工抽出共同步骤作为“技能”，并标注一条只属于单次任务的细节。",
-        "level": "understand_why",
-        "one_liner": "把人类操作演示转成可复用的代理技能，而非一次性任务脚本。",
+        "title": "GUI 代理一体化评测与训练平台",
+        "why_now": "MAI-Gym 指出交互环境成本高、真实训练任务稀缺，尝试用共享 rollout 流水线统一评测与训练。",
+        "application": "需要跨移动与桌面环境复现评测并采集训练数据的团队。",
+        "hands_on": "用本地模拟：为两个假想GUI任务写评测记录字段（环境、动作、结果），并对比字段是否一致。",
+        "level": "build",
+        "one_liner": "统一移动、桌面与网页环境的GUI代理评测、数据采集与在线RL训练流水线。",
         "learn": [
-          "演示记录与动作上下文",
-          "工作流规则与任务细节分离",
-          "技能复用边界"
+          "共享 rollout 流水线",
+          "可验证奖励与在线RL",
+          "跨环境评测一致性"
         ],
-        "practice_minutes": 20,
-        "done_when": "产出两条模拟序列、一个共同技能步骤和一条被排除的任务细节。",
+        "practice_minutes": 25,
+        "done_when": "产出两份模拟评测记录，并指出一处跨环境不一致字段。",
         "source_urls": [
-          "https://huggingface.co/papers/2610.12984"
+          "https://huggingface.co/papers/2610.20939"
         ]
       },
       {
-        "title": "长程代理的残差记忆压缩",
-        "why_now": "REMORY 提出用神经记忆网络在摘要后追加有界软记忆 token，用于长程代理上下文压缩。",
-        "application": "上下文窗口有限、需要跨多步保持历史信息的长程代理。",
-        "hands_on": "用本地小文本模拟一段历史与一份摘要，手工列出摘要遗漏的两条关键事实，并写出若补充“记忆槽”应放什么。",
+        "title": "长程代理的过程有效性",
+        "why_now": "BizBench 指出既有长程基准偏重最终成功，对中间执行有效性评估有限，并以支付等高风险场景说明后果。",
+        "application": "支付、合规等中间违规会造成实际损失的业务代理。",
+        "hands_on": "用本地模拟：给一个假想支付流程写三个中间检查点及各自通过条件，不接真实系统。",
         "level": "understand_why",
-        "one_liner": "在文本摘要之外补充有界软记忆，帮助冻结模型近似完整历史下的决策。",
+        "one_liner": "长程任务不仅看最终成功，还要检查中间执行是否满足关键约束。",
         "learn": [
-          "摘要压缩的决策信息损失",
-          "有界软记忆 token",
-          "冻结模型下的近似续写"
+          "最终成功与过程有效性的区别",
+          "策略冲突与过期策略处理",
+          "关键约束的中间检查点"
         ],
         "practice_minutes": 20,
-        "done_when": "提交一份模拟摘要、两条遗漏事实和两个记忆槽内容。",
+        "done_when": "产出三个检查点与通过条件，并标出一个可能被跳过的检查点。",
         "source_urls": [
-          "https://huggingface.co/papers/2610.11287"
+          "https://huggingface.co/papers/2610.20424"
         ]
       },
       {
-        "title": "编码代理的测试质量评测",
-        "why_now": "TestPrism 指出用单一参考解评估测试会高估质量，并提出联合成功指标。",
-        "application": "使用编码代理生成单元测试、需要判断测试是否真正有区分度的工程场景。",
-        "hands_on": "用本地两个玩具函数（一个正确、一个错误）和一份模拟测试，手工判断该测试能否同时通过正确实现并拒绝错误实现，记录结论。",
-        "level": "understand_why",
-        "one_liner": "评估编码代理生成的测试，不能只看是否匹配单一参考实现。",
+        "title": "长程代理的对象化上下文",
+        "why_now": "CarryOn 提出面向对象的上下文运行时，围绕可复用任务对象组织续接，而非压缩历史或重建叙述。",
+        "application": "交互历史很长、需要保留可复用进度的代理任务。",
+        "hands_on": "用本地模拟：把一段假想交互历史改写成两个任务对象，各写字段与复用点。",
+        "level": "build",
+        "one_liner": "用可复用的任务对象组织长程上下文，而不是反复重放交互历史。",
         "learn": [
-          "单一参考解的偏差",
-          "有效与无效实现对照",
-          "联合成功指标"
+          "任务对象与交互历史的区别",
+          "可复用进度的表示",
+          "上下文续接的组织方式"
         ],
-        "practice_minutes": 20,
-        "done_when": "写出两个玩具函数、一份模拟测试和一句联合判断结论。",
+        "practice_minutes": 25,
+        "done_when": "产出两个任务对象定义，并说明相比原始历史节省了哪类重复信息。",
         "source_urls": [
-          "https://huggingface.co/papers/2610.12289"
+          "https://huggingface.co/papers/2610.18784"
         ]
       },
       {
-        "title": "无状态长程研究代理",
-        "why_now": "Stateless Language Agents 将长程研究失败归因于状态存放位置与下一步决策者，并提出无状态设计。",
-        "application": "长时间自动研究或多步探索、需要控制重复工作和 token 消耗的代理系统。",
-        "hands_on": "用本地列表模拟三条研究子任务与一份外部状态文件，手工安排一次调度并标出哪条会被跳过以避免重复。",
-        "level": "understand_why",
-        "one_liner": "把研究状态外置、由调度决定下一步，以减少长程代理的重复与空转。",
+        "title": "开放移动代理环境与工具",
+        "why_now": "OpenMobile-2 构建含35个模拟商业应用与安卓模拟器的开放环境，并配套开放训练配方。",
+        "application": "需要跨应用工作流且可复现验证的移动代理训练。",
+        "hands_on": "用本地模拟：为两个假想移动应用写工具接口字典与一个跨应用流程步骤，不接真实设备。",
+        "level": "build",
+        "one_liner": "用可重置、可验证的模拟应用环境训练和评测移动代理。",
         "learn": [
-          "研究状态外置",
-          "下一步决策归属",
-          "重复工作与空转失败模式"
+          "模拟商业应用与跨应用工作流",
+          "环境重置与验证",
+          "应用原生工具接口"
         ],
         "practice_minutes": 20,
-        "done_when": "产出三条模拟子任务、一份状态记录和被跳过的一条及理由。",
+        "done_when": "产出两个接口字典与一条跨应用流程，并标出一步需要验证的位置。",
         "source_urls": [
-          "https://huggingface.co/papers/2610.07625"
+          "https://huggingface.co/papers/2610.14157"
         ]
       }
     ],
     "model_usage": {
-      "prompt_tokens": 6687,
-      "completion_tokens": 1790,
-      "total_tokens": 8477
+      "prompt_tokens": 6776,
+      "completion_tokens": 1602,
+      "total_tokens": 8378
     }
   },
   "candidate_terms": [
@@ -240,23 +230,9 @@
         "hf_space"
       ],
       "examples": [
-        "TestPrism: Rethinking Test Evaluation Beyond a Single Reference",
-        "ProgramGym: Scaling Training Environments for Long-Horizon Program Reproduction Agents",
-        "AgentSWE: Can Coding Agents Build the Agent You Actually Want?"
-      ],
-      "seed": true
-    },
-    {
-      "term": "planning",
-      "score": 10.49,
-      "count": 10,
-      "sources": [
-        "hf_daily_papers"
-      ],
-      "examples": [
-        "Memento 3: Model-Based Recursive Self-Improvement through Reflective Rulebooks",
-        "RSI-Anything: Unlocking Recursive Self-Improvement with World Models",
-        "VIS-Ground: Video Interactive Storytelling with Contextual Grounding"
+        "3DCodeVerse: Exploring 3D Worlds as Code",
+        "HexaShell: A Thin Harness for Exploring the Limits of VLM Agents as Robot Coding Agents",
+        "Self-Evolving Coding Agents via Harness-Policy Optimization"
       ],
       "seed": true
     },
@@ -276,44 +252,45 @@
     },
     {
       "term": "computer-use agent",
-      "score": 10.48,
-      "count": 5,
+      "score": 10.02,
+      "count": 4,
       "sources": [
         "hf_daily_papers",
         "hf_space"
       ],
       "examples": [
-        "SoftwareGym: Scaling Computer-Use Agent Training with Diverse Synthesized Software Environments",
-        "Work2Skill: Capturing Human GUI Experience for Reusable Agent Skill Induction",
-        "Player-1: Learning to Play from Synthetic Experience"
-      ],
-      "seed": true
-    },
-    {
-      "term": "long-horizon task",
-      "score": 8.98,
-      "count": 5,
-      "sources": [
-        "hf_daily_papers"
-      ],
-      "examples": [
-        "MiMo-V2.6: Scaling Reinforcement Learning Towards Self-Improvement",
-        "Tev: Scaling Long-Horizon Agentic Environments with Dense Progress Rewards",
-        "LeWAM: End-to-End World and Action Modeling with JEPAs"
+        "OpenGCUA: Toward a Fully Open Stack for Generalist Computer Use",
+        "Evolving Agent Interfaces",
+        "Agent World Model in the Wild: Computer-Use Agent Environment Synthesis"
       ],
       "seed": true
     },
     {
       "term": "agent memory",
-      "score": 8.75,
-      "count": 2,
+      "score": 9.47,
+      "count": 3,
       "sources": [
         "hf_daily_papers",
         "hf_space"
       ],
       "examples": [
-        "Seeing, Maintaining, and Learning: The Evolution of Multimodal Agent Memory",
+        "MemPilot: Orchestrating On-Demand Multimodal Memory Curation for LLM Agents",
+        "Memory-Centric Continual Learning for AI Agents",
         "agent-memory-leaderboard/leaderboard"
+      ],
+      "seed": true
+    },
+    {
+      "term": "planning",
+      "score": 9.36,
+      "count": 6,
+      "sources": [
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "AnyGoal: On World Model Generalization Beyond Expert Rollouts",
+        "InfiniDream: Open-Ended Photorealistic 3D Worlds Through Procedural Generation",
+        "Ropedia W0: Scaling Loco-Manipulation World Models across Embodiments with Human Experience"
       ],
       "seed": true
     },
@@ -325,48 +302,50 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "SoftwareGym: Scaling Computer-Use Agent Training with Diverse Synthesized Software Environments",
-        "Work2Skill: Capturing Human GUI Experience for Reusable Agent Skill Induction",
-        "OpenGCUA: Toward a Fully Open Stack for Generalist Computer Use"
-      ],
-      "seed": true
-    },
-    {
-      "term": "terminal-bench",
-      "score": 7.25,
-      "count": 2,
-      "sources": [
-        "hf_daily_papers"
-      ],
-      "examples": [
-        "REMORY: Learning Residual Memory for Context Compaction",
-        "Tev: Scaling Long-Horizon Agentic Environments with Dense Progress Rewards"
-      ],
-      "seed": true
-    },
-    {
-      "term": "reflection",
-      "score": 7.25,
-      "count": 2,
-      "sources": [
-        "hf_daily_papers"
-      ],
-      "examples": [
-        "Memento 3: Model-Based Recursive Self-Improvement through Reflective Rulebooks",
-        "Agent-Reflex: Teaching Language Agents to Act Reflectively"
+        "MAI-Gym: An Open All-in-One Platform for GUI Agent Evaluation and RL Training across Mobile and Computer Environments",
+        "OpenGCUA: Toward a Fully Open Stack for Generalist Computer Use",
+        "Pack Light, CarryOn: Building Object-Oriented Context for Long-Horizon Agents"
       ],
       "seed": true
     },
     {
       "term": "gui agent",
+      "score": 7.97,
+      "count": 3,
+      "sources": [
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "MAI-Gym: An Open All-in-One Platform for GUI Agent Evaluation and RL Training across Mobile and Computer Environments",
+        "Focused Omni-Modal GUI Agents",
+        "Right Screen, Wrong Transition: World Models as Verifiers for GUI Agents"
+      ],
+      "seed": true
+    },
+    {
+      "term": "long-horizon task",
+      "score": 7.97,
+      "count": 3,
+      "sources": [
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "Tree-Aware Posterior Distillation for Long-Horizon Agentic Reinforcement Learning",
+        "Interlock: From Local Correctness to Task Completion in Long-Horizon Agents",
+        "Sage-A1.5: From Long-Horizon Execution to Scientific Exploration with Capability Composition"
+      ],
+      "seed": true
+    },
+    {
+      "term": "mobileworld",
       "score": 7.25,
       "count": 2,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "Relevance Does Not Imply Applicability: Experience Activation for Personal GUI Agents",
-        "MAI-Gym: An Open All-in-One Platform for GUI Agent Evaluation and RL Training across Mobile and Computer Environments"
+        "MAI-Gym: An Open All-in-One Platform for GUI Agent Evaluation and RL Training across Mobile and Computer Environments",
+        "OpenMobile-2: Building Versatile Mobile Agents with Scalable Environments and App-Native Tools"
       ],
       "seed": true
     },
@@ -396,34 +375,70 @@
       "seed": true
     },
     {
-      "term": "mobileworld",
+      "term": "mobile agent",
       "score": 6.23,
       "count": 1,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "MAI-Gym: An Open All-in-One Platform for GUI Agent Evaluation and RL Training across Mobile and Computer Environments"
+        "OpenMobile-2: Building Versatile Mobile Agents with Scalable Environments and App-Native Tools"
+      ],
+      "seed": true
+    },
+    {
+      "term": "androidworld",
+      "score": 6.23,
+      "count": 1,
+      "sources": [
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "OpenMobile-2: Building Versatile Mobile Agents with Scalable Environments and App-Native Tools"
+      ],
+      "seed": true
+    },
+    {
+      "term": "enterprise agent",
+      "score": 6.23,
+      "count": 1,
+      "sources": [
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "MMEnterprise-Bench: Evaluating Enterprise Agents over Evolving Multimodal Records"
+      ],
+      "seed": true
+    },
+    {
+      "term": "research agent",
+      "score": 6.23,
+      "count": 1,
+      "sources": [
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "Beyond Watching and Searching: Benchmarking Agents for Video-centered Deep Research Reports"
       ],
       "seed": true
     },
     {
       "term": "computer use",
-      "score": 8.2,
-      "count": 7,
+      "score": 7.86,
+      "count": 6,
       "sources": [
         "hf_daily_papers",
         "hf_space"
       ],
       "examples": [
-        "CLASHarness: Benchmarking Multi-Agent Conflict in Computer Use via a Controllable and Verifiable Generation Pipeline",
+        "MAI-Gym: An Open All-in-One Platform for GUI Agent Evaluation and RL Training across Mobile and Computer Environments",
         "OpenGCUA: Toward a Fully Open Stack for Generalist Computer Use",
-        "MAI-Gym: An Open All-in-One Platform for GUI Agent Evaluation and RL Training across Mobile and Computer Environments"
+        "hugging-apps/fara-computer-use-agent"
       ],
       "seed": false
     },
     {
-      "term": "computer-use agents",
+      "term": "ai agents",
       "score": 7.02,
       "count": 4,
       "sources": [
@@ -431,9 +446,9 @@
         "hf_space"
       ],
       "examples": [
-        "SoftwareGym: Scaling Computer-Use Agent Training with Diverse Synthesized Software Environments",
-        "Work2Skill: Capturing Human GUI Experience for Reusable Agent Skill Induction",
-        "Player-1: Learning to Play from Synthetic Experience"
+        "Into the Unknown: Benchmarking AI agents on open scientific research problems",
+        "From Research Goals to Scientific Closure: Evaluating Agents Through Evidence-Supported Physics Research",
+        "Memory-Centric Continual Learning for AI Agents"
       ],
       "seed": false
     },
@@ -445,65 +460,52 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "Learn2Play Bench: How Well Do LLM Agents Learn from Experience in Unfamiliar Environments?",
-        "From Traces to Agentic Worlds: Agentic Language World Models for Interactive Environment Simulation",
-        "Memento 3: Model-Based Recursive Self-Improvement through Reflective Rulebooks"
+        "Self-Evolving Coding Agents via Harness-Policy Optimization",
+        "OR-License: Evaluating LLM Agents as Real-World Operations Research Practitioners",
+        "MemPilot: Orchestrating On-Demand Multimodal Memory Curation for LLM Agents"
+      ],
+      "seed": false
+    },
+    {
+      "term": "computer-use agents",
+      "score": 6.47,
+      "count": 3,
+      "sources": [
+        "hf_daily_papers",
+        "hf_space"
+      ],
+      "examples": [
+        "Evolving Agent Interfaces",
+        "Agent World Model in the Wild: Computer-Use Agent Environment Synthesis",
+        "Noihat/repro-ppt-eval-a-benchmark-for-computer-use-agents-on-powerpoint-tasks"
       ],
       "seed": false
     },
     {
       "term": "coding agents",
-      "score": 6.7,
-      "count": 7,
+      "score": 5.98,
+      "count": 5,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "TestPrism: Rethinking Test Evaluation Beyond a Single Reference",
-        "ProgramGym: Scaling Training Environments for Long-Horizon Program Reproduction Agents",
-        "AgentSWE: Can Coding Agents Build the Agent You Actually Want?"
+        "3DCodeVerse: Exploring 3D Worlds as Code",
+        "HexaShell: A Thin Harness for Exploring the Limits of VLM Agents as Robot Coding Agents",
+        "Self-Evolving Coding Agents via Harness-Policy Optimization"
       ],
       "seed": false
     },
     {
-      "term": "existing benchmarks",
-      "score": 6.36,
-      "count": 6,
+      "term": "tool use",
+      "score": 5.52,
+      "count": 4,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "Learn2Play Bench: How Well Do LLM Agents Learn from Experience in Unfamiliar Environments?",
-        "WOVEN: Weaving Visual World Modeling into Multimodal LLMs",
-        "ExeWorldBench: Benchmarking Code-Based Executable 3D World Modeling"
-      ],
-      "seed": false
-    },
-    {
-      "term": "ai agents",
-      "score": 5.75,
-      "count": 2,
-      "sources": [
-        "hf_daily_papers",
-        "hf_space"
-      ],
-      "examples": [
-        "Can AI Agents Learn Their Way to the Top? Evaluating Heuristic Learning in a Long-Running Game Agent Competition",
-        "Yashp2003/repro-swe-bench-pro-can-ai-agents-solve-long-horizon-software-engineering-tasks"
-      ],
-      "seed": false
-    },
-    {
-      "term": "agent benchmark",
-      "score": 5.75,
-      "count": 2,
-      "sources": [
-        "hf_daily_papers",
-        "hf_space"
-      ],
-      "examples": [
-        "Agent-Reflex: Teaching Language Agents to Act Reflectively",
-        "Salesteq/sara-agent-benchmark-leaderboard"
+        "MAI-Gym: An Open All-in-One Platform for GUI Agent Evaluation and RL Training across Mobile and Computer Environments",
+        "LiveMACE: Process-Aware Evaluation of LLM Agent Capabilities in Evolving Markets",
+        "OpenMobile-2: Building Versatile Mobile Agents with Scalable Environments and App-Native Tools"
       ],
       "seed": false
     },
@@ -515,84 +517,56 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "REMORY: Learning Residual Memory for Context Compaction",
-        "Prospective Hindsight: Self-Calibrating Reinforcement Learning via Prediction-Reality Gaps",
-        "Tev: Scaling Long-Horizon Agentic Environments with Dense Progress Rewards"
+        "BizBench: Unveiling Hidden Challenges in Deploying Long-Horizon Agents for Real-World Business",
+        "Pack Light, CarryOn: Building Object-Oriented Context for Long-Horizon Agents",
+        "Interlock: From Local Correctness to Task Completion in Long-Horizon Agents"
       ],
       "seed": false
     },
     {
-      "term": "spatial reasoning",
+      "term": "model llm agents",
       "score": 5.52,
       "count": 4,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "S-Space: Exploring Spatial Workspace in Multimodal Language Models",
-        "SpatialASM: Internalizing Active Mentalization for Spatial Reasoning",
-        "RoTA-Bench: Evaluating 3D Spatial Reasoning through Interactive Projection Alignment"
+        "Self-Evolving Coding Agents via Harness-Policy Optimization",
+        "OR-License: Evaluating LLM Agents as Real-World Operations Research Practitioners",
+        "AdaExploreBench: Benchmarking LLM Agents for Proactive Exploration and Test-time Adaptation in Evolving Environments"
       ],
       "seed": false
     },
     {
-      "term": "agent training",
+      "term": "language model llm agents",
       "score": 5.52,
       "count": 4,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "SoftwareGym: Scaling Computer-Use Agent Training with Diverse Synthesized Software Environments",
-        "Tev: Scaling Long-Horizon Agentic Environments with Dense Progress Rewards",
-        "WorkRover: Scaling Long-Horizon Cowork Agent Training Via Recursive Environment Evolution"
+        "Self-Evolving Coding Agents via Harness-Policy Optimization",
+        "OR-License: Evaluating LLM Agents as Real-World Operations Research Practitioners",
+        "AdaExploreBench: Benchmarking LLM Agents for Proactive Exploration and Test-time Adaptation in Evolving Environments"
       ],
       "seed": false
     },
     {
-      "term": "benchmarks spanning",
+      "term": "requires agents",
       "score": 5.52,
       "count": 4,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "GroundingPI: A Grounding Foundation Model towards Physical Intelligence with Visual Primitives",
-        "Scaling Agentic Data for Long-Horizon Terminal Intelligence",
-        "SpatialASM: Internalizing Active Mentalization for Spatial Reasoning"
+        "AdaExploreBench: Benchmarking LLM Agents for Proactive Exploration and Test-time Adaptation in Evolving Environments",
+        "MMEnterprise-Bench: Evaluating Enterprise Agents over Evolving Multimodal Records",
+        "SpatialScout: Can VLM Agents Actively Explore and Map 3D Scenes?"
       ],
       "seed": false
     },
     {
-      "term": "agentic reinforcement learning",
-      "score": 5.52,
-      "count": 4,
-      "sources": [
-        "hf_daily_papers"
-      ],
-      "examples": [
-        "PR-OPD: Privileged Representation On-policy Self-Distillation for Agentic Reinforcement Learning",
-        "Agent-Reflex: Teaching Language Agents to Act Reflectively",
-        "More Methods, Better Agents? A Reality Check on Self-Distillation in Agentic Reinforcement Learning"
-      ],
-      "seed": false
-    },
-    {
-      "term": "agentic reinforcement",
-      "score": 5.52,
-      "count": 4,
-      "sources": [
-        "hf_daily_papers"
-      ],
-      "examples": [
-        "PR-OPD: Privileged Representation On-policy Self-Distillation for Agentic Reinforcement Learning",
-        "Agent-Reflex: Teaching Language Agents to Act Reflectively",
-        "More Methods, Better Agents? A Reality Check on Self-Distillation in Agentic Reinforcement Learning"
-      ],
-      "seed": false
-    },
-    {
-      "term": "computer use agent",
+      "term": "use agent",
       "score": 5.52,
       "count": 4,
       "sources": [
@@ -606,7 +580,7 @@
       "seed": false
     },
     {
-      "term": "use agent",
+      "term": "computer use agent",
       "score": 5.52,
       "count": 4,
       "sources": [
@@ -634,114 +608,142 @@
       "seed": false
     },
     {
-      "term": "agent harnesses",
+      "term": "gui agents",
       "score": 4.97,
       "count": 3,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "Learn2Play Bench: How Well Do LLM Agents Learn from Experience in Unfamiliar Environments?",
-        "MiMo-V2.6: Scaling Reinforcement Learning Towards Self-Improvement",
-        "EmbodiedCLBench: Evaluating Continual Learning for Self-Evolving Embodied Agents"
+        "MAI-Gym: An Open All-in-One Platform for GUI Agent Evaluation and RL Training across Mobile and Computer Environments",
+        "Focused Omni-Modal GUI Agents",
+        "Right Screen, Wrong Transition: World Models as Verifiers for GUI Agents"
       ],
       "seed": false
     },
     {
-      "term": "reasoning benchmarks",
+      "term": "spatial reasoning",
       "score": 4.97,
       "count": 3,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "U-Space: Uncovering When and Why Uncertainty Arises in Language Models",
-        "Learning More by Training Less: Uncertainty-Guided Progressive Contraction for Efficient Reasoning Post-Training",
-        "Recovering Reliable Supervision via Critique-Guided On-Policy Distillation"
+        "RoTA-Bench: Evaluating 3D Spatial Reasoning through Interactive Projection Alignment",
+        "3DCodeVerse: Exploring 3D Worlds as Code",
+        "S-Agent 2.0: Spatial Reasoning with a General Coding Agent"
       ],
       "seed": false
     },
     {
-      "term": "coding agents are increasingly",
+      "term": "tool call",
       "score": 4.97,
       "count": 3,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "ProgramGym: Scaling Training Environments for Long-Horizon Program Reproduction Agents",
-        "AgentSWE: Can Coding Agents Build the Agent You Actually Want?",
-        "ExeWorldBench: Benchmarking Code-Based Executable 3D World Modeling"
+        "Each Reward to Its Relevant Tokens: Reward-Specific Token-Level Credit Assignment for Multi-Reward RL",
+        "DeLoop: Repeated Actions as Self-Supervision for Long-Horizon Agents",
+        "Heartbeat Thinking: Speculative Reasoning and Tool Execution While Listening in Realtime Voice Agents"
       ],
       "seed": false
     },
     {
-      "term": "agents are increasingly",
+      "term": "existing benchmarks",
       "score": 4.97,
       "count": 3,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "ProgramGym: Scaling Training Environments for Long-Horizon Program Reproduction Agents",
-        "AgentSWE: Can Coding Agents Build the Agent You Actually Want?",
-        "ExeWorldBench: Benchmarking Code-Based Executable 3D World Modeling"
+        "Orbia: Do Generated Videos Form a Consistent 3D World?",
+        "BlenderWorld: Benchmarking Visual Agents for 3D Creation from Real-World References",
+        "AdaExploreBench: Benchmarking LLM Agents for Proactive Exploration and Test-time Adaptation in Evolving Environments"
       ],
       "seed": false
     },
     {
-      "term": "grounding benchmarks",
+      "term": "agents increasingly",
       "score": 4.97,
       "count": 3,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "GroundingPI: A Grounding Foundation Model towards Physical Intelligence with Visual Primitives",
-        "GroundAnything: Reconciling Parallel Decoding with Precise Visual Grounding at Flash Speed",
-        "VideoJev: System One Model for Video Understanding and Interaction"
+        "AutoSFT: An Agentic System for Automated Data Research in Supervised Fine-Tuning",
+        "Interlock: From Local Correctness to Task Completion in Long-Horizon Agents",
+        "Focused Omni-Modal GUI Agents"
       ],
       "seed": false
     },
     {
-      "term": "reasoning performance.",
+      "term": "evaluation across",
       "score": 4.97,
       "count": 3,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "Learning More by Training Less: Uncertainty-Guided Progressive Contraction for Efficient Reasoning Post-Training",
-        "The Thinking Leakage in Reinforcement Learning for LLMs",
-        "Waypoint-OPD: Transferring RL-Induced Policy Shifts via Gated On-Policy Distillation"
+        "Has GPT-6-Astra Achieved Embodied Intelligence?",
+        "ALPS: Visual State Encoders for World Models",
+        "Deep Search in Real-World Web Environments"
       ],
       "seed": false
     },
     {
-      "term": "agent training.",
+      "term": "unified evaluation",
       "score": 4.97,
       "count": 3,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "Agent-Reflex: Teaching Language Agents to Act Reflectively",
-        "More Methods, Better Agents? A Reality Check on Self-Distillation in Agentic Reinforcement Learning",
-        "MAI-Gym: An Open All-in-One Platform for GUI Agent Evaluation and RL Training across Mobile and Computer Environments"
+        "BlenderWorld: Benchmarking Visual Agents for 3D Creation from Real-World References",
+        "ALPS: Visual State Encoders for World Models",
+        "Deep Search in Real-World Web Environments"
       ],
       "seed": false
     },
     {
-      "term": "mathematical reasoning",
+      "term": "autonomous agents",
       "score": 4.97,
       "count": 3,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "TPPO: Tracking-Value PPO For Language Model Reasoning",
-        "Recovering Reliable Supervision via Critique-Guided On-Policy Distillation",
-        "Waypoint-OPD: Transferring RL-Induced Policy Shifts via Gated On-Policy Distillation"
+        "BlenderWorld: Benchmarking Visual Agents for 3D Creation from Real-World References",
+        "Memory-Centric Continual Learning for AI Agents",
+        "Building AI Research Teams for Autonomous Discovery of Linear Attention Architectures"
+      ],
+      "seed": false
+    },
+    {
+      "term": "memory systems",
+      "score": 4.97,
+      "count": 3,
+      "sources": [
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "MemPilot: Orchestrating On-Demand Multimodal Memory Curation for LLM Agents",
+        "Memory-Centric Continual Learning for AI Agents",
+        "Is Complex Agentic Memory Always Needed? Naive RAG Is Stronger Than We Thought"
+      ],
+      "seed": false
+    },
+    {
+      "term": "benchmark comprising",
+      "score": 4.97,
+      "count": 3,
+      "sources": [
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "DecisionPivot: A Diagnostic Benchmark for Decision Models in LLM Systems",
+        "MMEnterprise-Bench: Evaluating Enterprise Agents over Evolving Multimodal Records",
+        "Deep Search in Real-World Web Environments"
       ],
       "seed": false
     },
@@ -760,20 +762,6 @@
       "seed": false
     },
     {
-      "term": "gaia-benchmark-agent gaia benchmark",
-      "score": 4.97,
-      "count": 3,
-      "sources": [
-        "hf_space"
-      ],
-      "examples": [
-        "AlwinXavier19/gaia-benchmark-agent",
-        "nkrishnas/gaia-benchmark-agent",
-        "kunallsharmaaa/gaia-benchmark-agent"
-      ],
-      "seed": false
-    },
-    {
       "term": "gaia-benchmark-agent gaia",
       "score": 4.97,
       "count": 3,
@@ -788,119 +776,94 @@
       "seed": false
     },
     {
-      "term": "agents can learn",
-      "score": 4.25,
-      "count": 2,
+      "term": "gaia-benchmark-agent gaia benchmark",
+      "score": 4.97,
+      "count": 3,
       "sources": [
-        "hf_daily_papers"
+        "hf_space"
       ],
       "examples": [
-        "AgentGarten: Code Worlds for Evolving Agents",
-        "AgentSWE: Can Coding Agents Build the Agent You Actually Want?"
+        "AlwinXavier19/gaia-benchmark-agent",
+        "nkrishnas/gaia-benchmark-agent",
+        "kunallsharmaaa/gaia-benchmark-agent"
       ],
       "seed": false
     },
     {
-      "term": "agents learning",
+      "term": "evaluation dimensions",
       "score": 4.25,
       "count": 2,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "AgentGarten: Code Worlds for Evolving Agents",
-        "Learn2Play Bench: How Well Do LLM Agents Learn from Experience in Unfamiliar Environments?"
+        "OmniCompass: A Holistic Benchmark for Omni-Modal Video Grounding and Understanding",
+        "StreamEval: Evaluating Interactive Streaming Video Generation Models"
       ],
       "seed": false
     },
     {
-      "term": "whether agents",
+      "term": "mathematics coding",
       "score": 4.25,
       "count": 2,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "Learn2Play Bench: How Well Do LLM Agents Learn from Experience in Unfamiliar Environments?",
-        "EmbodiedCLBench: Evaluating Continual Learning for Self-Evolving Embodied Agents"
+        "MAI-Gym: An Open All-in-One Platform for GUI Agent Evaluation and RL Training across Mobile and Computer Environments",
+        "RouteWeaver: Weaving Mode Selection and Execution into Unified LLM Routing"
       ],
       "seed": false
     },
     {
-      "term": "agents learn",
+      "term": "established benchmarks",
       "score": 4.25,
       "count": 2,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "Learn2Play Bench: How Well Do LLM Agents Learn from Experience in Unfamiliar Environments?",
-        "Can AI Agents Learn Their Way to the Top? Evaluating Heuristic Learning in a Long-Running Game Agent Competition"
+        "MAI-Gym: An Open All-in-One Platform for GUI Agent Evaluation and RL Training across Mobile and Computer Environments",
+        "OpenMobile-2: Building Versatile Mobile Agents with Scalable Environments and App-Native Tools"
       ],
       "seed": false
     },
     {
-      "term": "agent actions",
+      "term": "agent behavior",
       "score": 4.25,
       "count": 2,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "From Traces to Agentic Worlds: Agentic Language World Models for Interactive Environment Simulation",
-        "Multi-Agent Egocentric World Model with Fine-Grained Embodied Interaction"
+        "MAI-Gym: An Open All-in-One Platform for GUI Agent Evaluation and RL Training across Mobile and Computer Environments",
+        "LiveMACE: Process-Aware Evaluation of LLM Agent Capabilities in Evolving Markets"
       ],
       "seed": false
     },
     {
-      "term": "further research",
+      "term": "benchmarks typically",
       "score": 4.25,
       "count": 2,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "MiMo-V2.6: Scaling Reinforcement Learning Towards Self-Improvement",
-        "ProgramGym: Scaling Training Environments for Long-Horizon Program Reproduction Agents"
+        "FDE-Gym: The Last Mile of AI Delivery",
+        "OR-License: Evaluating LLM Agents as Real-World Operations Research Practitioners"
       ],
       "seed": false
     },
     {
-      "term": "agentic rl",
+      "term": "evaluate agents",
       "score": 4.25,
       "count": 2,
       "sources": [
         "hf_daily_papers"
       ],
       "examples": [
-        "MiMo-V2.6: Scaling Reinforcement Learning Towards Self-Improvement",
-        "Mosaic: Multi-Session Agentic Reinforcement Learning"
-      ],
-      "seed": false
-    },
-    {
-      "term": "agent harness",
-      "score": 4.25,
-      "count": 2,
-      "sources": [
-        "hf_daily_papers"
-      ],
-      "examples": [
-        "SuperNav: An Agentic Navigation System for Any Task in Any Scene",
-        "Self-Evolving Agent Harness"
-      ],
-      "seed": false
-    },
-    {
-      "term": "reproducible research",
-      "score": 4.25,
-      "count": 2,
-      "sources": [
-        "hf_daily_papers"
-      ],
-      "examples": [
-        "In-context Robot Learning Made Simple: A Democratized Recipe for Manipulation Tasks",
-        "Post-Training Frontier Text-to-Image Models by Composing Preference and Rubric Rewards"
+        "FDE-Gym: The Last Mile of AI Delivery",
+        "Deep Search in Real-World Web Environments"
       ],
       "seed": false
     },
@@ -912,8 +875,34 @@
         "hf_daily_papers"
       ],
       "examples": [
-        "REMORY: Learning Residual Memory for Context Compaction",
-        "FDE-Gym: The Last Mile of AI Delivery"
+        "FDE-Gym: The Last Mile of AI Delivery",
+        "BizBench: Unveiling Hidden Challenges in Deploying Long-Horizon Agents for Real-World Business"
+      ],
+      "seed": false
+    },
+    {
+      "term": "existing agent",
+      "score": 4.25,
+      "count": 2,
+      "sources": [
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "FDE-Gym: The Last Mile of AI Delivery",
+        "MemPilot: Orchestrating On-Demand Multimodal Memory Curation for LLM Agents"
+      ],
+      "seed": false
+    },
+    {
+      "term": "agentic reinforcement learning",
+      "score": 4.25,
+      "count": 2,
+      "sources": [
+        "hf_daily_papers"
+      ],
+      "examples": [
+        "Mosaic: Multi-Session Agentic Reinforcement Learning",
+        "Tree-Aware Posterior Distillation for Long-Horizon Agentic Reinforcement Learning"
       ],
       "seed": false
     }
