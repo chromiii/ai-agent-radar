@@ -1,6 +1,5 @@
 {
   "seen": {
-    "http://manus.im/blog/introducing-manus-2-0": "2026-10-13",
     "https://manus.im/features": "2026-10-14",
     "https://www.cloudbees.com/blog/enterprise-jenkins-now-builds-from-cursor-origin": "2026-10-14",
     "https://cursor.com/docs/api/origin": "2026-10-14",
@@ -75,6 +74,8 @@
     "https://autoglm.zhipuai.cn": "2026-10-24",
     "https://zcode.z.ai/cn": "2026-10-24",
     "https://bigmodel.cn": "2026-10-24",
-    "https://www.minimax.io/blog/minimax-h3": "2026-10-24"
+    "https://www.minimax.io/blog/minimax-h3": "2026-10-24",
+    "http://manus.im/blog/introducing-manus-2-0": "2026-10-27",
+    "https://www.cursor.com/changelog/agent-sdk": "2026-10-27"
   }
 }
