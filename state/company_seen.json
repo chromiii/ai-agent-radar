@@ -1,19 +1,5 @@
 {
   "seen": {
-    "https://api-docs.deepseek.com/": "2026-10-15",
-    "https://api-docs.deepseek.com/zh-cn/": "2026-10-15",
-    "https://api-docs.deepseek.com/quick_start/pricing": "2026-10-15",
-    "https://platform.kimi.com": "2026-10-15",
-    "https://openai.com/api/": "2026-10-15",
-    "https://platform.deepseek.com/": "2026-10-15",
-    "https://qwen.ai/research": "2026-10-15",
-    "https://chat.qwen.ai": "2026-10-15",
-    "https://www.kimi.com/": "2026-10-15",
-    "https://www.kimi.com/en/blog/kimi-k3": "2026-10-15",
-    "https://www.kimi.com/en/blog/perception-bench": "2026-10-15",
-    "https://www.kimi.com/en/blog/kimi-k2-6": "2026-10-15",
-    "https://www.kimi.com/business": "2026-10-15",
-    "https://seed.bytedance.com/en/blog/seed-alignment-preparedness-team-looking-for-global-talents": "2026-10-15",
     "https://qwenlm.github.io/blog/page/2/": "2026-10-17",
     "https://manus.im/features/webapp": "2026-10-17",
     "https://manus.im/features/wide-research": "2026-10-17",
@@ -74,6 +60,18 @@
     "http://manus.im/blog/introducing-manus-2-0": "2026-10-27",
     "https://www.cursor.com/changelog/agent-sdk": "2026-10-27",
     "https://manus.im/features": "2026-10-28",
-    "https://www.minimax.io/blog/minimax-music-3-0-next-generation-open-weights-production-ready-versatile-music-model": "2026-10-28"
+    "https://www.minimax.io/blog/minimax-music-3-0-next-generation-open-weights-production-ready-versatile-music-model": "2026-10-28",
+    "https://api-docs.deepseek.com/": "2026-10-29",
+    "https://api-docs.deepseek.com/zh-cn/": "2026-10-29",
+    "https://platform.kimi.com": "2026-10-29",
+    "https://platform.deepseek.com/": "2026-10-29",
+    "https://qwen.ai/research": "2026-10-29",
+    "https://chat.qwen.ai": "2026-10-29",
+    "https://www.kimi.com/": "2026-10-29",
+    "https://www.kimi.com/en/blog/kimi-k3": "2026-10-29",
+    "https://www.kimi.com/en/blog/perception-bench": "2026-10-29",
+    "https://www.kimi.com/en/blog/kimi-k2-6": "2026-10-29",
+    "https://www.kimi.com/business": "2026-10-29",
+    "https://seed.bytedance.com/en/blog/seed-alignment-preparedness-team-looking-for-global-talents": "2026-10-29"
   }
 }
