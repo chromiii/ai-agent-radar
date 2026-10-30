@@ -1,18 +1,5 @@
 {
   "seen": {
-    "https://qwenlm.github.io/blog/page/2/": "2026-10-17",
-    "https://manus.im/features/webapp": "2026-10-17",
-    "https://manus.im/features/wide-research": "2026-10-17",
-    "https://manus.im/models": "2026-10-17",
-    "https://manus.im/compare/vs-chatgpt": "2026-10-17",
-    "https://blog.google/innovation-and-ai/technology/developers-tools/": "2026-10-17",
-    "https://www.microsoft.com/en-us/ai/financial-services/capital-markets": "2026-10-17",
-    "https://www.microsoft.com/en-us/microsoft-agent-365": "2026-10-17",
-    "https://microsoft.com/en-us/ai/agent-factory": "2026-10-17",
-    "https://github.blog/developer-skills/": "2026-10-17",
-    "https://github.blog/developer-skills/application-development/": "2026-10-17",
-    "https://www.minimax.io/models/text/m27": "2026-10-17",
-    "https://www.minimax.io/models/text": "2026-10-17",
     "https://api-docs.deepseek.com/guides/search": "2026-10-18",
     "https://cursor.com/docs/cloud-agent": "2026-10-18",
     "https://agent.minimax.io/download": "2026-10-18",
@@ -73,6 +60,20 @@
     "https://www.kimi.com/en/blog/kimi-k2-6": "2026-10-29",
     "https://www.kimi.com/business": "2026-10-29",
     "https://seed.bytedance.com/en/blog/seed-alignment-preparedness-team-looking-for-global-talents": "2026-10-29",
-    "https://mistral.ai/news/mistral-large-4-oss/": "2026-10-30"
+    "https://mistral.ai/news/mistral-large-4-oss/": "2026-10-30",
+    "https://qwenlm.github.io/blog/page/2/": "2026-10-31",
+    "https://www.kimi.com/en/blog/kimi-k3-1-pro": "2026-10-31",
+    "https://platform.minimax.io/console/home": "2026-10-31",
+    "https://manus.im/features/webapp": "2026-10-31",
+    "https://manus.im/features/wide-research": "2026-10-31",
+    "https://manus.im/models": "2026-10-31",
+    "https://manus.im/compare/vs-chatgpt": "2026-10-31",
+    "https://blog.google/innovation-and-ai/technology/developers-tools/": "2026-10-31",
+    "https://www.microsoft.com/en-us/ai/financial-services/capital-markets": "2026-10-31",
+    "https://www.microsoft.com/en-us/microsoft-agent-365": "2026-10-31",
+    "https://microsoft.com/en-us/ai/agent-factory": "2026-10-31",
+    "https://github.blog/developer-skills/": "2026-10-31",
+    "https://github.blog/developer-skills/application-development/": "2026-10-31",
+    "https://www.minimax.io/audio": "2026-10-31"
   }
 }
