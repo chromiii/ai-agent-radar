@@ -1,16 +1,5 @@
 {
   "seen": {
-    "https://api-docs.deepseek.com/guides/search": "2026-10-18",
-    "https://cursor.com/docs/cloud-agent": "2026-10-18",
-    "https://agent.minimax.io/download": "2026-10-18",
-    "https://www.cursor.com/changelog/cloud-agent-canvases-and-environments": "2026-10-18",
-    "https://cursor.com/docs/agent/tools/canvas": "2026-10-18",
-    "https://cursor.com/docs/cloud-agent/setup": "2026-10-18",
-    "https://seed.bytedance.com/en/blog/seed-alignment-preparedness-team-looking-for-global-talents?view_from=homepage_tab": "2026-10-18",
-    "https://www.minimax.io/news/minimax-speech-28": "2026-10-18",
-    "https://design.minimax.io/": "2026-10-18",
-    "https://developer.meta.com/ai/?utm_source=ai_meta_site&utm_medium=web&utm_campaign=nav_AI-developers_07242026&utm_content=nav_AI-developers": "2026-10-18",
-    "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/": "2026-10-18",
     "https://seed.bytedance.com/en/models?view_from=homepage_tab": "2026-10-19",
     "https://seed.bytedance.com/en/research?view_from=homepage_tab": "2026-10-19",
     "https://seed.bytedance.com/models?view_from=homepage_tab": "2026-10-19",
@@ -74,6 +63,15 @@
     "https://microsoft.com/en-us/ai/agent-factory": "2026-10-31",
     "https://github.blog/developer-skills/": "2026-10-31",
     "https://github.blog/developer-skills/application-development/": "2026-10-31",
-    "https://www.minimax.io/audio": "2026-10-31"
+    "https://www.minimax.io/audio": "2026-10-31",
+    "https://api-docs.deepseek.com/guides/search": "2026-11-01",
+    "https://cursor.com/docs/cloud-agent": "2026-11-01",
+    "https://www.cursor.com/changelog/cloud-agent-canvases-and-environments": "2026-11-01",
+    "https://cursor.com/docs/agent/tools/canvas": "2026-11-01",
+    "https://cursor.com/docs/cloud-agent/setup": "2026-11-01",
+    "https://www.minimax.io/news/minimax-speech-28": "2026-11-01",
+    "https://design.minimax.io/": "2026-11-01",
+    "https://developer.meta.com/ai/?utm_source=ai_meta_site&utm_medium=web&utm_campaign=nav_AI-developers_07242026&utm_content=nav_AI-developers": "2026-11-01",
+    "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/": "2026-11-01"
   }
 }
