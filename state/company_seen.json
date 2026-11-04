@@ -1,6 +1,5 @@
 {
   "seen": {
-    "https://www.cursor.com/automate": "2026-10-22",
     "https://status.deepseek.com/": "2026-10-23",
     "https://api-docs.deepseek.com/guides/vision": "2026-10-23",
     "https://api-docs.deepseek.com/api/create-chat-completion": "2026-10-23",
@@ -73,6 +72,7 @@
     "https://www.anthropic.com/claude-opus-5-5": "2026-11-04",
     "https://www.anthropic.com/claude-haiku-5-5": "2026-11-04",
     "https://mistral.ai/news/voxtral-3/": "2026-11-04",
-    "https://mistral.ai/news/mistral-x-cloudera/": "2026-11-04"
+    "https://mistral.ai/news/mistral-x-cloudera/": "2026-11-04",
+    "https://www.cursor.com/automate": "2026-11-05"
   }
 }
