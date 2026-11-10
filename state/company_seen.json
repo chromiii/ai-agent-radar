@@ -1,7 +1,5 @@
 {
   "seen": {
-    "https://manus.im/features": "2026-10-28",
-    "https://www.minimax.io/blog/minimax-music-3-0-next-generation-open-weights-production-ready-versatile-music-model": "2026-10-28",
     "https://api-docs.deepseek.com/": "2026-10-29",
     "https://api-docs.deepseek.com/zh-cn/": "2026-10-29",
     "https://platform.kimi.com": "2026-10-29",
@@ -76,6 +74,9 @@
     "https://www.anthropic.com/claude-fable-and-mythos-5-2": "2026-11-10",
     "https://www.cursor.com/changelog/agent-sdk": "2026-11-10",
     "https://seed.bytedance.com/en/blog/more-realistic-images-more-stable-editing-across-100-rounds-introducing-seedream-5-5": "2026-11-10",
-    "https://seed.bytedance.com/en/blog/one-take-creation-flexible-referencing-introducing-seedance-2-5": "2026-11-10"
+    "https://seed.bytedance.com/en/blog/one-take-creation-flexible-referencing-introducing-seedance-2-5": "2026-11-10",
+    "https://manus.im/features": "2026-11-11",
+    "https://www.minimax.io/blog/minimax-h3-image": "2026-11-11",
+    "https://www.minimax.io/blog/minimax-music-3-0-next-generation-open-weights-production-ready-versatile-music-model": "2026-11-11"
   }
 }
