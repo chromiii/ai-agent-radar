@@ -1,4 +1,21 @@
 {
   "schema_version": 1,
-  "items": {}
+  "items": {
+    "bn-9ebaee35fc0c": {
+      "id": "bn-9ebaee35fc0c",
+      "title": "langchain-ai/langchain: langchain-typesafe==0.1.0",
+      "source_url": "https://github.com/langchain-ai/langchain/releases/tag/langchain-typesafe%3D%3D0.1.0",
+      "first_seen": "2026-11-11",
+      "last_seen": "2026-11-11",
+      "report_paths": [],
+      "impact_categories": [
+        "breaking_change"
+      ],
+      "official_source_candidate": true,
+      "severity": "high",
+      "status": "pending",
+      "history": [],
+      "source_kind": "official_github_release"
+    }
+  }
 }
