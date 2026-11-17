@@ -1,9 +1,5 @@
 {
   "seen": {
-    "https://www.anthropic.com/claude-opus-5-5": "2026-11-04",
-    "https://www.anthropic.com/claude-haiku-5-5": "2026-11-04",
-    "https://mistral.ai/news/voxtral-3/": "2026-11-04",
-    "https://mistral.ai/news/mistral-x-cloudera/": "2026-11-04",
     "https://www.cursor.com/automate": "2026-11-05",
     "https://mistral.ai/news/build-with-studio/": "2026-11-06",
     "https://status.deepseek.com/": "2026-11-06",
@@ -70,6 +66,10 @@
     "https://seed.bytedance.com/en/blog/seedrealtime-audio-visual-full-duplex-llm-released-toward-omni-modal-natural-interaction": "2026-11-17",
     "https://seed.bytedance.com/en/blog/from-speech-to-audio-creation-introducing-the-seed-audio-1-0-audio-creation-model": "2026-11-17",
     "https://www.minimax.io/blog/minimax-m31f": "2026-11-17",
-    "https://www.minimax.io/models/text/m3": "2026-11-17"
+    "https://www.minimax.io/models/text/m3": "2026-11-17",
+    "https://www.anthropic.com/claude-haiku-5-5": "2026-11-18",
+    "https://www.anthropic.com/claude-opus-5-5": "2026-11-18",
+    "https://mistral.ai/news/voxtral-3/": "2026-11-18",
+    "https://mistral.ai/news/mistral-x-cloudera/": "2026-11-18"
   }
 }
