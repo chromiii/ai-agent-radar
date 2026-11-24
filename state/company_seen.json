@@ -1,11 +1,5 @@
 {
   "seen": {
-    "https://azure.microsoft.com/en-us/solutions/ai/": "2026-11-10",
-    "http://manus.im/blog/introducing-manus-2-0": "2026-11-10",
-    "https://www.anthropic.com/claude-fable-and-mythos-5-2": "2026-11-10",
-    "https://www.cursor.com/changelog/agent-sdk": "2026-11-10",
-    "https://seed.bytedance.com/en/blog/more-realistic-images-more-stable-editing-across-100-rounds-introducing-seedream-5-5": "2026-11-10",
-    "https://seed.bytedance.com/en/blog/one-take-creation-flexible-referencing-introducing-seedance-2-5": "2026-11-10",
     "https://manus.im/features": "2026-11-11",
     "https://www.minimax.io/blog/minimax-h3-image": "2026-11-11",
     "https://www.minimax.io/blog/minimax-music-3-0-next-generation-open-weights-production-ready-versatile-music-model": "2026-11-11",
@@ -71,6 +65,17 @@
     "https://autoglm.zhipuai.cn": "2026-11-21",
     "https://zcode.z.ai/cn": "2026-11-21",
     "https://bigmodel.cn": "2026-11-21",
-    "https://www.minimax.io/blog/minimax-h3": "2026-11-21"
+    "https://www.minimax.io/blog/minimax-h3": "2026-11-21",
+    "https://api-docs.deepseek.com/guides/build_a_chatbot/": "2026-11-24",
+    "https://api-docs.deepseek.com/guides/thinking_mode/": "2026-11-24",
+    "https://api-docs.deepseek.com/api/create-chat-completion/": "2026-11-24",
+    "https://api-docs.deepseek.com/updates/": "2026-11-24",
+    "https://azure.microsoft.com/en-us/solutions/ai/": "2026-11-24",
+    "https://www.zhipuai.cn/zh/research/164": "2026-11-24",
+    "http://manus.im/blog/introducing-manus-2-0": "2026-11-24",
+    "https://www.anthropic.com/claude-fable-and-mythos-5-2": "2026-11-24",
+    "https://www.cursor.com/changelog/agent-sdk": "2026-11-24",
+    "https://seed.bytedance.com/en/blog/more-realistic-images-more-stable-editing-across-100-rounds-introducing-seedream-5-5": "2026-11-24",
+    "https://seed.bytedance.com/en/blog/one-take-creation-flexible-referencing-introducing-seedance-2-5": "2026-11-24"
   }
 }
