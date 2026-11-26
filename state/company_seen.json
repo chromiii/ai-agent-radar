@@ -1,6 +1,5 @@
 {
   "seen": {
-    "https://mistral.ai/news/mistral-large-4-oss/": "2026-11-13",
     "https://api-docs.deepseek.com/guides/build_a_chatbot": "2026-11-14",
     "https://api-docs.deepseek.com/guides/thinking_mode": "2026-11-14",
     "https://qwenlm.github.io/blog/page/2/": "2026-11-14",
@@ -76,6 +75,8 @@
     "https://www.kimi.com/en/blog/kimi-k3": "2026-11-26",
     "https://www.kimi.com/en/blog/perception-bench": "2026-11-26",
     "https://www.kimi.com/business": "2026-11-26",
-    "https://seed.bytedance.com/en/blog/seed-alignment-preparedness-team-looking-for-global-talents": "2026-11-26"
+    "https://seed.bytedance.com/en/blog/seed-alignment-preparedness-team-looking-for-global-talents": "2026-11-26",
+    "https://mistral.ai/news/mistral-large-4-oss/": "2026-11-27",
+    "https://www.kimi.com/resources/kimi-brand": "2026-11-27"
   }
 }
