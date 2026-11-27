@@ -1,5 +1,7 @@
 # AI Agent Radar
 
+[在 GitHub 查看主题图谱](RADAR.md) · [打开交互阅读页](https://chromiii.github.io/ai-agent-radar/)
+
 一个跑在 GitHub Actions 上的 AI agent / AI 应用信息雷达。稳定主干仍然是 deterministic pipeline；Agent 能力以隔离实验逐步加入，不接管 Daily / Company / Weekly 的可靠性路径。
 
 当前包含：
@@ -15,7 +17,7 @@
 
 ## 阅读页与主题图谱
 
-[打开 GitHub Pages 阅读页](https://chromiii.github.io/ai-agent-radar/)。日报或周报采集成功后，GitHub Actions 用默认分支的公开报告重建页面。构建页面直接使用现有结果。
+仓库内的主题图谱由每周工作流更新。交互阅读页由 GitHub Pages 提供，日报或周报采集成功后自动重建。两个入口都使用已有的公开报告和图谱结果。
 
 在仓库目录运行 `python radar_reader.py`，双击生成的 `reader.html`。首页将主题、小词条和对应原文连成图谱。点主题切换小词条，点词条查看原文。图谱日期取自每周发现结果，「全部内容」还可查看已经同步的最新 Daily / Company 报告。
 
