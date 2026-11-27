@@ -47,7 +47,11 @@ jobs:
       - name: Build GitHub topic graph
         id: native_graph
         continue-on-error: true
-        run: python radar_github.py
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          python -m pip install -r requirements-graph.txt
+          python radar_github.py
 
       - name: Commit weekly trend radar
         run: |
@@ -55,7 +59,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add weekly/*.md state/trending_terms.json
           if [ "${{ steps.native_graph.outcome }}" = 'success' ]; then
-            git add -- RADAR.md
+            git add -- RADAR.md assets/radar-graph.png
           fi
           if git diff --cached --quiet; then
             echo "No weekly trend changes to commit."

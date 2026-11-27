@@ -4,28 +4,7 @@
 
 图谱数据日期 **2026-11-21**。每周整理完成后更新。展开主题即可查看小词条和原文。
 
-```mermaid
-flowchart LR
-    radar["AI Agent Radar"]
-    radar --> t1["coding agent"]
-    t1 --> t1_s1["编码代理的行为轨迹分析"]
-    t1 --> t1_s2["组织内编码代理基准"]
-    t1 --> t1_s3["self-improving agent"]
-    t1 --> t1_s4["其他相关资料"]
-    radar --> t2["agent memory"]
-    t2 --> t2_s1["多代理记忆系统"]
-    t2 --> t2_s2["其他相关资料"]
-    radar --> t3["computer use agent"]
-    t3 --> t3_s1["相关资料"]
-    radar --> t4["webarena"]
-    t4 --> t4_s1["可复现网页代理基准"]
-    t4 --> t4_s2["osworld"]
-    radar --> t5["long-horizon task"]
-    t5 --> t5_s1["相关资料"]
-    radar --> t6["tool use"]
-    t6 --> t6_s1["osworld"]
-    t6 --> t6_s2["其他相关资料"]
-```
+![Radar 主题和小词条关系图](assets/radar-graph.png)
 
 ## 主题与原文
 
