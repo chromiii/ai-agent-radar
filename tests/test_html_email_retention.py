@@ -118,8 +118,11 @@ def test_retention_never_deletes_unrecognized_filenames(tmp_path):
 def test_real_weekly_teaching_cards_lead_finished_newsletter(tmp_path):
     from weekly_briefing import build_briefing
 
-    root = Path(__file__).parents[1]
-    markdown = build_briefing(root=root, as_of=dt.date(2026, 10, 11))
+    fixture = Path(__file__).parent / 'fixtures/weekly/2026-10-10.md'
+    weekly = tmp_path / 'weekly'
+    weekly.mkdir()
+    (weekly / fixture.name).write_bytes(fixture.read_bytes())
+    markdown = build_briefing(root=tmp_path, as_of=dt.date(2026, 10, 11))
     assert "本周先看这 3 件事" in markdown
     assert "Agent Harness 优化" in markdown
     assert "发生了什么" in markdown

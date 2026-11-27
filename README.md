@@ -13,6 +13,18 @@
 - **Historical Radar Memory（V4，实验性）**：把已提交的 Daily / Weekly / Company Radar 构造成可重建的历史索引、Entity Memory 与 Trend Memory；Ask Radar / Verified Research 先查相关历史，再补当前外部来源。
 - **Learning Memory（V5）**：手动标记学习卡；根据你明确同意的公开模式，V6 将状态提交到仓库并支持 Actions 更新。
 
+## 阅读页与主题图谱
+
+[打开 GitHub Pages 阅读页](https://chromiii.github.io/ai-agent-radar/)。日报或周报采集成功后，GitHub Actions 用默认分支的公开报告重建页面。构建页面直接使用现有结果。
+
+在仓库目录运行 `python radar_reader.py`，双击生成的 `reader.html`。首页将主题、小词条和对应原文连成图谱。点主题切换小词条，点词条查看原文。图谱日期取自每周发现结果，「全部内容」还可查看已经同步的最新 Daily / Company 报告。
+
+每周趋势整理用既有模型调用从代表性资料发现小词条，为小词条附上来源编号。程序仅保留能对应原始资料的分支。尚未包含图谱的旧报告会用已保存的 AI 趋势、学习卡和实际来源生成初始关系。如果快照没有可用的图谱，仍可从「全部内容」查看已经同步的报告。
+
+在「全部内容」或「收藏」可按时间和已读状态筛选。阅读状态保存在当前浏览器。同步本地报告后，重新生成同一路径的 HTML，再刷新即可继续阅读。筛选优先用发布日期，日期未知时使用保留报告中的最早收录日。同一来源链接、同一 arXiv 论文及有相同明确标题和发布时间的条目会合并。
+
+周报仍由每周六的工作流投递。`watchlist.json` 继续控制周报订阅分组。可用 `python weekly_briefing.py --output-dir preview` 和 `python email_render.py preview/YYYY-MM-DD.md` 本地生成邮件预览。
+
 ## 直接问一个问题
 
 在 GitHub 仓库打开 **Actions → Ask Radar → Run workflow**，输入最多 600 字的问题，例如“我想用 MCP 给一个 Python 工具加接口，有哪些值得学的实现？”。运行后，打开该次运行的 Overview 阅读学习卡。需要查看来源记录时，下载 `ask-radar-answer`，其中 `answer.md` 是可读回答，`run.json` 是检索和运行记录；artifact 保留 7 天。

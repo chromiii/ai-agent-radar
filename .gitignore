@@ -9,6 +9,7 @@ ask_results/
 
 state/history/
 history_results/
+reader.html
 
 # User explicitly opted to keep non-sensitive learning progress public.
 # Secrets, token-bearing exports and raw Agent runs remain ignored.

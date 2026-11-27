@@ -14,6 +14,7 @@ from research_search import canonical_url, clean
 from breaking_news import read_queue, normalized_news_url
 from learning_path import format_plan
 from learning_memory import weekly_recommendations
+from radar_feed import Topic, collect_events, load_watchlist, matches_topic
 
 ROOT = Path(__file__).resolve().parent
 
@@ -130,11 +131,35 @@ def curated_highlights(root: Path, end: dt.date, limit: int = 3) -> tuple[list[d
     return highlights, report
 
 
+def watched_updates(root: Path, as_of: dt.date, topics: list[Topic]) -> list[str]:
+    start = (as_of - dt.timedelta(days=6)).isoformat()
+    events = [row for row in collect_events(root, as_of) if start <= row.date <= as_of.isoformat()]
+    shown: set[str] = set()
+    lines = ['', '## 本周关注的变化', '', '首次收录以保留的 Radar 报告为准。', '']
+    for topic in topics:
+        events_for_topic = [row for row in events if row.id not in shown and matches_topic(row, topic)][:3]
+        if not events_for_topic:
+            continue
+        lines.append(f'### {topic.name}')
+        for row in events_for_topic:
+            title = row.title.translate(str.maketrans('[]', '［］'))
+            published = f'发布 {row.published}' if row.published else '发布日期未标注'
+            lines.append(f'- [{title}]({row.urls[0]}) · {published} · 首次收录 {row.first_seen}')
+            for index, url in enumerate(row.urls[1:3], 2):
+                lines.append(f'  - [其他来源 {index}]({url})')
+            shown.add(row.id)
+        lines.append('')
+    if not shown:
+        lines.append('本周没有符合关注规则的变化。')
+    return lines
+
+
 def build_briefing(root: Path = ROOT, as_of: dt.date | None = None,
-                   queue_path: Path | None = None, path_progress: Path | None = None) -> str:
+                   queue_path: Path | None = None, path_progress: Path | None = None,
+                   watchlist_path: Path | None = None) -> str:
     from learning_path import PROGRESS
     as_of = as_of or dt.date.today()
-    articles = collect(root, as_of)
+    watchlist_path = watchlist_path or root / 'watchlist.json'
     highlights, weekly_source = curated_highlights(root, as_of)
     queue = read_queue(queue_path or (root / "state/breaking_queue.json"))
     rows = sorted(queue["items"].values(), key=lambda r: (r["last_seen"], r["severity"]), reverse=True)
@@ -155,16 +180,20 @@ def build_briefing(root: Path = ROOT, as_of: dt.date | None = None,
             ])
     else:
         lines.append("本周暂无通过学习卡校验的重点解读；以下保留可追溯的新闻线索。")
-    lines.extend(["", "## 本周值得查看的论文 / 工程项目", ""])
-    for index, row in enumerate(articles["research"], 1):
-        lines.append(f"{index}. [{row['title']}]({row['url']})（Radar {row['date']}）")
-    if not articles["research"]:
-        lines.append("本周没有可引用的新研究条目。")
-    lines.extend(["", "## 本周公司与产品线索（以 Radar 收录日为准）", ""])
-    for index, row in enumerate(articles["companies"], 1):
-        lines.append(f"{index}. [{row['title']}]({row['url']})（Radar {row['date']}）")
-    if not articles["companies"]:
-        lines.append("本周没有可引用的新公司动态。")
+    if watchlist_path.exists():
+        lines.extend(watched_updates(root, as_of, load_watchlist(watchlist_path)))
+    else:
+        articles = collect(root, as_of)
+        lines.extend(["", "## 本周值得查看的论文 / 工程项目", ""])
+        for index, row in enumerate(articles["research"], 1):
+            lines.append(f"{index}. [{row['title']}]({row['url']})（Radar {row['date']}）")
+        if not articles["research"]:
+            lines.append("本周没有可引用的新研究条目。")
+        lines.extend(["", "## 本周公司与产品线索（以 Radar 收录日为准）", ""])
+        for index, row in enumerate(articles["companies"], 1):
+            lines.append(f"{index}. [{row['title']}]({row['url']})（Radar {row['date']}）")
+        if not articles["companies"]:
+            lines.append("本周没有可引用的新公司动态。")
     lines.extend(["", "## Breaking Desk · 待核验 / 已确认", ""])
     for row in pending[:6]:
         marker = "人工已确认" if row["status"] == "approved" else "候选待核验"
@@ -189,12 +218,13 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--as-of", type=dt.date.fromisoformat, default=None)
     parser.add_argument("--output-dir", type=Path, default=ROOT / "briefings")
+    parser.add_argument("--watchlist", type=Path, help="Override the repository watchlist.json")
     args = parser.parse_args()
     from radar import today_local
     day = args.as_of or today_local()
     args.output_dir.mkdir(parents=True, exist_ok=True)
     path = args.output_dir / f"{day.isoformat()}.md"
-    path.write_text(build_briefing(as_of=day), encoding="utf-8")
+    path.write_text(build_briefing(as_of=day, watchlist_path=args.watchlist), encoding="utf-8")
     print(f"Weekly briefing: {path}")
 
 
