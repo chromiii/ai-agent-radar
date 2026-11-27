@@ -35,11 +35,12 @@ def markdown_text(value: Any) -> str:
     return re.sub(r"([\\`*_\[\]#|])", r"\\\1", text)
 
 
-def source_link(label: str, url: str) -> str:
+def source_link(label: str, url: str, *, preserve_original: bool = False) -> str:
     safe_url = canonical_url(url)
     if not safe_url:
         return ""
-    return f"[{markdown_text(label)}]({quote(safe_url, safe='/:?&=%+@-._~')})"
+    href = url.strip() if preserve_original else safe_url
+    return f"[{markdown_text(label)}]({quote(href, safe='/?:#&=%+@-._~')})"
 
 
 def learning_details(entry: dict[str, Any]) -> dict[str, Any]:

@@ -44,11 +44,19 @@ jobs:
       - name: Run weekly trend radar
         run: python weekly_trends.py
 
+      - name: Build GitHub topic graph
+        id: native_graph
+        continue-on-error: true
+        run: python radar_github.py
+
       - name: Commit weekly trend radar
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add weekly/*.md state/trending_terms.json
+          if [ "${{ steps.native_graph.outcome }}" = 'success' ]; then
+            git add -- RADAR.md
+          fi
           if git diff --cached --quiet; then
             echo "No weekly trend changes to commit."
             exit 0
