@@ -11,11 +11,14 @@ from radar_feed import collect_events
 from topic_graph import build_reader_graph
 
 ROOT = Path(__file__).resolve().parent
-MERMAID_LABEL = str.maketrans({'"': '”', '[': '［', ']': '］', '<': '‹', '>': '›', '`': '’', '&': '＆'})
+GRAPH_IMAGE = Path('assets/radar-graph.png')
 
 
-def render_github_reader(root: Path, day: dt.date) -> str:
+def render_github_reader(root: Path, day: dt.date, *, image_path: Path | None = None) -> str:
     graph = build_reader_graph(root, day, collect_events(root, day))
+    if image_path is not None:
+        from radar_graph_image import render_graph_image
+        render_graph_image(graph, image_path)
     lines = [
         '# Radar 主题图谱', '',
         '[研究日报](inbox/) · [公司日报](company/) · [学习周报](weekly/)', '',
@@ -25,15 +28,8 @@ def render_github_reader(root: Path, day: dt.date) -> str:
 
     lines.extend([
         f"图谱数据日期 **{graph['generated_at']}**。每周整理完成后更新。展开主题即可查看小词条和原文。", '',
-        '```mermaid', 'flowchart LR', '    radar["AI Agent Radar"]',
+        f'![Radar 主题和小词条关系图]({GRAPH_IMAGE.as_posix()})', '', '## 主题与原文', '',
     ])
-    for index, topic in enumerate(graph['topics'], 1):
-        name = topic['label'].translate(MERMAID_LABEL)
-        lines.append(f'    radar --> t{index}["{name}"]')
-        for child_index, child in enumerate(topic['children'], 1):
-            label = child['label'].translate(MERMAID_LABEL)
-            lines.append(f'    t{index} --> t{index}_s{child_index}["{label}"]')
-    lines.extend(['```', '', '## 主题与原文', ''])
 
     for topic in graph['topics']:
         label = html.escape(topic['label'])
@@ -63,7 +59,7 @@ def main() -> None:
     if day is None:
         from radar import today_local
         day = today_local()
-    text = render_github_reader(ROOT, day)
+    text = render_github_reader(ROOT, day, image_path=args.output.parent / GRAPH_IMAGE)
     args.output.write_text(text, encoding='utf-8')
     print(f'GitHub reader: {args.output}')
 
