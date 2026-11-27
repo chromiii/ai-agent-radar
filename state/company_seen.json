@@ -1,19 +1,5 @@
 {
   "seen": {
-    "https://api-docs.deepseek.com/guides/build_a_chatbot": "2026-11-14",
-    "https://api-docs.deepseek.com/guides/thinking_mode": "2026-11-14",
-    "https://qwenlm.github.io/blog/page/2/": "2026-11-14",
-    "https://www.kimi.com/en/blog/kimi-k3-1-pro": "2026-11-14",
-    "https://platform.minimax.io/console/home": "2026-11-14",
-    "https://manus.im/features/webapp": "2026-11-14",
-    "https://manus.im/features/wide-research": "2026-11-14",
-    "https://manus.im/models": "2026-11-14",
-    "https://manus.im/compare/vs-chatgpt": "2026-11-14",
-    "https://blog.google/innovation-and-ai/technology/developers-tools/": "2026-11-14",
-    "https://www.microsoft.com/en-us/ai/financial-services/capital-markets": "2026-11-14",
-    "https://www.microsoft.com/en-us/microsoft-agent-365": "2026-11-14",
-    "https://github.blog/developer-skills/": "2026-11-14",
-    "https://github.blog/developer-skills/application-development/": "2026-11-14",
     "https://cursor.com/docs/cloud-agent": "2026-11-15",
     "https://www.cursor.com/changelog/cloud-agent-canvases-and-environments": "2026-11-15",
     "https://www.minimax.io/news/minimax-speech-28": "2026-11-15",
@@ -77,6 +63,18 @@
     "https://www.kimi.com/business": "2026-11-26",
     "https://seed.bytedance.com/en/blog/seed-alignment-preparedness-team-looking-for-global-talents": "2026-11-26",
     "https://mistral.ai/news/mistral-large-4-oss/": "2026-11-27",
-    "https://www.kimi.com/resources/kimi-brand": "2026-11-27"
+    "https://www.kimi.com/resources/kimi-brand": "2026-11-27",
+    "https://qwenlm.github.io/blog/page/2/": "2026-11-28",
+    "https://www.kimi.com/en/blog/kimi-k3-1-pro": "2026-11-28",
+    "https://platform.minimax.io/console/home": "2026-11-28",
+    "https://manus.im/features/webapp": "2026-11-28",
+    "https://manus.im/features/wide-research": "2026-11-28",
+    "https://manus.im/models": "2026-11-28",
+    "https://manus.im/compare/vs-chatgpt": "2026-11-28",
+    "https://blog.google/innovation-and-ai/technology/developers-tools/": "2026-11-28",
+    "https://www.microsoft.com/en-us/ai/financial-services/capital-markets": "2026-11-28",
+    "https://www.microsoft.com/en-us/microsoft-agent-365": "2026-11-28",
+    "https://github.blog/developer-skills/": "2026-11-28",
+    "https://github.blog/developer-skills/application-development/": "2026-11-28"
   }
 }
