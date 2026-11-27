@@ -1,6 +1,6 @@
 # AI Agent Radar
 
-[在 GitHub 查看主题图谱](RADAR.md) · [打开交互阅读页](https://chromiii.github.io/ai-agent-radar/)
+[在仓库首页查看图谱](#阅读页与主题图谱) · [小词条与原文](RADAR.md) · [交互阅读页](https://chromiii.github.io/ai-agent-radar/)
 
 一个跑在 GitHub Actions 上的 AI agent / AI 应用信息雷达。稳定主干仍然是 deterministic pipeline；Agent 能力以隔离实验逐步加入，不接管 Daily / Company / Weekly 的可靠性路径。
 
@@ -16,6 +16,8 @@
 - **Learning Memory（V5）**：手动标记学习卡；根据你明确同意的公开模式，V6 将状态提交到仓库并支持 Actions 更新。
 
 ## 阅读页与主题图谱
+
+![Radar 主题和小词条关系图](assets/radar-graph.png)
 
 仓库内的主题图谱由每周工作流更新。交互阅读页由 GitHub Pages 提供，日报或周报采集成功后自动重建。两个入口都使用已有的公开报告和图谱结果。
 
