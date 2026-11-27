@@ -16,6 +16,7 @@ import requests
 
 from radar import dedupe, fetch_hf_daily_papers, fetch_hf_spaces, get_text, load_config, normalize, today_local
 from learning_cards import CARD_PROMPT, render_learning_card, weekly_cards
+from topic_graph import validate_topic_graph
 from learning_memory import memory_path, weekly_recommendations
 
 
@@ -341,11 +342,13 @@ def build_classifier_prompt(
     # citable record here and previously led to claims paired with unrelated URLs.
     prompt_terms = [{key: term[key] for key in ("term", "score", "count", "sources", "seed") if key in term}
                     for term in candidate_terms]
+    prompt_evidence = [dict(item, evidence_id=index) for index, item in enumerate(representative_items, 1)]
     system = (
         "You are a strict editor for a weekly AI Agent application-layer learning radar. "
         "Return valid JSON only. Use only supplied candidate terms and representative items. "
         "Prioritize practical application knowledge over pure research novelty. "
-        "Do not invent terms, facts, links, papers, metrics, code behavior, or company claims."
+        "Use supplied terms for trend classification. Derive graph labels only from cited evidence. "
+        "Do not invent facts, links, papers, metrics, code behavior, or company claims."
     )
     user = f"""
 Classify weekly trend candidate terms for AI agent / AI application monitoring.
@@ -377,6 +380,8 @@ JSON schema:
     "computer use": "真实环境操作方向升温",
     "agentic search": "多步检索型研究代理升温"
   }},
+  "topic_graph": [{{"term": "computer use", "label": "计算机操作代理",
+    "children": [{{"label": "真实界面任务评测", "evidence_ids": [1]}}]}}],
   "learning_cards": [
     {{
       "title": "Computer-use Agent",
@@ -400,6 +405,9 @@ Rules:
 - noise max 10 terms.
 - notes values must be Simplified Chinese, max 30 Chinese characters.
 - Every term in tier1/tier2/downrank/noise must exactly match a candidate term.
+- topic_graph: optional, up to 6 themes from your tier1/tier2. Give each a short Simplified Chinese label.
+- Discover up to 4 narrowly scoped subtopics per theme from representative items, including specific methods, tools, or benchmarks. Use short labels, avoid repeating the parent or making generic categories.
+- Each subtopic must cite 1–4 supplied evidence_id numbers. Only cite items that support the subtopic. Omit unsupported branches.
 - learning_cards: at most 5 concise cards; fewer is acceptable when the week is weak.
 - learning_cards.level must be one of "know", "build", "understand_why".
 - learning_cards should answer: 是什么、为什么现在值得知道、应用层要学到什么深度、是否值得动手。
@@ -421,7 +429,7 @@ Candidate terms JSON:
 {json.dumps(prompt_terms, ensure_ascii=False, indent=2)}
 
 Representative items JSON:
-{json.dumps(representative_items, ensure_ascii=False, indent=2)}
+{json.dumps(prompt_evidence, ensure_ascii=False, indent=2)}
 """.strip()
     return [{"role": "system", "content": system}, {"role": "user", "content": user}]
 
@@ -488,7 +496,7 @@ def validate_curated(
     learning_cards = normalize_learning_cards(curated.get("learning_cards"), representative_items)
     if not tier1 and not tier2 and not learning_cards:
         return None
-    return {
+    result = {
         "tier1": tier1,
         "tier2": tier2,
         "downrank": downrank,
@@ -496,6 +504,10 @@ def validate_curated(
         "notes": notes,
         "learning_cards": learning_cards,
     }
+    graph = validate_topic_graph(curated.get("topic_graph"), set(tier1 + tier2), representative_items)
+    if graph:
+        result["topic_graph"] = graph
+    return result
 
 
 def call_deepseek_json(

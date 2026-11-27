@@ -1,0 +1,19 @@
+{
+  "topics": [
+    {
+      "name": "Coding Agent",
+      "include": ["coding agent", "coding agents", "code agent", "code agents", "codex", "claude code", "cursor", "编程代理", "编码代理", "代码代理"],
+      "exclude": ["beginner", "入门教程", "prompt collection"]
+    },
+    {
+      "name": "Agent 框架与评测",
+      "include": ["mcp", "langgraph", "langchain", "agent memory", "agent benchmark", "agent benchmarks", "agent evaluation", "computer use", "computer-use", "tool use", "多智能体", "工具调用"],
+      "exclude": ["入门教程", "prompt collection"]
+    },
+    {
+      "name": "AI 公司与产品",
+      "kinds": ["company"],
+      "exclude": ["hiring", "招聘"]
+    }
+  ]
+}

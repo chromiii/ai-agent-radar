@@ -212,8 +212,8 @@ def test_weekly_public_report_stays_unpersonalized_and_private_sidecar_is_ignore
     assert "state/private_recommendations/" in (Path(__file__).parents[1] / ".gitignore").read_text()
 
 
-def test_actual_repository_weekly_cards_can_be_catalogued(tmp_path):
-    report = Path(__file__).parents[1] / "weekly" / "2026-10-03.md"
+def test_archived_weekly_cards_can_be_catalogued(tmp_path):
+    report = Path(__file__).parent / 'fixtures/weekly/2026-10-10.md'
     items = lm.items_from_file(report)
     assert len(items) >= 3
     assert all(item.source_url.startswith("https://") for item in items)
